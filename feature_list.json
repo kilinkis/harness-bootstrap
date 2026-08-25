@@ -1,0 +1,31 @@
+[
+  {
+    "id": "TASK-001",
+    "title": "Create a task from the command line",
+    "status": "done",
+    "acceptance_criteria": [
+      "The CLI accepts a task title and optional tag.",
+      "Created tasks persist in a local JSON file.",
+      "The command prints the created task ID."
+    ]
+  },
+  {
+    "id": "TASK-002",
+    "title": "List persisted tasks",
+    "status": "done",
+    "acceptance_criteria": [
+      "The CLI lists each saved task with its ID, status, title, and tag.",
+      "An empty task store produces a clear message."
+    ]
+  },
+  {
+    "id": "TASK-003",
+    "title": "Complete a task from the command line",
+    "status": "pending",
+    "acceptance_criteria": [
+      "The CLI accepts a task ID for completion.",
+      "Completing an existing open task persists its completed status.",
+      "An unknown task ID returns a helpful non-zero error."
+    ]
+  }
+]
