@@ -21,7 +21,7 @@
   {
     "id": "TASK-003",
     "title": "Complete a task from the command line",
-    "status": "in_progress",
+    "status": "in_review",
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/1",
     "acceptance_criteria": [
       "The CLI accepts a task ID for completion.",
