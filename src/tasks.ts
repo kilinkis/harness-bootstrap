@@ -25,3 +25,18 @@ export function createTask(title: string, tag?: string): Task {
     status: "open",
   };
 }
+
+export function completeTask(tasks: readonly Task[], taskId: string): Task[] {
+  let matched = false;
+  const updatedTasks = tasks.map((task) => {
+    if (task.id !== taskId) return task;
+    matched = true;
+    return { ...task, status: "completed" as const };
+  });
+
+  if (!matched) {
+    throw new Error(`Task not found: ${taskId}`);
+  }
+
+  return updatedTasks;
+}

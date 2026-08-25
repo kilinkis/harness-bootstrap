@@ -59,6 +59,8 @@ flowchart LR
 
 Each role has a narrow responsibility: the leader plans and coordinates, the implementer changes code, and the reviewer evaluates it independently. Agents return short status messages; the useful detail is written to files in `progress/`. That avoids losing decisions when a chat is compacted or a session ends.
 
+For a complete ticket walkthrough with reusable, tool-neutral prompts for each role, see [Run a ticket through the harness](docs/run-a-ticket.md).
+
 ## Repository map
 
 ```text

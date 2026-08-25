@@ -17,7 +17,7 @@ A task is a JSON object with `id`, `title`, `tag`, and `status`. IDs are UUID st
 - A task title is non-empty after trimming whitespace.
 - The task store is a JSON array.
 - Writes are atomic: a complete replacement file is written before it replaces the old store.
-- Domain code raises `ValueError` for invalid user-facing state; the CLI turns it into a readable error and non-zero exit code.
+- Domain code throws `Error` for invalid user-facing state; the CLI turns it into a readable error and non-zero exit code.
 
 ## Harness boundaries
 

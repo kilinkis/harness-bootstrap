@@ -21,11 +21,13 @@
   {
     "id": "TASK-003",
     "title": "Complete a task from the command line",
-    "status": "pending",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/1",
     "acceptance_criteria": [
       "The CLI accepts a task ID for completion.",
       "Completing an existing open task persists its completed status.",
-      "An unknown task ID returns a helpful non-zero error."
+      "An unknown task ID returns a helpful non-zero error.",
+      "The repository documents reusable leader, implementer, and reviewer prompts for this ticket."
     ]
   }
 ]

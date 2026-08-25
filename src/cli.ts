@@ -1,16 +1,14 @@
 /** Command-line interface for the task demo. */
 
 import { loadTasks, saveTasks } from "./storage.js";
-import { createTask } from "./tasks.js";
+import { completeTask, createTask } from "./tasks.js";
 
 type WriteLine = (message: string) => void;
 
-interface Command {
-  name: "add" | "list";
-  title?: string;
-  tag?: string;
-  store: string;
-}
+type Command =
+  | { name: "add"; title: string; tag?: string; store: string }
+  | { name: "complete"; taskId: string; store: string }
+  | { name: "list"; store: string };
 
 export async function run(
   arguments_: string[],
@@ -22,10 +20,17 @@ export async function run(
     const tasks = await loadTasks(command.store);
 
     if (command.name === "add") {
-      const task = createTask(command.title ?? "", command.tag);
+      const task = createTask(command.title, command.tag);
       tasks.push(task);
       await saveTasks(command.store, tasks);
       write(`Created ${task.id}: ${task.title}`);
+      return 0;
+    }
+
+    if (command.name === "complete") {
+      const updatedTasks = completeTask(tasks, command.taskId);
+      await saveTasks(command.store, updatedTasks);
+      write(`Completed ${command.taskId}`);
       return 0;
     }
 
@@ -59,6 +64,13 @@ function parseArguments(arguments_: string[]): Command {
 
   const name = remaining.shift();
   if (name === "list" && remaining.length === 0) return { name, store };
+  if (name === "complete") {
+    const taskId = remaining.shift();
+    if (!taskId || remaining.length !== 0) {
+      throw new Error("Usage: complete <task-id>");
+    }
+    return { name, taskId, store };
+  }
   if (name === "add") {
     const title = remaining.shift();
     const tagIndex = remaining.indexOf("--tag");
@@ -69,7 +81,7 @@ function parseArguments(arguments_: string[]): Command {
     if (tagIndex === -1 && remaining.length !== 0) throw new Error("Usage: add <title> [--tag <tag>]");
     return { name, title, tag, store };
   }
-  throw new Error("Usage: [--store <path>] <add|list>");
+  throw new Error("Usage: [--store <path>] <add|complete|list>");
 }
 
 function messageFor(error: unknown): string {
