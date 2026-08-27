@@ -1,5 +1,22 @@
 # Current Session
 
-No feature is active.
+## TASK-004 — Add repository code-quality gates
 
-When work starts, the leader replaces this note with the feature ID, objective, plan, owner, verification command, and next handoff.
+Status: `in_progress`
+
+Objective: add complementary TypeScript, ESLint, and Fallow checks so each ticket can prove type safety, local lint quality, and repository-level structural health.
+
+Plan:
+
+1. Add ESLint with the recommended TypeScript flat configuration and an explicit whole-file length limit.
+2. Add Fallow commands for full-codebase analysis and changed-file audits, with thresholds captured in repository configuration.
+3. Integrate the changed-file audit into the standard verification gate and document all commands.
+4. Run the full gate, record implementation evidence, and hand the change to review.
+
+Anticipated files: `package.json`, `pnpm-lock.yaml`, `eslint.config.js`, Fallow configuration, `scripts/verify.sh`, `docs/verification.md`, and `progress/` reports.
+
+Verification: `./scripts/verify.sh`, plus focused `pnpm run lint`, `pnpm run analyze`, and `pnpm run analyze:changes` commands.
+
+Owner: implementer.
+
+Next handoff: reviewer after the implementation report is complete.

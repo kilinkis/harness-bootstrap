@@ -27,5 +27,18 @@
       "Completing an existing open task persists its completed status.",
       "An unknown task ID returns a helpful non-zero error."
     ]
+  },
+  {
+    "id": "TASK-004",
+    "title": "Add repository code-quality gates",
+    "status": "in_progress",
+    "acceptance_criteria": [
+      "ESLint checks TypeScript source and test files using the current flat configuration format.",
+      "The lint gate enforces a maximum file length without duplicating Fallow's complexity checks.",
+      "Fallow reports code duplication, cyclomatic and cognitive complexity, dead code, circular dependencies, and large functions.",
+      "The repository exposes separate full-codebase and changed-file Fallow commands.",
+      "The standard verification command runs type checking, linting, changed-file analysis, and tests.",
+      "The verification documentation explains when to run each quality command."
+    ]
   }
 ]
