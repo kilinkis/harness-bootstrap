@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -24,19 +24,22 @@ interface CommandResult {
 
 interface FallowConfig {
   entry: string[];
-  duplicates?: {
+  duplicates: {
+    mode: string;
     minTokens: number;
     minLines: number;
     minOccurrences: number;
-    threshold?: number;
+    threshold: number;
   };
-  health?: {
+  health: {
     maxCyclomatic: number;
     maxCognitive: number;
     maxCrap: number;
     maxUnitSize: number;
   };
 }
+
+const REPOSITORY_FALLOW_CONFIG = await loadRepositoryFallowConfig();
 
 void test("ESLint rejects a TypeScript file over the configured line limit", async () => {
   const oversizedSource = Array.from(
@@ -53,28 +56,20 @@ void test("ESLint rejects a TypeScript file over the configured line limit", asy
 });
 
 void test("Fallow health reports excessive function complexity", async () => {
-  const fixture = await createFallowFixture(
-    {
-      "src/index.ts": `
+  const decisionPoints = Array.from(
+    { length: 21 },
+    (_, index) => `  if (value === ${index}) return "${index}";`,
+  ).join("\n");
+  const padding = Array.from({ length: 40 }, () => "  value += 1;").join("\n");
+  const fixture = await createFallowFixture({
+    "src/index.ts": `
 export function classify(value: number): string {
-  if (value > 100) return "huge";
-  if (value > 50) return "large";
-  if (value > 10) return "medium";
-  if (value > 0) return "small";
-  return "none";
+${decisionPoints}
+${padding}
+  return "other";
 }
 `,
-    },
-    {
-      entry: ["src/index.ts"],
-      health: {
-        maxCyclomatic: 2,
-        maxCognitive: 2,
-        maxCrap: 999,
-        maxUnitSize: 5,
-      },
-    },
-  );
+  });
 
   try {
     const result = await runFallow(fixture, ["health", "--complexity", "--fail-on-issues"]);
@@ -94,20 +89,16 @@ export function normalize(value: number): string {
   const doubled = value * 2;
   const adjusted = doubled + 10;
   const bounded = Math.max(0, adjusted);
-  return bounded.toString();
+  const rounded = Math.round(bounded);
+  const formatted = rounded.toFixed(2);
+  return formatted;
 }
 `;
-  const fixture = await createFallowFixture(
-    {
-      "src/first.ts": duplicateSource,
-      "src/index.ts": `import "./first.js";\nimport "./second.js";\n`,
-      "src/second.ts": duplicateSource,
-    },
-    {
-      entry: ["src/index.ts"],
-      duplicates: { minTokens: 10, minLines: 3, minOccurrences: 2, threshold: 5 },
-    },
-  );
+  const fixture = await createFallowFixture({
+    "src/first.ts": duplicateSource,
+    "src/index.ts": `import "./first.js";\nimport "./second.js";\n`,
+    "src/second.ts": duplicateSource,
+  });
 
   try {
     const result = await runFallow(fixture, ["dupes", "--fail-on-issues"]);
@@ -125,27 +116,15 @@ void test("a clean fixture passes the combined Fallow gate", async () => {
   const [eslintResult] = await lintRepositoryFixture(
     "export const qualityContractValue = 4;\n",
   );
-  const fixture = await createFallowFixture(
-    {
-      "src/index.ts": `
+  const fixture = await createFallowFixture({
+    "src/index.ts": `
 export function square(value: number): number {
   return value * value;
 }
 
 console.log(square(4));
 `,
-    },
-    {
-      entry: ["src/index.ts"],
-      duplicates: { minTokens: 50, minLines: 5, minOccurrences: 2 },
-      health: {
-        maxCyclomatic: 20,
-        maxCognitive: 15,
-        maxCrap: 300,
-        maxUnitSize: 60,
-      },
-    },
-  );
+  });
 
   try {
     const result = await runFallow(fixture, ["--fail-on-issues"]);
@@ -178,9 +157,12 @@ async function lintRepositoryFixture(source: string): Promise<Awaited<ReturnType
 
 async function createFallowFixture(
   files: Record<string, string>,
-  config: FallowConfig,
 ): Promise<string> {
   const root = await mkdtemp(join(tmpdir(), "harness-quality-"));
+  const config: FallowConfig = {
+    ...REPOSITORY_FALLOW_CONFIG,
+    entry: ["src/index.ts"],
+  };
   await writeFile(join(root, "package.json"), JSON.stringify({ private: true, type: "module" }));
   await writeFile(join(root, ".fallowrc.json"), JSON.stringify(config));
 
@@ -191,6 +173,29 @@ async function createFallowFixture(
   }
 
   return root;
+}
+
+async function loadRepositoryFallowConfig(): Promise<FallowConfig> {
+  const json = await readFile(join(REPOSITORY_ROOT, ".fallowrc.json"), "utf8");
+  const value = parseObject(json);
+  const duplicates = parseRecord(value.duplicates, "duplicates");
+  const health = parseRecord(value.health, "health");
+
+  assert.equal(typeof duplicates.mode, "string");
+  assert.equal(typeof duplicates.minTokens, "number");
+  assert.equal(typeof duplicates.minLines, "number");
+  assert.equal(typeof duplicates.minOccurrences, "number");
+  assert.equal(typeof duplicates.threshold, "number");
+  assert.equal(typeof health.maxCyclomatic, "number");
+  assert.equal(typeof health.maxCognitive, "number");
+  assert.equal(typeof health.maxCrap, "number");
+  assert.equal(typeof health.maxUnitSize, "number");
+
+  return {
+    entry: ["src/index.ts"],
+    duplicates: duplicates as FallowConfig["duplicates"],
+    health: health as FallowConfig["health"],
+  };
 }
 
 function runFallow(root: string, commandArguments: string[]): Promise<CommandResult> {
@@ -231,5 +236,10 @@ function runFallow(root: string, commandArguments: string[]): Promise<CommandRes
 function parseObject(json: string): Record<string, unknown> {
   const value: unknown = JSON.parse(json);
   assert.ok(value !== null && typeof value === "object" && !Array.isArray(value));
+  return value as Record<string, unknown>;
+}
+
+function parseRecord(value: unknown, field: string): Record<string, unknown> {
+  assert.ok(value !== null && typeof value === "object" && !Array.isArray(value), field);
   return value as Record<string, unknown>;
 }
