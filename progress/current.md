@@ -2,7 +2,7 @@
 
 ## TASK-004 — Add repository code-quality gates
 
-Status: `in_progress`
+Status: `in_review`
 
 Objective: add complementary TypeScript, ESLint, and Fallow checks so each ticket can prove type safety, local lint quality, and repository-level structural health.
 
@@ -17,6 +17,6 @@ Anticipated files: `package.json`, `pnpm-lock.yaml`, `eslint.config.js`, Fallow 
 
 Verification: `./scripts/verify.sh`, plus focused `pnpm run lint`, `pnpm run analyze`, and `pnpm run analyze:changes` commands.
 
-Owner: implementer.
+Owner: reviewer.
 
-Next handoff: reviewer after the implementation report is complete.
+Next handoff: resolve any blocking findings, then close TASK-004 after the completion gate passes.
