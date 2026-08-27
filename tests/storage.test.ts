@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { loadTasks, saveTasks } from "../src/storage.js";
 
-test("a missing store is empty and saved tasks round-trip", async () => {
+void test("a missing store is empty and saved tasks round-trip", async () => {
   const directory = await mkdtemp(join(tmpdir(), "harness-bootstrap-"));
   const filePath = join(directory, "nested", "tasks.json");
   const tasks = [{ id: "1", title: "Test", tag: null, status: "open" as const }];

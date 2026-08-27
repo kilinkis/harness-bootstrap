@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { run } from "../src/cli.js";
 
-test("adds and lists a task", async () => {
+void test("adds and lists a task", async () => {
   const directory = await mkdtemp(join(tmpdir(), "harness-bootstrap-"));
   const store = join(directory, "tasks.json");
   const output: string[] = [];
@@ -15,10 +15,10 @@ test("adds and lists a task", async () => {
   assert.equal(await run(["--store", store, "list"], output.push.bind(output)), 0);
 
   assert.match(output[0], /^Created /);
-  assert.match(output[1], /open  Plan demo \[ai\]$/);
+  assert.match(output[1], /open {2}Plan demo \[ai\]$/);
 });
 
-test("reports an empty task store clearly", async () => {
+void test("reports an empty task store clearly", async () => {
   const directory = await mkdtemp(join(tmpdir(), "harness-bootstrap-"));
   const output: string[] = [];
 

@@ -17,11 +17,11 @@ export function createTask(title: string, tag?: string): Task {
     throw new Error("Task title cannot be empty");
   }
 
-  const normalizedTag = tag?.trim();
+  const normalizedTag = tag?.trim() ?? "";
   return {
     id: randomUUID(),
     title: normalizedTitle,
-    tag: normalizedTag || null,
+    tag: normalizedTag === "" ? null : normalizedTag,
     status: "open",
   };
 }
