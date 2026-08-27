@@ -2,7 +2,7 @@
 
 ## TASK-005 — Add contract tests for quality gates
 
-Status: `in_progress`
+Status: `in_review`
 
 Issue: https://github.com/kilinkis/harness-bootstrap/issues/3
 
@@ -19,6 +19,6 @@ Anticipated files: `tests/harness/`, `package.json`, `docs/verification.md`, and
 
 Verification: `pnpm run test:product`, `pnpm run test:harness`, `pnpm test`, and `./scripts/verify.sh`.
 
-Owner: implementer.
+Owner: reviewer.
 
-Next handoff: reviewer after implementation evidence is complete.
+Next handoff: resolve any blocking findings, then close TASK-005 after the completion gate passes.
