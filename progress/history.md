@@ -7,3 +7,7 @@ Created the initial English-language harness and dependency-free task CLI demons
 ## 2026-08-27 — TASK-004
 
 Added type-aware ESLint with a whole-file length limit and Fallow analysis for dead code, dependency hygiene, cycles, duplication, complexity, and large functions. The standard harness gate now audits changed files, while `pnpm run analyze` provides a full-codebase report. Independent review approved the change with no findings.
+
+## 2026-08-27 — TASK-005
+
+Added isolated contract tests that prove the repository's ESLint and Fallow policies reject oversized, overly complex, and duplicated code while accepting clean fixtures. Split product and harness test commands, retained both in the standard gate, and made duplication above 5% blocking. Review finding and resolution are recorded against [GitHub Issue #3](https://github.com/kilinkis/harness-bootstrap/issues/3).
