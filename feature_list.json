@@ -31,7 +31,7 @@
   {
     "id": "TASK-004",
     "title": "Add repository code-quality gates",
-    "status": "in_review",
+    "status": "done",
     "acceptance_criteria": [
       "ESLint checks TypeScript source and test files using the current flat configuration format.",
       "The lint gate enforces a maximum file length without duplicating Fallow's complexity checks.",
