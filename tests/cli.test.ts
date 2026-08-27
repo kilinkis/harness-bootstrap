@@ -25,3 +25,15 @@ void test("reports an empty task store clearly", async () => {
   assert.equal(await run(["--store", join(directory, "tasks.json"), "list"], output.push.bind(output)), 0);
   assert.deepEqual(output, ["No tasks yet."]);
 });
+
+void test("rejects malformed add options with a useful error", async () => {
+  const output: string[] = [];
+  const errors: string[] = [];
+
+  assert.equal(
+    await run(["add", "Plan demo", "--tag"], output.push.bind(output), errors.push.bind(errors)),
+    1,
+  );
+  assert.deepEqual(output, []);
+  assert.deepEqual(errors, ["Error: Usage: add <title> [--tag <tag>]"]);
+});

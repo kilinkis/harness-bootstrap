@@ -7,14 +7,17 @@
   "scripts": {
     "check": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
+    "analyze": "fallow",
+    "analyze:changes": "fallow audit",
     "test": "tsx --test tests/*.test.ts",
-    "verify": "pnpm run check && pnpm test",
+    "verify": "pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm test",
     "start": "tsx src/cli.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.0.0",
     "eslint": "^10.9.1",
+    "fallow": "^3.19.0",
     "tsx": "^4.20.0",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.68.0"

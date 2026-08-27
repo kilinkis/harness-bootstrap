@@ -5,6 +5,9 @@ import { createTask } from "./tasks.js";
 
 type WriteLine = (message: string) => void;
 
+const ADD_USAGE = "Usage: add <title> [--tag <tag>]";
+const COMMAND_USAGE = "Usage: [--store <path>] <add|list>";
+
 interface Command {
   name: "add" | "list";
   title?: string;
@@ -46,6 +49,15 @@ export async function run(
 }
 
 function parseArguments(arguments_: string[]): Command {
+  const { remaining, store } = extractStore(arguments_);
+  const name = remaining.shift();
+
+  if (name === "list" && remaining.length === 0) return { name, store };
+  if (name === "add") return parseAdd(remaining, store);
+  throw new Error(COMMAND_USAGE);
+}
+
+function extractStore(arguments_: string[]): { remaining: string[]; store: string } {
   const remaining = [...arguments_];
   let store = process.env.TASK_HARNESS_STORE ?? ".task-harness/tasks.json";
 
@@ -57,19 +69,17 @@ function parseArguments(arguments_: string[]): Command {
     remaining.splice(storeIndex, 2);
   }
 
-  const name = remaining.shift();
-  if (name === "list" && remaining.length === 0) return { name, store };
-  if (name === "add") {
-    const title = remaining.shift();
-    const tagIndex = remaining.indexOf("--tag");
-    const tag = tagIndex === -1 ? undefined : remaining[tagIndex + 1];
-    if (!title || (tagIndex !== -1 && !tag) || (tagIndex !== -1 && remaining.length !== 2)) {
-      throw new Error("Usage: add <title> [--tag <tag>]");
-    }
-    if (tagIndex === -1 && remaining.length !== 0) throw new Error("Usage: add <title> [--tag <tag>]");
-    return { name, title, tag, store };
+  return { remaining, store };
+}
+
+function parseAdd(remaining: string[], store: string): Command {
+  const [title, ...options] = remaining;
+  if (!title) throw new Error(ADD_USAGE);
+  if (options.length === 0) return { name: "add", title, store };
+  if (options.length === 2 && options[0] === "--tag" && options[1]) {
+    return { name: "add", title, tag: options[1], store };
   }
-  throw new Error("Usage: [--store <path>] <add|list>");
+  throw new Error(ADD_USAGE);
 }
 
 function messageFor(error: unknown): string {
