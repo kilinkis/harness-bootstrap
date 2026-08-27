@@ -44,7 +44,7 @@
   {
     "id": "TASK-005",
     "title": "Add contract tests for quality gates",
-    "status": "in_review",
+    "status": "in_progress",
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/3",
     "acceptance_criteria": [
       "An ESLint contract test proves the configured 300-line limit rejects an oversized TypeScript file.",
