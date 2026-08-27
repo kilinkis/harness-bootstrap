@@ -40,5 +40,20 @@
       "The standard verification command runs type checking, linting, changed-file analysis, and tests.",
       "The verification documentation explains when to run each quality command."
     ]
+  },
+  {
+    "id": "TASK-005",
+    "title": "Add contract tests for quality gates",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/3",
+    "acceptance_criteria": [
+      "An ESLint contract test proves the configured 300-line limit rejects an oversized TypeScript file.",
+      "Fallow contract tests prove health analysis detects excessive complexity or function size and duplication analysis detects repeated code.",
+      "A clean temporary fixture passes the representative ESLint and Fallow checks.",
+      "Fixtures are generated in temporary directories and do not pollute normal source analysis.",
+      "Contract tests assert stable exit codes and machine-readable fields instead of human output.",
+      "The standard harness verification command runs both product tests and harness contract tests.",
+      "Verification documentation explains the two test layers."
+    ]
   }
 ]

@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-004 added ESLint and Fallow quality gates. Implementation evidence is in `progress/impl_TASK-004.md`; the approved review is in `progress/review_TASK-004.md`.
+TASK-005 added contract tests for the harness quality gates. Implementation and review evidence lives in `progress/impl_TASK-005.md`, `progress/impl_TASK-005_followup.md`, `progress/review_TASK-005.md`, and `progress/review_TASK-005_followup.md`.

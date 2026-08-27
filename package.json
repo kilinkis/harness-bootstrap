@@ -9,7 +9,9 @@
     "lint": "eslint . --max-warnings=0",
     "analyze": "fallow",
     "analyze:changes": "fallow audit",
-    "test": "tsx --test tests/*.test.ts",
+    "test:product": "tsx --test tests/*.test.ts",
+    "test:harness": "tsx --test tests/harness/*.test.ts",
+    "test": "pnpm run test:product && pnpm run test:harness",
     "verify": "pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm test",
     "start": "tsx src/cli.ts"
   },
