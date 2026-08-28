@@ -23,3 +23,7 @@ Added concise technical prose rules for durable repository text. The rules apply
 ## 2026-08-28 — TASK-008
 
 Added an optional production-readiness checklist for harness adopters. It covers quality, security, performance, accessibility, domain, operational, recovery, and cost risks. It also shows how to convert selected risks into measurable commands, contract tests, and required CI gates. Independent review approved the change with no findings; work is tracked in [GitHub Issue #9](https://github.com/kilinkis/harness-bootstrap/issues/9).
+
+## 2026-08-28 — TASK-009
+
+Converted feature-state and evidence checkpoints into a TypeScript validator with stable finding codes. The standard gate now rejects invalid queue state, mixed active work, missing progress evidence, incomplete reports, missing history, and unapproved tracked completion. Eight contract tests cover valid and invalid repositories. A review finding exposed and corrected a negated-verdict false-positive. Work is tracked in [GitHub Issue #11](https://github.com/kilinkis/harness-bootstrap/issues/11).

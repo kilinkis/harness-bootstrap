@@ -5,6 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@10.28.2",
   "scripts": {
+    "check:harness-state": "tsx scripts/check-harness-state.ts",
     "check": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "analyze": "fallow",
