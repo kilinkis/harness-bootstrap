@@ -70,5 +70,21 @@
       "The README and completion checkpoints link the workflow from the normal entry points.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-007",
+    "title": "Add clear technical prose conventions",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/7",
+    "acceptance_criteria": [
+      "docs/conventions.md defines clear technical prose rules based on applicable ASD-STE100 principles.",
+      "The convention covers documentation, pull request descriptions, release notes, code comments, issues, and progress reports.",
+      "The convention does not claim full ASD-STE100 compliance without validation against the current standard and project terminology.",
+      "Commit messages have a separate concise imperative-subject rule.",
+      "Chat replies are not included in the repository prose requirement.",
+      "AGENTS.md points agents to the prose convention without duplicating it.",
+      "Official ASD-STE100 sources are recorded in the documentation.",
+      "The full harness verification passes."
+    ]
   }
 ]

@@ -15,3 +15,7 @@ Added isolated contract tests that prove the repository's ESLint and Fallow poli
 ## 2026-08-28 — TASK-006
 
 Added a concise, tool-neutral delivery workflow from tracked work item through protected-branch merge. A runbook keeps normal ticket prompts short, while GitHub-specific issue and pull request templates and remote ruleset guidance provide the platform integration. Independent review approved the change with no findings; work is tracked in [GitHub Issue #5](https://github.com/kilinkis/harness-bootstrap/issues/5).
+
+## 2026-08-28 — TASK-007
+
+Added concise technical prose rules for durable repository text. The rules apply practical ASD-STE100 principles, use a separate commit-subject rule, exclude chat replies, and prevent unverified compliance claims. Independent review approved the change with no findings; work is tracked in [GitHub Issue #7](https://github.com/kilinkis/harness-bootstrap/issues/7).

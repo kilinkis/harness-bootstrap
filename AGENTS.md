@@ -17,6 +17,7 @@ This repository is a harness: follow the system before changing the product.
 - Do not mark work done based on intent. Run verification and record its output.
 - Preserve unrelated user changes. Never rewrite history or delete data to make a check pass.
 - A reviewer reports findings but does not edit implementation files.
+- Follow the technical prose rules in `docs/conventions.md` for durable repository text.
 
 ## Delivery workflow
 
