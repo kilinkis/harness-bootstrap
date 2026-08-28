@@ -27,3 +27,7 @@ Added an optional production-readiness checklist for harness adopters. It covers
 ## 2026-08-28 — TASK-009
 
 Converted feature-state and evidence checkpoints into a TypeScript validator with stable finding codes. The standard gate now rejects invalid queue state, mixed active work, missing progress evidence, incomplete reports, missing history, and unapproved tracked completion. Eight contract tests cover valid and invalid repositories. A review finding exposed and corrected a negated-verdict false-positive. Work is tracked in [GitHub Issue #11](https://github.com/kilinkis/harness-bootstrap/issues/11).
+
+## 2026-08-28 — TASK-010
+
+Added a fast inner feedback command for harness state, types, lint rules, changed-file analysis, and product tests. The full gate adds harness contracts and remains the local and remote merge gate. Two contracts protect command composition and the CI entry point. Review approved the change with no findings; work is tracked in [GitHub Issue #13](https://github.com/kilinkis/harness-bootstrap/issues/13).

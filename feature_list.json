@@ -121,5 +121,20 @@
       "Verification documentation explains the executable checkpoints and their limits.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-010",
+    "title": "Add a fast inner feedback loop",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/13",
+    "acceptance_criteria": [
+      "A fast command validates harness state, types, lint rules, changed-file analysis, and product tests.",
+      "The full verification command composes the fast command with harness contract tests.",
+      "The shell gate invokes the full verification command without duplicate checks.",
+      "CI continues to use the shell gate.",
+      "Contract tests prevent the fast and full gate definitions from drifting.",
+      "Verification documentation explains focused, fast, and full feedback levels.",
+      "The full harness verification passes."
+    ]
   }
 ]

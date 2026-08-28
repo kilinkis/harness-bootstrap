@@ -13,7 +13,8 @@
     "test:product": "tsx --test tests/*.test.ts",
     "test:harness": "tsx --test tests/harness/*.test.ts",
     "test": "pnpm run test:product && pnpm run test:harness",
-    "verify": "pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm test",
+    "feedback": "pnpm run check:harness-state && pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm run test:product",
+    "verify": "pnpm run feedback && pnpm run test:harness",
     "start": "tsx src/cli.ts"
   },
   "devDependencies": {

@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-009 converted feature-state and evidence checkpoints into executable validation. Eight contracts cover valid and invalid repository state. Implementation and review evidence lives in `progress/impl_TASK-009.md`, `progress/impl_TASK-009_followup.md`, `progress/review_TASK-009.md`, and `progress/review_TASK-009_followup.md`. Follow-up review approved the change with no unresolved findings.
+TASK-010 added `pnpm run feedback` for early implementation checks. The full `./scripts/verify.sh` gate composes that loop with harness contract tests. Two contracts protect the command boundary and CI entry point. Review approved the change with no unresolved findings.
