@@ -17,6 +17,7 @@ The structure is intentionally small. A useful harness should provide the constr
 | Separate context and ownership by role | `agents/` |
 | Definition of done | `CHECKPOINTS.md` and `docs/verification.md` |
 | Auditable delivery | Work item → branch → pull request → CI → merge |
+| Product-specific exit gates | `docs/production-readiness.md` |
 | Project knowledge on demand | `AGENTS.md` and `docs/` |
 | Minimal, focused context | Short role files and targeted documents |
 
@@ -39,6 +40,8 @@ Give an AI coding agent this repository's URL alongside the following prompt:
 > Review this repository as a reference harness, then adapt its structure to the current project. Preserve the project's existing stack and conventions. Add only the relevant agent instructions, work queue, progress records, verification gate, and role boundaries; do not copy the demo task CLI. Keep the harness small, and load project context only when a role needs it.
 
 The agent should first inspect the current project's existing instructions, test commands, and architecture. Treat this repository as a pattern to adapt, not a framework to install wholesale.
+
+Use the [production-readiness checklist](docs/production-readiness.md) to identify the last-mile gates that apply to the target product. Record why a gate applies, how it is measured, and how CI enforces it. Do not enable every listed gate by default.
 
 ## Run it with an AI coding agent
 
@@ -92,7 +95,8 @@ Only one item may be active (`in_progress` or `in_review`) at a time. This keeps
 2. Update `docs/architecture.md` with its boundaries and invariants.
 3. Replace the seed features in `feature_list.json` with thin vertical slices.
 4. Make `scripts/verify.sh` run your formatter, type checker, tests, and build.
-5. Keep reports compact and factual—files changed, commands run, results, and remaining risks.
+5. Select applicable security, performance, accessibility, operational, and domain gates with the [production-readiness checklist](docs/production-readiness.md).
+6. Keep reports compact and factual—files changed, commands run, results, and remaining risks.
 
 The harness is intentionally framework-agnostic. The demo uses TypeScript and has a deliberately small dependency surface.
 
