@@ -19,3 +19,7 @@ Added a concise, tool-neutral delivery workflow from tracked work item through p
 ## 2026-08-28 — TASK-007
 
 Added concise technical prose rules for durable repository text. The rules apply practical ASD-STE100 principles, use a separate commit-subject rule, exclude chat replies, and prevent unverified compliance claims. Independent review approved the change with no findings; work is tracked in [GitHub Issue #7](https://github.com/kilinkis/harness-bootstrap/issues/7).
+
+## 2026-08-28 — TASK-008
+
+Added an optional production-readiness checklist for harness adopters. It covers quality, security, performance, accessibility, domain, operational, recovery, and cost risks. It also shows how to convert selected risks into measurable commands, contract tests, and required CI gates. Independent review approved the change with no findings; work is tracked in [GitHub Issue #9](https://github.com/kilinkis/harness-bootstrap/issues/9).

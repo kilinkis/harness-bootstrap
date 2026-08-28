@@ -35,6 +35,7 @@ This repository is a harness: follow the system before changing the product.
 | Style and error-handling rules | `docs/conventions.md` |
 | Commands and evidence required | `docs/verification.md` |
 | Ticket-to-merge workflow | `docs/run-a-ticket.md` |
+| Production-readiness adoption | `docs/production-readiness.md` |
 | GitHub templates and remote setup | `docs/github-setup.md` |
 | Optional MCP capabilities and safety | `docs/optional-mcp.md` |
 | Completion gate | `CHECKPOINTS.md` |

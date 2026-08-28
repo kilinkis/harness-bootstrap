@@ -86,5 +86,21 @@
       "Official ASD-STE100 sources are recorded in the documentation.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-008",
+    "title": "Add a production-readiness adoption checklist",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/9",
+    "acceptance_criteria": [
+      "docs/production-readiness.md provides an adoption checklist.",
+      "Each item can be marked applicable, not applicable with a reason, planned with an owner or ticket, or enforced automatically.",
+      "The checklist covers correctness and coverage, security, performance, accessibility, domain acceptance, observability, deployment and rollback, data protection and recovery, cost limits, and operational documentation.",
+      "The guide asks for a prevented failure, measurable threshold, command, harness integration, required CI check, contract test, and exception owner.",
+      "The guide shows the progression from identified risk to required CI gate.",
+      "The guide tells adopters to select relevant gates instead of enabling every gate by default.",
+      "README.md and AGENTS.md link the checklist from normal adoption and navigation paths.",
+      "The full harness verification passes."
+    ]
   }
 ]
