@@ -102,5 +102,24 @@
       "README.md and AGENTS.md link the checklist from normal adoption and navigation paths.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-009",
+    "title": "Make harness completion checkpoints executable",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/11",
+    "acceptance_criteria": [
+      "A TypeScript validator checks a repository root and returns all harness-state findings through one small interface.",
+      "The validator rejects duplicate or empty feature IDs, invalid statuses, missing titles or acceptance criteria, and more than one active feature in the shared workstream.",
+      "An active feature must appear in progress/current.md.",
+      "An in_review feature must have an implementation report.",
+      "A completed tracked feature must have implementation and review reports and a history entry.",
+      "Required reports contain the accepted evidence sections and identify their feature.",
+      "Legacy untracked bootstrap features remain valid without fabricated evidence.",
+      "The standard harness gate runs the validator before other quality checks.",
+      "Contract tests prove valid state passes and representative invalid states fail with stable finding codes.",
+      "Verification documentation explains the executable checkpoints and their limits.",
+      "The full harness verification passes."
+    ]
   }
 ]
