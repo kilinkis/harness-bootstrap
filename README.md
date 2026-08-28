@@ -16,6 +16,7 @@ The structure is intentionally small. A useful harness should provide the constr
 | Durable state, not chat memory | `progress/` |
 | Separate context and ownership by role | `agents/` |
 | Definition of done | `CHECKPOINTS.md` and `docs/verification.md` |
+| Auditable delivery | Work item → branch → pull request → CI → merge |
 | Project knowledge on demand | `AGENTS.md` and `docs/` |
 | Minimal, focused context | Short role files and targeted documents |
 
@@ -28,6 +29,8 @@ pnpm start -- list
 ```
 
 `verify.sh` validates the queue and runs the real test suite. It should be green before and after every feature.
+
+For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
 
 ## Adopt this structure in another project
 
@@ -66,9 +69,10 @@ Each role has a narrow responsibility: the leader plans and coordinates, the imp
 ├── AGENTS.md                 # Entry point and navigation for all agents
 ├── CHECKPOINTS.md            # Non-negotiable completion criteria
 ├── feature_list.json         # Small, machine-readable work queue
-├── docs/                     # Architecture, conventions, verification, optional MCPs
+├── docs/                     # Architecture, workflow, verification, optional MCPs
 ├── progress/                 # Versioned session records and reports
 ├── agents/                   # Tool-neutral leader, implementer, reviewer prompts
+├── .github/                  # GitHub issue/PR templates and CI workflow
 ├── scripts/verify.sh         # Harness gate: validates state + runs tests
 ├── src/                      # Minimal TypeScript task CLI
 └── tests/                    # Node test suite
@@ -91,6 +95,8 @@ Only one item may be active (`in_progress` or `in_review`) at a time. This keeps
 5. Keep reports compact and factual—files changed, commands run, results, and remaining risks.
 
 The harness is intentionally framework-agnostic. The demo uses TypeScript and has a deliberately small dependency surface.
+
+Repository instructions should define the shared workflow. Keep machine-specific identity, credentials, tool permissions, and personal preferences in your agent runner's local configuration; see [GitHub setup](docs/github-setup.md).
 
 ## Optional MCP integrations
 

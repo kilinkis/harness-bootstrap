@@ -11,3 +11,10 @@ A feature can move to `done` only when every applicable checkpoint is true.
 - [ ] `progress/current.md` and `progress/history.md` accurately reflect the outcome.
 
 If a checkpoint cannot be satisfied, leave the item active and document the blocker. Do not quietly downgrade the requirement.
+
+## Before merge
+
+- [ ] The pull or merge request links its work item and summarizes the accepted scope.
+- [ ] The implementation and review reports are linked or named in the request.
+- [ ] Required remote checks pass on the final branch state.
+- [ ] Remaining risks and follow-up work are visible to the person merging.

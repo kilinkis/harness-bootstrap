@@ -1,0 +1,45 @@
+name: Feature
+description: Define one scoped, verifiable product or harness change
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: Keep the change small enough for one implementation and review cycle.
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What outcome should this change produce, and for whom?
+      placeholder: Describe the desired outcome rather than the implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: List observable conditions that define done.
+      placeholder: |
+        - [ ] The user can...
+        - [ ] The system reports...
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: Which commands or manual checks should prove the criteria?
+      placeholder: ./scripts/verify.sh plus any focused checks
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and risks
+      description: Note constraints, decisions, dependencies, or known risks. Leave blank if none.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This issue describes one independently verifiable change.
+          required: true
