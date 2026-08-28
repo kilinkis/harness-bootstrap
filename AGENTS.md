@@ -18,6 +18,14 @@ This repository is a harness: follow the system before changing the product.
 - Preserve unrelated user changes. Never rewrite history or delete data to make a check pass.
 - A reviewer reports findings but does not edit implementation files.
 
+## Delivery workflow
+
+- Track every non-trivial change in a work item with explicit acceptance criteria.
+- Create a feature branch from the default branch; do not commit directly to the protected branch.
+- Open a pull or merge request that links the work item using the platform's closing syntax.
+- Include implementation and review reports, verification evidence, and remaining risks in the request.
+- Merge only after the completion checkpoints and required remote checks pass.
+
 ## Navigation
 
 | Need | Read |
@@ -25,6 +33,8 @@ This repository is a harness: follow the system before changing the product.
 | System design and boundaries | `docs/architecture.md` |
 | Style and error-handling rules | `docs/conventions.md` |
 | Commands and evidence required | `docs/verification.md` |
+| Ticket-to-merge workflow | `docs/run-a-ticket.md` |
+| GitHub templates and remote setup | `docs/github-setup.md` |
 | Optional MCP capabilities and safety | `docs/optional-mcp.md` |
 | Completion gate | `CHECKPOINTS.md` |
 | Current session state | `progress/current.md` |

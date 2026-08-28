@@ -11,3 +11,7 @@ Added type-aware ESLint with a whole-file length limit and Fallow analysis for d
 ## 2026-08-27 — TASK-005
 
 Added isolated contract tests that prove the repository's ESLint and Fallow policies reject oversized, overly complex, and duplicated code while accepting clean fixtures. Split product and harness test commands, retained both in the standard gate, and made duplication above 5% blocking. Review finding and resolution are recorded against [GitHub Issue #3](https://github.com/kilinkis/harness-bootstrap/issues/3).
+
+## 2026-08-28 — TASK-006
+
+Added a concise, tool-neutral delivery workflow from tracked work item through protected-branch merge. A runbook keeps normal ticket prompts short, while GitHub-specific issue and pull request templates and remote ruleset guidance provide the platform integration. Independent review approved the change with no findings; work is tracked in [GitHub Issue #5](https://github.com/kilinkis/harness-bootstrap/issues/5).

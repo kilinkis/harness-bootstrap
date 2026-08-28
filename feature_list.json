@@ -55,5 +55,20 @@
       "The standard harness verification command runs both product tests and harness contract tests.",
       "Verification documentation explains the two test layers."
     ]
+  },
+  {
+    "id": "TASK-006",
+    "title": "Document and template the delivery workflow",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/5",
+    "acceptance_criteria": [
+      "AGENTS.md contains concise, tool-neutral delivery rules.",
+      "docs/run-a-ticket.md explains how to execute a ticket through the harness without repeating long prompts.",
+      "A GitHub feature issue form captures the objective, acceptance criteria, verification, and context or risks.",
+      "A pull request template captures the linked issue, acceptance criteria, harness reports, verification evidence, and risks.",
+      "docs/github-setup.md documents remote ruleset and required-check setup that is not carried by a clone.",
+      "The README and completion checkpoints link the workflow from the normal entry points.",
+      "The full harness verification passes."
+    ]
   }
 ]
