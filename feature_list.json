@@ -136,5 +136,22 @@
       "Verification documentation explains focused, fast, and full feedback levels.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-011",
+    "title": "Document optional parallel worktrees",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/15",
+    "acceptance_criteria": [
+      "A guide explains when parallel worktrees are appropriate and when work must remain sequential.",
+      "The guide requires one ticket, branch, worktree, and agent per workstream.",
+      "The guide uses the issue tracker as the cross-worktree claim mechanism.",
+      "The guide provides safe create, inspect, update, and remove commands.",
+      "The guide explains queue and progress conflicts when branches converge.",
+      "Each worktree retains the standard implementation, review, verification, and pull request gates.",
+      "README.md and AGENTS.md link the guide.",
+      "The default one-active-feature rule and validator remain unchanged.",
+      "The full harness verification passes."
+    ]
   }
 ]

@@ -18,6 +18,7 @@ The structure is intentionally small. A useful harness should provide the constr
 | Definition of done | `CHECKPOINTS.md` and `docs/verification.md` |
 | Auditable delivery | Work item → branch → pull request → CI → merge |
 | Product-specific exit gates | `docs/production-readiness.md` |
+| Optional parallel scaling | `docs/parallel-worktrees.md` |
 | Project knowledge on demand | `AGENTS.md` and `docs/` |
 | Minimal, focused context | Short role files and targeted documents |
 
@@ -32,6 +33,8 @@ pnpm start -- list
 `verify.sh` validates the queue and runs the real test suite. It should be green before and after every feature.
 
 For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
+
+The default workflow has one active feature. Advanced adopters can use [parallel worktrees](docs/parallel-worktrees.md) for independent tickets. Each worktree still runs the complete harness lifecycle and full merge gate.
 
 ## Adopt this structure in another project
 
