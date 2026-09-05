@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@12.3.4",
   "scripts": {
     "check:harness-state": "tsx scripts/check-harness-state.ts",
     "check": "tsc --noEmit",
