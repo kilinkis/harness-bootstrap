@@ -171,5 +171,24 @@
       "The documentation states that template checks do not prove an adopted project is deployable.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-013",
+    "title": "Add a read-only TypeScript adoption audit",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/31",
+    "acceptance_criteria": [
+      "A TypeScript interface audits a repository root and returns discovered targets, stable findings, and a proposed inventory.",
+      "The audit discovers the root package and packages declared by pnpm-workspace.yaml.",
+      "Each target reports its path, package name, TypeScript configuration, frontend indicators, and relevant scripts.",
+      "The audit reports missing target inventory, missing project-gate integration, unresolved workspace patterns, and missing commands that need a decision.",
+      "The audit does not guess whether a discovered target is deployable.",
+      "A CLI prints a readable report and supports machine-readable JSON.",
+      "The audit performs no repository writes.",
+      "Contract tests use temporary fixtures for a single package, a frontend monorepo, malformed input, and unresolved workspace patterns.",
+      "The adoption checklist and verification documentation explain how to use and interpret the audit.",
+      "The audit is not part of the standard gate until an adopter approves and configures its proposed inventory.",
+      "The full harness verification passes."
+    ]
   }
 ]

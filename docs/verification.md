@@ -28,6 +28,18 @@ The fast command is not a completion or merge gate.
 
 The commands in this repository verify the sample task CLI. They do not prove that an adopted project can build or deploy.
 
+Run the read-only adoption audit before you define the project gate:
+
+```bash
+pnpm run audit:adoption
+```
+
+The audit discovers pnpm workspace targets and TypeScript configuration. It reports frontend indicators and relevant package scripts. Its proposed inventory is a review aid. It does not decide whether a target is deployable. It does not change the target repository.
+
+Use `pnpm --silent run audit:adoption --json` to emit JSON without pnpm command headers.
+
+Do not put the audit in the standard gate before you approve and configure the inventory. The audit reports incomplete adoption decisions. It does not replace the commands that enforce those decisions.
+
 During adoption, define a project-owned command such as `verify:project`. It must cover every target recorded in `ADOPTION_CHECKLIST.md`. Include all required workspace type checks, tests, and production builds. Compose it into the full `verify` command, not only into an optional workflow.
 
 Do not assume that a root `tsc --noEmit` command covers a monorepo. Select TypeScript project references, workspace scripts, Turborepo, Nx, or another existing project mechanism based on the repository's build graph.

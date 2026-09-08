@@ -4,6 +4,22 @@
 
 The bootstrap gate verifies the sample project only. It does not prove that another repository can build or deploy. Complete this checklist when you copy or adapt the harness.
 
+## Start with the adoption audit
+
+Run the read-only audit from the target repository after you copy the harness scripts:
+
+```bash
+pnpm run audit:adoption
+```
+
+The audit discovers the root package and packages in `pnpm-workspace.yaml`. It reports TypeScript configuration, frontend indicators, relevant scripts, and unresolved decisions. It also proposes the content for `harness.targets.json`.
+
+Use `pnpm --silent run audit:adoption --json` when another tool must parse the result.
+
+Review the proposal. Do not treat a detected script as an approved gate. The audit does not decide which targets are deployable. It does not write files. It exits with a non-zero status while findings remain.
+
+Do not add this audit to the standard gate during discovery. First approve the target inventory. Then configure the project gate and its contract tests.
+
 ## 1. Inventory verification targets
 
 List every deployable application. Also list each workspace that can affect a deployable application.
