@@ -20,7 +20,7 @@ Run the inner feedback loop before review:
 pnpm run feedback
 ```
 
-This command validates harness state. It then checks types, lint rules, changed-file Fallow findings, and product behavior. It omits harness contract tests to reduce feedback time.
+This command validates harness state and the approved target inventory. It then checks types, lint rules, changed-file Fallow findings, and product behavior. It omits harness contract tests to reduce feedback time.
 
 The fast command is not a completion or merge gate.
 
@@ -37,6 +37,8 @@ pnpm run audit:adoption
 The audit discovers pnpm workspace targets and TypeScript configuration. It reports frontend indicators and relevant package scripts. Its proposed inventory is a review aid. It does not decide whether a target is deployable. It does not change the target repository.
 
 Use `pnpm --silent run audit:adoption --json` to emit JSON without pnpm command headers.
+
+Approve the inventory with the [target inventory guide](target-inventory.md). The audit reports malformed, missing, stale, and incomplete entries. It validates command declarations but does not execute them.
 
 Do not put the audit in the standard gate before you approve and configure the inventory. The audit reports incomplete adoption decisions. It does not replace the commands that enforce those decisions.
 
@@ -71,11 +73,12 @@ The validator checks the presence and structure of evidence. It cannot prove tha
 
 After harness-state validation, the commands run complementary checks:
 
-1. `pnpm run check` performs TypeScript type checking.
-2. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
-3. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
-4. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
-5. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
+1. `pnpm run check:targets` validates the approved target inventory against package discovery.
+2. `pnpm run check` performs TypeScript type checking.
+3. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
+4. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
+5. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
+6. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
 
 Use `pnpm run analyze` when you need a full-codebase Fallow report rather than the changed-file merge gate. Its thresholds and CLI entry point are versioned in `.fallowrc.json`; duplication above 5% fails the analysis. The CRAP threshold is calibrated above Fallow's static estimates because this small Node test setup does not emit Istanbul coverage; cyclomatic, cognitive, and function-size limits remain independently enforced.
 

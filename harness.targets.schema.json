@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kilinkis/harness-bootstrap/harness.targets.schema.json",
+  "title": "Harness target inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "targets"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "targets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/target" }
+    }
+  },
+  "$defs": {
+    "decision": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["command"],
+          "properties": { "command": { "type": "string", "pattern": "\\S" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["notApplicable"],
+          "properties": { "notApplicable": { "type": "string", "pattern": "\\S" } }
+        }
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "packageName", "deployable", "typecheck", "test", "build"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?:\\.|(?!\\.\\.?$)(?!\\.\\.?/)(?!.*(?:/\\.\\.?)(?:/|$))[^/\\\\]+(?:/[^/\\\\]+)*)$"
+        },
+        "packageName": { "type": ["string", "null"] },
+        "deployable": { "type": "boolean" },
+        "typecheck": { "$ref": "#/$defs/decision" },
+        "test": { "$ref": "#/$defs/decision" },
+        "build": { "$ref": "#/$defs/decision" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "deployable": { "const": true } },
+            "required": ["deployable"]
+          },
+          "then": {
+            "properties": {
+              "build": {
+                "type": "object",
+                "required": ["command"]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

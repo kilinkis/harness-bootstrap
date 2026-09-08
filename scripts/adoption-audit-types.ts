@@ -37,6 +37,24 @@ export type ProposedDecision =
   | { command: string }
   | { reviewRequired: string };
 
+export type InventoryDecision =
+  | { command: string }
+  | { notApplicable: string };
+
+export interface InventoryTarget {
+  path: string;
+  packageName: string | null;
+  deployable: boolean;
+  typecheck: InventoryDecision;
+  test: InventoryDecision;
+  build: InventoryDecision;
+}
+
+export interface TargetInventory {
+  version: 1;
+  targets: InventoryTarget[];
+}
+
 export interface AdoptionAuditResult {
   targets: AdoptionTarget[];
   findings: AdoptionFinding[];

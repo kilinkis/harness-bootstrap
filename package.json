@@ -7,6 +7,7 @@
   "scripts": {
     "audit:adoption": "tsx scripts/audit-adoption.ts",
     "check:harness-state": "tsx scripts/check-harness-state.ts",
+    "check:targets": "tsx scripts/check-target-inventory.ts",
     "check": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "analyze": "fallow",
@@ -14,7 +15,7 @@
     "test:product": "tsx --test tests/*.test.ts",
     "test:harness": "tsx --test tests/harness/*.test.ts",
     "test": "pnpm run test:product && pnpm run test:harness",
-    "feedback": "pnpm run check:harness-state && pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm run test:product",
+    "feedback": "pnpm run check:harness-state && pnpm run check:targets && pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm run test:product",
     "verify": "pnpm run feedback && pnpm run test:harness",
     "start": "tsx src/cli.ts"
   },
