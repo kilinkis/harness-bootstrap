@@ -12,8 +12,8 @@ The agent should derive the role sequence, required files, and evidence from `AG
 2. **Start clean.** Update the default branch, run `./scripts/verify.sh`, confirm no feature is active, and add or select the matching entry in `feature_list.json`.
 3. **Create a branch.** Use a traceable name such as `feature/TASK-006-delivery-workflow`. Never develop directly on the protected branch.
 4. **Plan.** The leader marks the feature `in_progress` and writes the plan and handoff to `progress/current.md`.
-5. **Implement.** The implementer changes only the accepted scope, verifies it, writes `progress/impl_<feature-id>.md`, and moves the feature to `in_review`.
-6. **Review.** A reviewer independently checks the diff, acceptance criteria, tests, and risks. Findings go in `progress/review_<feature-id>.md`; the reviewer does not edit the implementation.
+5. **Implement.** The implementer changes only the accepted scope, verifies it, stages the intended implementation snapshot, records its digest, writes `progress/impl_<feature-id>.md`, and moves the feature to `in_review`.
+6. **Review.** A reviewer independently checks the staged diff, acceptance criteria, tests, and risks. The reviewer recomputes the digest. Findings and the digest go in `progress/review_<feature-id>.md`; the reviewer does not edit the implementation.
 7. **Complete the harness gate.** Resolve blocking findings, run `./scripts/verify.sh` on the final state, satisfy `CHECKPOINTS.md`, and record the outcome. A feature marked `done` is locally ready for delivery; it is not necessarily merged yet.
 8. **Open the change request.** Link the work item, summarize the change, name the two reports, paste exact verification results, and disclose remaining risks.
 9. **Merge.** Wait for required remote checks, merge through the platform, and let the closing keyword close the work item. Confirm the default branch is green.

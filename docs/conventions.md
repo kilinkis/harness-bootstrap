@@ -5,8 +5,10 @@
 - Use explicit TypeScript types for public functions and domain data structures.
 - Keep CLI output human-readable and errors on stderr.
 - Test observable behavior, including failure modes.
-- Name reports with the feature ID: `impl_TASK-003.md`, `review_TASK-003.md`.
-- Do not edit a reviewer report after it is written; add a follow-up report if circumstances change.
+- Name implementation reports with the feature ID: `impl_TASK-003.md`.
+- Put change-request reviews in numbered files such as `review_TASK-003_round1.md`.
+- Reserve `review_TASK-003.md` for the final approved report.
+- Do not edit a reviewer report after it is written. Add another numbered round when circumstances change.
 
 ## Technical prose
 

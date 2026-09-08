@@ -51,3 +51,7 @@ Added a versioned target-inventory contract. The standard fast gate validates it
 ## 2026-09-08 — TASK-015
 
 Added a bounded repair protocol for verification failures. One cycle permits at most three evidence-driven repair attempts. It defines immediate stops, blocked-state evidence, and compact reporting. Review found and closed a loophole that allowed new errors to reset the budget. Work is tracked in [GitHub Issue #35](https://github.com/kilinkis/harness-bootstrap/issues/35).
+
+## 2026-09-08 — TASK-016
+
+Added a deterministic digest that binds final review approval to the staged implementation snapshot. The standard gate rejects missing, malformed, or stale bindings. Numbered review rounds preserve change requests, while the canonical report records final approval. Review found and resolved an ambiguity between immutable reports and canonical approval checks. Work is tracked in [GitHub Issue #37](https://github.com/kilinkis/harness-bootstrap/issues/37).
