@@ -35,8 +35,9 @@ export async function validateTargetInventory(
   return findings.sort(compareFindings);
 }
 
-async function collectTargetInventoryAudit(root: string): Promise<{
+export async function collectTargetInventoryAudit(root: string): Promise<{
   targets: AdoptionTarget[];
+  inventory: TargetInventory | null;
   findings: AdoptionFinding[];
 }> {
   const findings: AdoptionFinding[] = [];
@@ -51,7 +52,7 @@ async function collectTargetInventoryAudit(root: string): Promise<{
     );
   }
   addInventoryFindings(targets, inventory, findings);
-  return { targets, findings };
+  return { targets, inventory, findings };
 }
 
 async function addRepositoryFindings(

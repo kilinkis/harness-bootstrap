@@ -237,7 +237,7 @@ function detectedScript(
   return command ? { name, command } : null;
 }
 
-function stringRecord(value: unknown): Record<string, string> {
+export function stringRecord(value: unknown): Record<string, string> {
   if (!isRecord(value)) return {};
   return Object.fromEntries(
     Object.entries(value).filter((entry): entry is [string, string] =>
@@ -246,7 +246,7 @@ function stringRecord(value: unknown): Record<string, string> {
   );
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 

@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-016 added content-bound review approval. The standard gate compares the final review report with a deterministic digest of the staged implementation. Feature state and progress evidence are outside the digest. The review found and resolved report-round ambiguity. Final review approved digest `sha256:4e8044a687890d22a45b2f8ffa72798057abf2e32f843509b4b28f6eec2a98d8`.
+TASK-017 added optional workspace impact analysis. It maps Git changes to direct targets and transitive consumers. It reports approved focused commands and uncertainty, but it always requires the full merge gate. Review found and resolved incomplete-inventory and staged-rename gaps. Final review approved digest `sha256:1838a9749a7ae89bb4a14385fd9dee87018ca0b7a17ff589a4b8bb457390379e`.
