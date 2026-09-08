@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-012 added a root harness-adoption checklist. It requires target and workspace coverage, exact production builds, CI and deployment parity, and deliberate negative tests. The README, agent guide, verification guide, production-readiness guide, pull request template, and harness contracts reinforce the adoption boundary. Review approved the change with no unresolved findings.
+TASK-013 added a read-only TypeScript and pnpm adoption audit. It discovers targets and relevant commands. It reports uncertainty instead of guessing deployment status. Seven contracts cover representative repositories, malformed input, repository boundaries, command errors, and read-only behavior. The first review findings were resolved. The final review approved the change.

@@ -39,3 +39,7 @@ Documented an optional worktree model for independent parallel tickets. Each wor
 ## 2026-09-08 — TASK-012
 
 Added an adoption checklist that prevents the bootstrap's passing demo gate from being mistaken for project build evidence. The checklist inventories deployable targets and relevant workspaces. It requires exact production builds, a project verification extension, deployment parity, required remote checks, and deliberate failing runs. Harness contracts keep the checklist visible from primary entry points. Review approved the change with no findings; work is tracked in [GitHub Issue #29](https://github.com/kilinkis/harness-bootstrap/issues/29).
+
+## 2026-09-08 — TASK-013
+
+Added a read-only TypeScript and pnpm adoption audit. It discovers the root package and workspace targets. It reports TypeScript configuration, frontend indicators, relevant scripts, and unresolved decisions. It proposes a target inventory without deciding deployment status. Review found and resolved repository-boundary and command-error gaps. Work is tracked in [GitHub Issue #31](https://github.com/kilinkis/harness-bootstrap/issues/31).

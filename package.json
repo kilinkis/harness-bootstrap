@@ -5,6 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@10.34.5",
   "scripts": {
+    "audit:adoption": "tsx scripts/audit-adoption.ts",
     "check:harness-state": "tsx scripts/check-harness-state.ts",
     "check": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
