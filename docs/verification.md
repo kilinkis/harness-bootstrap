@@ -87,3 +87,5 @@ For a feature, add the smallest focused command that demonstrates its behavior. 
 Harness-state and Fallow contract fixtures are created under the operating system's temporary directory. The type-aware ESLint fixture is created within the test tree so TypeScript's project service can resolve it. Every fixture is removed in a `finally` block, so intentionally invalid state never remains in the repository or enters the normal pre-test analysis.
 
 Record exact commands and exit results in the implementation report. A passing command run before a change is not evidence for the final state.
+
+Use the [bounded repair loop](repair-loop.md) when a deterministic command fails. Record each repair attempt in the implementation report. Stop when the repair cycle uses its three-attempt budget.
