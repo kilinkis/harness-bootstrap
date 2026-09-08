@@ -9,6 +9,8 @@ This repository is a harness: follow the system before changing the product.
 3. Read `docs/architecture.md`, `docs/conventions.md`, and the selected feature's acceptance criteria.
 4. Read the relevant role definition in `agents/` before taking that role.
 
+When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.md` before you treat the gate as production-ready.
+
 ## Operating rules
 
 - Work on exactly one feature at a time. Do not start a second active item.
@@ -35,6 +37,7 @@ This repository is a harness: follow the system before changing the product.
 | Style and error-handling rules | `docs/conventions.md` |
 | Commands and evidence required | `docs/verification.md` |
 | Ticket-to-merge workflow | `docs/run-a-ticket.md` |
+| Harness adoption and build coverage | `ADOPTION_CHECKLIST.md` |
 | Optional parallel worktrees | `docs/parallel-worktrees.md` |
 | Production-readiness adoption | `docs/production-readiness.md` |
 | GitHub templates and remote setup | `docs/github-setup.md` |

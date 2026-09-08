@@ -2,6 +2,8 @@
 
 A reusable project template for AI-assisted software work: small, verifiable changes, clear handoffs, and an audit trail that survives the chat session.
 
+> **Adopting this harness?** Complete the [Harness Adoption Checklist](ADOPTION_CHECKLIST.md) before you trust a green gate. The bootstrap checks do not prove that your applications can build or deploy.
+
 The demo application is deliberately small—a local task CLI. The point is the structure around it: explicit work queues, durable progress records, independent review, and executable verification. Share this repository with an AI agent as a reference when you want it to establish the same working structure in an existing project.
 
 ## Why this exists
@@ -18,6 +20,7 @@ The structure is intentionally small. A useful harness should provide the constr
 | Definition of done | `CHECKPOINTS.md` and `docs/verification.md` |
 | Auditable delivery | Work item → branch → pull request → CI → merge |
 | Product-specific exit gates | `docs/production-readiness.md` |
+| Adoption and build coverage | `ADOPTION_CHECKLIST.md` |
 | Optional parallel scaling | `docs/parallel-worktrees.md` |
 | Project knowledge on demand | `AGENTS.md` and `docs/` |
 | Minimal, focused context | Short role files and targeted documents |
@@ -43,6 +46,8 @@ Give an AI coding agent this repository's URL alongside the following prompt:
 > Review this repository as a reference harness, then adapt its structure to the current project. Preserve the project's existing stack and conventions. Add only the relevant agent instructions, work queue, progress records, verification gate, and role boundaries; do not copy the demo task CLI. Keep the harness small, and load project context only when a role needs it.
 
 The agent should first inspect the current project's existing instructions, test commands, and architecture. Treat this repository as a pattern to adapt, not a framework to install wholesale.
+
+Complete the [Harness Adoption Checklist](ADOPTION_CHECKLIST.md) before you declare the adapted gate ready. Inventory every deployable target and relevant workspace. Run each production build in the full gate and prove that a broken build makes the gate fail.
 
 Use the [production-readiness checklist](docs/production-readiness.md) to identify the last-mile gates that apply to the target product. Record why a gate applies, how it is measured, and how CI enforces it. Do not enable every listed gate by default.
 
@@ -73,6 +78,7 @@ Each role has a narrow responsibility: the leader plans and coordinates, the imp
 ```text
 .
 ├── AGENTS.md                 # Entry point and navigation for all agents
+├── ADOPTION_CHECKLIST.md     # Required target, build, and deployment audit
 ├── CHECKPOINTS.md            # Non-negotiable completion criteria
 ├── feature_list.json         # Small, machine-readable work queue
 ├── docs/                     # Architecture, workflow, verification, optional MCPs
