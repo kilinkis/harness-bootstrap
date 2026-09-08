@@ -284,5 +284,24 @@
       "Verification guidance defines trivial changes narrowly and records how exceptions remain accountable.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-019",
+    "title": "Record workflow and agent usage metrics",
+    "status": "done",
+    "issue": "feature_list.json#TASK-019",
+    "acceptance_criteria": [
+      "A versioned event schema records append-only workflow metrics as JSON Lines.",
+      "The default local metrics file is ignored by Git and its path can be overridden for CI artifact collection.",
+      "Gate events record the gate name, outcome, start time, and wall time without storing command arguments or source content.",
+      "The normal fast, documentation-only, and full verification entry points record gate events automatically.",
+      "An agent-run command records provider, model, input tokens, output tokens, estimated cost, and wall time when those values are available.",
+      "Optional token and cost fields are omitted when unavailable and all supplied numeric values are validated as finite and non-negative.",
+      "A summary command reports gate counts, failures, wall time, agent token totals, and estimated cost from the event log.",
+      "Metrics collection preserves the wrapped command exit status and cannot turn a failing gate into a pass.",
+      "Documentation defines privacy limits, estimated-cost semantics, retention, CI export, and the limits of local evidence.",
+      "Temporary-fixture contracts cover event validation, append behavior, summaries, gate success and failure, and ignored default storage.",
+      "The full harness verification passes."
+    ]
   }
 ]

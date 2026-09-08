@@ -76,7 +76,7 @@ Run the full harness gate before completion and merge:
 ./scripts/verify.sh
 ```
 
-The shell gate runs `pnpm run verify`. The full command composes `pnpm run feedback` with `pnpm run test:harness`. CI uses the same shell gate.
+The shell gate runs `pnpm run verify`. This public command records one full-gate event and invokes `verify:raw`. The raw command composes `feedback:raw` with `pnpm run test:harness`. It does not invoke the public fast wrapper, so one full-gate run does not create a second fast-gate event. CI uses the same shell gate.
 
 The feedback command first runs `pnpm run check:harness-state`. This command validates the feature queue and its durable evidence:
 
@@ -111,5 +111,7 @@ For a feature, add the smallest focused command that demonstrates its behavior. 
 Harness-state and Fallow contract fixtures are created under the operating system's temporary directory. The type-aware ESLint fixture is created within the test tree so TypeScript's project service can resolve it. Every fixture is removed in a `finally` block, so intentionally invalid state never remains in the repository or enters the normal pre-test analysis.
 
 Record exact commands and exit results in the implementation report. A passing command run before a change is not evidence for the final state.
+
+The public fast, documentation-only, and full entry points record duration and outcome metadata. See [workflow metrics](workflow-metrics.md) for storage, privacy, CI export, agent usage, summaries, and evidence limits.
 
 Use the [bounded repair loop](repair-loop.md) when a deterministic command fails. Record each repair attempt in the implementation report. Stop when the repair cycle uses its three-attempt budget.

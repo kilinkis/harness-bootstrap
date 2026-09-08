@@ -14,7 +14,11 @@ void test("the full gate contains every fast feedback check", async () => {
     await readRepositoryFile("package.json"),
   ) as PackageManifest;
 
-  assert.deepEqual(manifest.scripts?.feedback?.split(" && "), [
+  assert.equal(
+    manifest.scripts?.feedback,
+    "tsx scripts/record-gate.ts fast -- pnpm run feedback:raw",
+  );
+  assert.deepEqual(manifest.scripts?.["feedback:raw"]?.split(" && "), [
     "pnpm run check:harness-state",
     "pnpm run check:review-binding",
     "pnpm run check:targets",
@@ -23,11 +27,19 @@ void test("the full gate contains every fast feedback check", async () => {
     "pnpm run analyze:changes",
     "pnpm run test:product",
   ]);
-  assert.deepEqual(manifest.scripts?.verify?.split(" && "), [
-    "pnpm run feedback",
+  assert.equal(
+    manifest.scripts?.verify,
+    "tsx scripts/record-gate.ts full -- pnpm run verify:raw",
+  );
+  assert.deepEqual(manifest.scripts?.["verify:raw"]?.split(" && "), [
+    "pnpm run feedback:raw",
     "pnpm run test:harness",
   ]);
-  assert.deepEqual(manifest.scripts?.["verify:docs"]?.split(" && "), [
+  assert.equal(
+    manifest.scripts?.["verify:docs"],
+    "tsx scripts/record-gate.ts docs -- pnpm run verify:docs:raw",
+  );
+  assert.deepEqual(manifest.scripts?.["verify:docs:raw"]?.split(" && "), [
     "pnpm run check:harness-state",
     "pnpm run check:review-binding",
     "pnpm run check:targets",
@@ -37,6 +49,7 @@ void test("the full gate contains every fast feedback check", async () => {
     "tests/harness/adoption-guidance.test.ts",
     "tests/harness/impact-analysis.test.ts",
     "tests/harness/local-verification.test.ts",
+    "tests/harness/metrics-guidance.test.ts",
     "tests/harness/repair-loop.test.ts",
     "tests/harness/verification-loop.test.ts",
   ]);
@@ -58,7 +71,7 @@ void test("the local selector remains separate from the full gate", async () => 
   ) as PackageManifest;
 
   assert.equal(manifest.scripts?.["verify:local"], "tsx scripts/local-verification.ts");
-  assert.equal(manifest.scripts?.verify, "pnpm run feedback && pnpm run test:harness");
+  assert.equal(manifest.scripts?.verify, "tsx scripts/record-gate.ts full -- pnpm run verify:raw");
 });
 
 async function readRepositoryFile(relativePath: string): Promise<string> {

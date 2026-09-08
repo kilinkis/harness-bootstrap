@@ -63,3 +63,7 @@ Added optional workspace impact analysis for focused implementation checks. It m
 ## 2026-09-08 — TASK-018
 
 Added an automatically guarded documentation-only local gate. It derives changed paths from Git, refuses the reduced path for non-documentation changes, and runs documentation-facing harness contracts. The full gate remains mandatory in CI and before merge. Added an explicit skipped queue state with a required reason and recorded TASK-003 as skipped. Review found and resolved an omitted impact-analysis documentation contract.
+
+## 2026-09-08 — TASK-019
+
+Added a versioned, append-only JSONL log for workflow and agent usage metrics. Fast, documentation-only, and full verification entry points record outcome and wall time automatically. Agent-run events accept provider, model, input and output tokens, estimated cost, and wall time when available. The default log is ignored by Git and can be redirected for CI artifacts. Review found and resolved cross-process append corruption, unsafe numeric aggregation, and schema/runtime parity gaps.

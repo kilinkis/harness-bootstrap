@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-018 added an automatically guarded documentation-only local gate. Non-documentation changes are refused, while CI and merge still require the full gate. It also added an explicit skipped queue state and recorded TASK-003 with a reason. Review found and resolved one missing documentation-facing contract. Final review approved digest `sha256:792769f432aa8b1cb996f461272864bd59a2cfeedfab6bce5c6471849a8f104e`.
+TASK-019 added privacy-bounded workflow and agent usage metrics. Verification entry points record gate duration and outcome automatically. Agent runs can record provider, model, input and output tokens, estimated cost, and wall time when available. Review found and resolved concurrent append corruption, unsafe numeric bounds, and schema/runtime parity. Final review approved digest `sha256:335a35198d4a53af04d781b36ef6b0f6b9fb861a27c1914aa226d1b875b6d07c`.

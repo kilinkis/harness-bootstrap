@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kilinkis/harness-bootstrap/workflow-metrics.schema.json",
+  "title": "Harness workflow metric event version 1",
+  "oneOf": [
+    { "$ref": "#/$defs/gate" },
+    { "$ref": "#/$defs/agentRun" }
+  ],
+  "$defs": {
+    "common": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$"
+        }
+      },
+      "required": ["schemaVersion", "startedAt"]
+    },
+    "gate": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "properties": {
+            "eventType": { "const": "gate" },
+            "gate": { "enum": ["fast", "docs", "full"] },
+            "outcome": { "enum": ["passed", "failed"] },
+            "wallTimeMs": { "type": "number", "minimum": 0, "maximum": 9007199254740991 },
+            "exitCode": { "type": "integer", "minimum": 0, "maximum": 255 }
+          },
+          "required": ["eventType", "gate", "outcome", "wallTimeMs", "exitCode"],
+          "oneOf": [
+            {
+              "properties": {
+                "outcome": { "const": "passed" },
+                "exitCode": { "const": 0 }
+              }
+            },
+            {
+              "properties": {
+                "outcome": { "const": "failed" },
+                "exitCode": { "minimum": 1, "maximum": 255 }
+              }
+            }
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "agentRun": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "properties": {
+            "eventType": { "const": "agent_run" },
+            "provider": { "type": "string", "pattern": "\\S", "maxLength": 256 },
+            "model": { "type": "string", "pattern": "\\S", "maxLength": 256 },
+            "inputTokens": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            "outputTokens": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            "estimatedCostUsd": { "type": "number", "minimum": 0, "maximum": 9007199254740991 },
+            "wallTimeMs": { "type": "number", "minimum": 0, "maximum": 9007199254740991 }
+          },
+          "required": ["eventType"]
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}
