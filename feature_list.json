@@ -208,5 +208,24 @@
       "The adoption checklist and verification guide explain approval and maintenance.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-015",
+    "title": "Define a bounded agent repair loop",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/35",
+    "acceptance_criteria": [
+      "A repair-loop guide defines observe, diagnose, change, and verify steps.",
+      "The default budget permits at most three repair attempts in one repair cycle.",
+      "An attempt needs new evidence or a changed hypothesis before another code change.",
+      "The protocol forbids rerunning an unchanged deterministic command without a reason.",
+      "The protocol defines immediate stop conditions for missing authority, secrets, destructive actions, and ambiguous acceptance criteria.",
+      "Exhausted work remains active and is reported as blocked with evidence.",
+      "Failed attempts are recorded in the implementation report with command, failure, diagnosis, and result.",
+      "AGENTS.md, the implementer role, and the ticket runbook link the protocol without duplicating it.",
+      "A harness contract keeps the budget, stop conditions, and entry-point links present.",
+      "The documentation states that repository checks cannot detect unreported attempts.",
+      "The full harness verification passes."
+    ]
   }
 ]

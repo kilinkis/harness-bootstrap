@@ -18,6 +18,8 @@ The agent should derive the role sequence, required files, and evidence from `AG
 8. **Open the change request.** Link the work item, summarize the change, name the two reports, paste exact verification results, and disclose remaining risks.
 9. **Merge.** Wait for required remote checks, merge through the platform, and let the closing keyword close the work item. Confirm the default branch is green.
 
+If verification fails during implementation, use the [bounded repair loop](repair-loop.md). Do not repeat speculative edits or reset its cycle budget.
+
 ```mermaid
 flowchart LR
     issue[Work item] --> branch[Feature branch]

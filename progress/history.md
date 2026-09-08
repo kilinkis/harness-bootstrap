@@ -47,3 +47,7 @@ Added a read-only TypeScript and pnpm adoption audit. It discovers the root pack
 ## 2026-09-08 — TASK-014
 
 Added a versioned target-inventory contract. The standard fast gate validates it against discovered packages. The contract records deployment, type-check, test, and production-build decisions without executing commands. Review found and resolved missing gate integration and schema-parity gaps. Work is tracked in [GitHub Issue #33](https://github.com/kilinkis/harness-bootstrap/issues/33).
+
+## 2026-09-08 — TASK-015
+
+Added a bounded repair protocol for verification failures. One cycle permits at most three evidence-driven repair attempts. It defines immediate stops, blocked-state evidence, and compact reporting. Review found and closed a loophole that allowed new errors to reset the budget. Work is tracked in [GitHub Issue #35](https://github.com/kilinkis/harness-bootstrap/issues/35).

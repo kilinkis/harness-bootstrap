@@ -19,6 +19,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Do not mark work done based on intent. Run verification and record its output.
 - Preserve unrelated user changes. Never rewrite history or delete data to make a check pass.
 - A reviewer reports findings but does not edit implementation files.
+- Follow `docs/repair-loop.md` after a verification failure. Stop after its repair budget is exhausted.
 - Follow the technical prose rules in `docs/conventions.md` for durable repository text.
 
 ## Delivery workflow
@@ -36,6 +37,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 | System design and boundaries | `docs/architecture.md` |
 | Style and error-handling rules | `docs/conventions.md` |
 | Commands and evidence required | `docs/verification.md` |
+| Failed verification repair loop | `docs/repair-loop.md` |
 | Ticket-to-merge workflow | `docs/run-a-ticket.md` |
 | Harness adoption and build coverage | `ADOPTION_CHECKLIST.md` |
 | Optional parallel worktrees | `docs/parallel-worktrees.md` |
