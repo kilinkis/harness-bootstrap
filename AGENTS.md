@@ -40,6 +40,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 | Harness adoption and build coverage | `ADOPTION_CHECKLIST.md` |
 | Optional parallel worktrees | `docs/parallel-worktrees.md` |
 | Production-readiness adoption | `docs/production-readiness.md` |
+| Approved verification targets | `docs/target-inventory.md` |
 | GitHub templates and remote setup | `docs/github-setup.md` |
 | Optional MCP capabilities and safety | `docs/optional-mcp.md` |
 | Completion gate | `CHECKPOINTS.md` |

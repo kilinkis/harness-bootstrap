@@ -190,5 +190,23 @@
       "The audit is not part of the standard gate until an adopter approves and configures its proposed inventory.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-014",
+    "title": "Validate an approved harness target inventory",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/33",
+    "acceptance_criteria": [
+      "harness.targets.json has a versioned and documented schema.",
+      "Each target records its path, deployment decision, type-check decision, test decision, and production-build decision.",
+      "A decision contains an exact command or a non-applicable reason.",
+      "Deployable targets cannot mark the production build as not applicable.",
+      "The adoption audit reads the approved inventory and reports malformed, missing, stale, or incomplete entries with stable finding codes.",
+      "The audit reports no inventory or deployment-decision finding for a valid declared target.",
+      "The bootstrap contains a valid inventory for its sample CLI.",
+      "Temporary-fixture contracts cover valid, malformed, missing-target, stale-target, and invalid deployable-build cases.",
+      "The adoption checklist and verification guide explain approval and maintenance.",
+      "The full harness verification passes."
+    ]
   }
 ]

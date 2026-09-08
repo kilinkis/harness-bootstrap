@@ -1,0 +1,20 @@
+{
+  "$schema": "./harness.targets.schema.json",
+  "version": 1,
+  "targets": [
+    {
+      "path": ".",
+      "packageName": "harness-bootstrap",
+      "deployable": false,
+      "typecheck": {
+        "command": "pnpm run check"
+      },
+      "test": {
+        "command": "pnpm run test:product"
+      },
+      "build": {
+        "notApplicable": "The sample command-line application has no production build."
+      }
+    }
+  ]
+}

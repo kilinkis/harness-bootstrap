@@ -43,3 +43,7 @@ Added an adoption checklist that prevents the bootstrap's passing demo gate from
 ## 2026-09-08 — TASK-013
 
 Added a read-only TypeScript and pnpm adoption audit. It discovers the root package and workspace targets. It reports TypeScript configuration, frontend indicators, relevant scripts, and unresolved decisions. It proposes a target inventory without deciding deployment status. Review found and resolved repository-boundary and command-error gaps. Work is tracked in [GitHub Issue #31](https://github.com/kilinkis/harness-bootstrap/issues/31).
+
+## 2026-09-08 — TASK-014
+
+Added a versioned target-inventory contract. The standard fast gate validates it against discovered packages. The contract records deployment, type-check, test, and production-build decisions without executing commands. Review found and resolved missing gate integration and schema-parity gaps. Work is tracked in [GitHub Issue #33](https://github.com/kilinkis/harness-bootstrap/issues/33).

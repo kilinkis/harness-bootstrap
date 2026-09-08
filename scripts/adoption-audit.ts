@@ -6,6 +6,7 @@ import {
   readRootScripts,
 } from "./adoption-target-discovery.js";
 import { addFinding, compareFindings } from "./adoption-findings.js";
+import { readTargetInventory } from "./adoption-inventory.js";
 import type {
   AdoptionAuditResult,
   AdoptionFinding,
@@ -13,13 +14,12 @@ import type {
   DetectedScript,
   ProposedDecision,
   ProposedTarget,
+  TargetInventory,
 } from "./adoption-audit-types.js";
 
 export async function auditAdoption(root: string): Promise<AdoptionAuditResult> {
-  const findings: AdoptionFinding[] = [];
-  const targets = await discoverTargets(root, findings);
+  const { targets, findings } = await collectTargetInventoryAudit(root);
   await addRepositoryFindings(root, targets, findings);
-  for (const target of targets) addTargetFindings(target, findings);
   findings.sort(compareFindings);
   return {
     targets,
@@ -28,12 +28,21 @@ export async function auditAdoption(root: string): Promise<AdoptionAuditResult> 
   };
 }
 
-async function addRepositoryFindings(
+export async function validateTargetInventory(
   root: string,
-  targets: AdoptionTarget[],
-  findings: AdoptionFinding[],
-): Promise<void> {
-  if (!(await fileExists(resolve(root, "harness.targets.json")))) {
+): Promise<AdoptionFinding[]> {
+  const { findings } = await collectTargetInventoryAudit(root);
+  return findings.sort(compareFindings);
+}
+
+async function collectTargetInventoryAudit(root: string): Promise<{
+  targets: AdoptionTarget[];
+  findings: AdoptionFinding[];
+}> {
+  const findings: AdoptionFinding[] = [];
+  const targets = await discoverTargets(root, findings);
+  const inventory = await readTargetInventory(root, findings);
+  if (!inventory && !(await fileExists(resolve(root, "harness.targets.json")))) {
     addFinding(
       findings,
       "TARGET_INVENTORY_MISSING",
@@ -41,6 +50,15 @@ async function addRepositoryFindings(
       "harness.targets.json",
     );
   }
+  addInventoryFindings(targets, inventory, findings);
+  return { targets, findings };
+}
+
+async function addRepositoryFindings(
+  root: string,
+  targets: AdoptionTarget[],
+  findings: AdoptionFinding[],
+): Promise<void> {
   const rootScripts = await readRootScripts(root);
   if (!("verify:project" in rootScripts)) {
     addFinding(
@@ -68,16 +86,54 @@ async function addRepositoryFindings(
   }
 }
 
-function addTargetFindings(
+function addInventoryFindings(
+  targets: AdoptionTarget[],
+  inventory: TargetInventory | null,
+  findings: AdoptionFinding[],
+): void {
+  const declaredTargets = new Map(
+    inventory?.targets.map((target) => [target.path, target]) ?? [],
+  );
+  for (const target of targets) {
+    const declared = declaredTargets.get(target.path);
+    if (declared) {
+      if (declared.packageName !== target.packageName) {
+        addFinding(
+          findings,
+          "TARGET_PACKAGE_NAME_MISMATCH",
+          `${target.path}: update the declared package name`,
+          "harness.targets.json",
+        );
+      }
+      continue;
+    }
+    addFinding(
+      findings,
+      inventory ? "TARGET_NOT_DECLARED" : "DEPLOYMENT_DECISION_REQUIRED",
+      inventory
+        ? `${target.path}: add this discovered target to harness.targets.json`
+        : `${target.path}: decide if this target is deployable`,
+      target.path,
+    );
+    addMissingDecisionFindings(target, findings);
+  }
+  const discoveredPaths = new Set(targets.map(({ path }) => path));
+  for (const target of inventory?.targets ?? []) {
+    if (!discoveredPaths.has(target.path)) {
+      addFinding(
+        findings,
+        "TARGET_DECLARATION_STALE",
+        `${target.path}: remove or correct this undiscovered target`,
+        "harness.targets.json",
+      );
+    }
+  }
+}
+
+function addMissingDecisionFindings(
   target: AdoptionTarget,
   findings: AdoptionFinding[],
 ): void {
-  addFinding(
-    findings,
-    "DEPLOYMENT_DECISION_REQUIRED",
-    `${target.path}: decide if this target is deployable`,
-    target.path,
-  );
   if (target.typescriptConfigs.length > 0 && !target.scripts.typecheck) {
     addFinding(
       findings,

@@ -30,6 +30,17 @@ void test("a single frontend package produces a reviewable proposal", async () =
       },
     }),
     "tsconfig.json": "{}",
+    "harness.targets.json": JSON.stringify({
+      version: 1,
+      targets: [{
+        path: ".",
+        packageName: "single-app",
+        deployable: true,
+        typecheck: { command: "pnpm run typecheck" },
+        test: { command: "pnpm run test" },
+        build: { command: "pnpm run build" },
+      }],
+    }),
   });
 
   try {
@@ -41,10 +52,7 @@ void test("a single frontend package produces a reviewable proposal", async () =
     assert.deepEqual(result.proposedInventory.targets[0]?.build, {
       command: "pnpm run build",
     });
-    assert.deepEqual(codes(result), [
-      "DEPLOYMENT_DECISION_REQUIRED",
-      "TARGET_INVENTORY_MISSING",
-    ]);
+    assert.deepEqual(codes(result), []);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

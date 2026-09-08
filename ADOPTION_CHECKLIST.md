@@ -16,7 +16,7 @@ The audit discovers the root package and packages in `pnpm-workspace.yaml`. It r
 
 Use `pnpm --silent run audit:adoption --json` when another tool must parse the result.
 
-Review the proposal. Do not treat a detected script as an approved gate. The audit does not decide which targets are deployable. It does not write files. It exits with a non-zero status while findings remain.
+Review the proposal with the [target inventory guide](docs/target-inventory.md). Do not treat a detected script as an approved gate. The audit does not decide which targets are deployable. It does not write files. It exits with a non-zero status while findings remain.
 
 Do not add this audit to the standard gate during discovery. First approve the target inventory. Then configure the project gate and its contract tests.
 
@@ -38,6 +38,8 @@ Use one of these values for each cell:
 - `Not applicable`, with a reason.
 
 An empty cell is an incomplete adoption decision.
+
+Record the approved values in `harness.targets.json`. Keep the table when human-readable evidence or links add information that the machine-readable inventory cannot contain.
 
 ## 2. Define project verification
 
