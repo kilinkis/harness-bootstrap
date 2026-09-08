@@ -21,4 +21,4 @@ A task is a JSON object with `id`, `title`, `tag`, and `status`. IDs are UUID st
 
 ## Harness boundaries
 
-The queue defines work scope. Progress reports supply auditability. `scripts/verify.sh` is the acceptance gate; conversation claims are not verification evidence.
+The queue defines normal feature scope. Progress reports supply normal local auditability. Automatically classified low-risk documentation changes use change-request review and full CI without local queue or report evidence. `scripts/verify.sh` is the acceptance gate; conversation claims are not verification evidence.

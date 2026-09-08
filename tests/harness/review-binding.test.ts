@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import test from "node:test";
 
 import {
@@ -35,6 +35,42 @@ void test("feature state and progress evidence do not change the digest", async 
     assert.deepEqual(await validateReviewBinding(root), []);
   } finally {
     await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("no active feature does not bind a documentation change to prior approval", async () => {
+  const root = await createFixture();
+
+  try {
+    const priorDigest = await addReviewReport(root);
+    await finalizeFeature(root);
+    await mkdir(join(root, "docs"), { recursive: true });
+    await writeFile(join(root, "docs/task-cli.md"), "# Low-risk task guide\n");
+    await runGit(root, ["add", "docs/task-cli.md"]);
+
+    assert.notEqual(await computeImplementationDigest(root), priorDigest);
+    assert.deepEqual(await validateReviewBinding(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("no active feature keeps non-low-risk changes bound to prior approval", async () => {
+  const paths = ["src/value.ts", "package.json", "scripts/check.ts",
+    "docs/review-binding.md", "README.md", "notes.md"];
+  for (const path of paths) {
+    const root = await createFixture();
+    try {
+      await addReviewReport(root);
+      await finalizeFeature(root);
+      const target = join(root, path);
+      await mkdir(dirname(target), { recursive: true });
+      await writeFile(target, "changed\n");
+      await runGit(root, ["add", path]);
+      assert.deepEqual(codes(await validateReviewBinding(root)), ["REVIEW_BINDING_STALE"], path);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   }
 });
 
@@ -95,7 +131,11 @@ async function createFixture(): Promise<string> {
   await writeFile(join(root, "src/value.ts"), "export const value = 1;\n");
   await writeFile(join(root, "progress/current.md"), "TASK-100 is in review.\n");
   await runGit(root, ["init", "--quiet"]);
+  await runGit(root, ["config", "user.email", "fixture@example.test"]);
+  await runGit(root, ["config", "user.name", "Fixture"]);
   await runGit(root, ["add", "."]);
+  await runGit(root, ["commit", "--quiet", "-m", "Initial fixture"]);
+  await runGit(root, ["update-ref", "refs/remotes/origin/main", "HEAD"]);
   return root;
 }
 
@@ -117,6 +157,14 @@ async function writeFeatureQueue(root: string, status: string): Promise<void> {
     issue: "https://example.test/100",
     acceptance_criteria: ["The fixture works."],
   }]));
+}
+
+async function finalizeFeature(root: string): Promise<void> {
+  await writeFeatureQueue(root, "done");
+  await writeFile(join(root, "progress/current.md"), "No feature is active.\n");
+  await runGit(root, ["add", "feature_list.json", "progress"]);
+  await runGit(root, ["commit", "--quiet", "-m", "Complete feature"]);
+  await runGit(root, ["update-ref", "refs/remotes/origin/main", "HEAD"]);
 }
 
 function runGit(root: string, args: string[]): Promise<void> {

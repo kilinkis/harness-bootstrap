@@ -24,6 +24,26 @@ This command validates harness state and the approved target inventory. It then 
 
 The fast command is not a completion or merge gate.
 
+## Proportional local verification
+
+Use the automatic local selector for an early check:
+
+```bash
+pnpm run verify:local
+```
+
+The command compares the working tree with `origin/main` by default. This includes staged, unstaged, and untracked files. Use an explicit base when the branch targets a different ref:
+
+```bash
+pnpm run verify:local -- --base origin/develop
+```
+
+The selector reports the base, selected gate, and reason. It selects the reduced documentation gate only when every changed path is the allowlisted product guide `docs/task-cli.md`. An empty change set does not qualify. Root documents, process documents, source files, tests, configuration, scripts, and unknown paths route to `pnpm run feedback`.
+
+The reduced gate runs harness-state validation, review-binding validation, target-inventory validation, and the documentation-facing harness contracts. The selector forwards its Git base to the binding check. An approved documentation-only change can use the low-risk lane in `run-a-ticket.md`. That lane does not activate a queue item or create local progress reports and role handoffs. It still requires change-request review and the full CI gate. CI continues to run only the full shell gate.
+
+This repository defines a trivial change as an edit limited to the approved documentation paths. The edit must not change executable code, tests, configuration, scripts, generated files, queue state, progress evidence, or other process controls. Do not override the automatic classification. If repository policy permits an emergency exception, record the excluded control, reason, approver, and expiry in the work item or change request. Required remote checks and accountable approval still apply.
+
 ## Project verification extension
 
 The commands in this repository verify the sample task CLI. They do not prove that an adopted project can build or deploy.
@@ -50,17 +70,18 @@ Run a deliberate negative test after you configure the command. Introduce a temp
 
 ## Full gate
 
-Run the full harness gate before completion and merge:
+After independent approval, the leader runs the full harness gate once before evidence finalization and merge:
 
 ```bash
 ./scripts/verify.sh
 ```
 
-The shell gate runs `pnpm run verify`. The full command composes `pnpm run feedback` with `pnpm run test:harness`. CI uses the same shell gate.
+The shell gate runs `pnpm run verify`. This command composes `pnpm run feedback` with `pnpm run test:harness`. CI uses the same shell gate. Default gates do not record workflow metrics or run metric contracts.
 
 The feedback command first runs `pnpm run check:harness-state`. This command validates the feature queue and its durable evidence:
 
-- Feature IDs, statuses, titles, and acceptance criteria are valid.
+- Feature IDs, statuses, titles, and acceptance criteria are valid. An active feature has at most five acceptance criteria. Completed legacy features keep their recorded criteria.
+- A skipped feature has a non-empty reason.
 - Only one feature is active in the shared workstream.
 - Active state agrees with `progress/current.md`.
 - Review state has an implementation report.
@@ -81,14 +102,18 @@ After harness-state validation, the commands run complementary checks:
 6. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
 7. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, review binding, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
 
-Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is still `in_progress`. It enforces the binding during review and after local completion.
+Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is `in_progress`. When no feature is active, only changes limited to `docs/task-cli.md` bypass the latest completed binding; all other changes validate the latest completed tracked approval. The gate enforces the active binding while a feature is `in_review`, including the leader's post-approval full gate.
 
 Use `pnpm run analyze` when you need a full-codebase Fallow report rather than the changed-file merge gate. Its thresholds and CLI entry point are versioned in `.fallowrc.json`; duplication above 5% fails the analysis. The CRAP threshold is calibrated above Fallow's static estimates because this small Node test setup does not emit Istanbul coverage; cyclomatic, cognitive, and function-size limits remain independently enforced.
 
-For a feature, add the smallest focused command that demonstrates its behavior. Run the fast loop before review. Run the full gate on the final state. CI checks out full Git history so Fallow can resolve the correct merge base.
+For a feature, add the smallest focused command that demonstrates its behavior. The implementer runs focused checks and the fast loop before review. The reviewer runs independent focused checks. After approval, the leader runs the one final local full gate on the approved snapshot. CI checks out full Git history so Fallow can resolve the correct merge base.
+
+After the full gate passes, the leader makes the evidence-only finalization changes in `feature_list.json` and `progress/`. The leader then runs `pnpm run check:harness-state` as a focused state check. These files are outside the reviewed implementation digest.
 
 Harness-state and Fallow contract fixtures are created under the operating system's temporary directory. The type-aware ESLint fixture is created within the test tree so TypeScript's project service can resolve it. Every fixture is removed in a `finally` block, so intentionally invalid state never remains in the repository or enters the normal pre-test analysis.
 
 Record exact commands and exit results in the implementation report. A passing command run before a change is not evidence for the final state.
+
+Workflow metrics are optional. Use their explicit commands when adoption data is needed. See [workflow metrics](workflow-metrics.md) for gate recording, contract tests, storage, privacy, CI export, agent usage, summaries, and evidence limits.
 
 Use the [bounded repair loop](repair-loop.md) when a deterministic command fails. Record each repair attempt in the implementation report. Stop when the repair cycle uses its three-attempt budget.

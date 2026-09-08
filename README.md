@@ -33,7 +33,7 @@ pnpm start -- add "Ship the harness" --tag portfolio
 pnpm start -- list
 ```
 
-`verify.sh` validates the queue and runs the real test suite. It should be green before and after every feature.
+See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The leader runs it once after independent approval, and required CI runs it before merge.
 
 For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
 
@@ -92,9 +92,11 @@ Each role has a narrow responsibility: the leader plans and coordinates, the imp
 
 ## The feature queue
 
-Each feature has a stable ID, acceptance criteria, and one of four statuses:
+Each feature has a stable ID, acceptance criteria, and one of five statuses:
 
 `pending` → `in_progress` → `in_review` → `done`
+
+Use `skipped` only when work is explicitly removed from the queue. Add a non-empty `skip_reason` so the decision remains accountable.
 
 Only one item may be active (`in_progress` or `in_review`) at a time. This keeps the agent focused and makes handoffs obvious. Create a new feature by copying an existing object, using a new ID, and leaving its status as `pending`.
 
