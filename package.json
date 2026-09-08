@@ -18,6 +18,7 @@
     "test:harness": "tsx --test tests/harness/*.test.ts",
     "test": "pnpm run test:product && pnpm run test:harness",
     "feedback": "pnpm run check:harness-state && pnpm run check:review-binding && pnpm run check:targets && pnpm run check && pnpm run lint && pnpm run analyze:changes && pnpm run test:product",
+    "impact": "tsx scripts/analyze-impact.ts",
     "verify": "pnpm run feedback && pnpm run test:harness",
     "start": "tsx src/cli.ts"
   },

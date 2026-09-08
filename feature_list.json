@@ -246,5 +246,25 @@
       "Documentation states that untracked files are outside the digest and must be staged before review.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-017",
+    "title": "Add advisory workspace impact analysis",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/39",
+    "acceptance_criteria": [
+      "A TypeScript interface accepts repository-relative changed paths and returns affected targets, commands, reasons, and uncertainties.",
+      "Direct changes affect the owning target.",
+      "Changes to a workspace package affect transitive workspace consumers that declare it as a dependency.",
+      "Root package-manager and workspace configuration changes affect every target.",
+      "Results are deterministic and do not execute inventory commands.",
+      "A CLI reads changed paths from Git, prints a readable report, and supports JSON output and an explicit base ref.",
+      "Unmapped or ambiguous changes request full verification instead of claiming that no target is affected.",
+      "The result always states that the full merge gate remains required.",
+      "Temporary fixtures cover direct, reverse-dependent, transitive, global, uncertain, and Git command behavior.",
+      "Documentation explains advisory use and warns against selective merge gating.",
+      "Normal agent instructions link the guide without embedding the graph in normal context.",
+      "The full harness verification passes."
+    ]
   }
 ]

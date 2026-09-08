@@ -55,3 +55,7 @@ Added a bounded repair protocol for verification failures. One cycle permits at 
 ## 2026-09-08 — TASK-016
 
 Added a deterministic digest that binds final review approval to the staged implementation snapshot. The standard gate rejects missing, malformed, or stale bindings. Numbered review rounds preserve change requests, while the canonical report records final approval. Review found and resolved an ambiguity between immutable reports and canonical approval checks. Work is tracked in [GitHub Issue #37](https://github.com/kilinkis/harness-bootstrap/issues/37).
+
+## 2026-09-08 — TASK-017
+
+Added optional workspace impact analysis for focused implementation checks. It maps tracked and untracked Git changes to direct targets and transitive workspace consumers. It reports approved commands and uncertainty while the full merge gate stays mandatory. Review found and resolved incomplete-inventory and staged-rename gaps. Work is tracked in [GitHub Issue #39](https://github.com/kilinkis/harness-bootstrap/issues/39).
