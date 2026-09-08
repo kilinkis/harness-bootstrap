@@ -4,7 +4,7 @@ This repository is a harness: follow the system before changing the product.
 
 ## Start here
 
-1. Run `./scripts/verify.sh`.
+1. Run `pnpm run feedback`.
 2. Read `feature_list.json`; select the first `pending` item unless directed otherwise.
 3. Read `docs/architecture.md`, `docs/conventions.md`, and the selected feature's acceptance criteria.
 4. Read the relevant role definition in `agents/` before taking that role.
@@ -22,13 +22,16 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Bind approval to the staged implementation with `docs/review-binding.md`.
 - Follow `docs/repair-loop.md` after a verification failure. Stop after its repair budget is exhausted.
 - Follow the technical prose rules in `docs/conventions.md` for durable repository text.
+- Use the low-risk documentation lane in `docs/run-a-ticket.md` only when the automatic classifier approves every changed path.
 
 ## Delivery workflow
 
-- Track every non-trivial change in a work item with explicit acceptance criteria.
+- Track every non-trivial change in a work item with at most five acceptance criteria.
+- Target at most 300 added implementation lines. Split larger work unless a named owner records why it cannot be split.
 - Create a feature branch from the default branch; do not commit directly to the protected branch.
-- Open a pull or merge request that links the work item using the platform's closing syntax.
-- Include implementation and review reports, verification evidence, and remaining risks in the request.
+- For normal work, open a pull or merge request that links the work item with closing syntax. Record the classifier result instead for the low-risk documentation lane.
+- For normal changes, include implementation and review reports, verification evidence, and remaining risks in the request.
+- The implementer runs focused and fast checks. The reviewer runs independent focused checks. After approval, the leader runs the one final local full gate.
 - Merge only after the completion checkpoints and required remote checks pass.
 
 ## Navigation
@@ -36,6 +39,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 | Need | Read |
 | --- | --- |
 | System design and boundaries | `docs/architecture.md` |
+| Sample product usage | `docs/task-cli.md` |
 | Style and error-handling rules | `docs/conventions.md` |
 | Commands and evidence required | `docs/verification.md` |
 | Failed verification repair loop | `docs/repair-loop.md` |
@@ -54,4 +58,4 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 
 ## Report convention
 
-Use `progress/impl_<feature-id>.md` for implementation. Use numbered review files for change requests. Reserve `progress/review_<feature-id>.md` for final approval. Include: scope, files changed or inspected, commands run with results, and any remaining risks. Every review report must include the implementation digest from `docs/review-binding.md`. Keep chat responses to a short pointer to the report.
+For normal work, use `progress/impl_<feature-id>.md` for implementation. Use numbered review files for change requests. Reserve `progress/review_<feature-id>.md` for final approval. Include: scope, files changed or inspected, commands run with results, and any remaining risks. Every review report must include the implementation digest from `docs/review-binding.md`. The approved low-risk documentation lane does not create local progress reports. Keep chat responses to a short pointer to the report.

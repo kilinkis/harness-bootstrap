@@ -75,6 +75,25 @@ void test("valid tracked and legacy feature state passes", async () => {
   }
 });
 
+void test("new active work is limited to five acceptance criteria", async () => {
+  const criteria = Array.from({ length: 6 }, (_, index) => `Criterion ${index + 1}.`);
+  const root = await createFixture({
+    features: [
+      feature({ id: "TASK-001", status: "done", acceptance_criteria: criteria }),
+      feature({ id: "TASK-100", status: "in_progress", acceptance_criteria: criteria }),
+    ],
+    files: { "progress/current.md": "TASK-100 is active.\n" },
+  });
+
+  try {
+    const findings = await validateHarnessState(root);
+    assert.deepEqual(codes(findings), ["FEATURE_ACCEPTANCE_LIMIT"]);
+    assert.match(findings[0]?.message ?? "", /TASK-100/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 void test("a skipped feature needs a non-empty reason", async () => {
   const validRoot = await createFixture({
     features: [

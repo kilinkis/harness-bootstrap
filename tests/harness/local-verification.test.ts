@@ -20,23 +20,31 @@ const TSX_BINARY = join(
 );
 
 void test("documentation-only paths select the reduced gate", () => {
-  assert.deepEqual(selectLocalVerification(["docs/verification.md", "README.md"]), {
+  assert.deepEqual(selectLocalVerification(["docs/task-cli.md"]), {
     gate: "documentation",
     command: "verify:docs",
-    changedPaths: ["README.md", "docs/verification.md"],
+    changedPaths: ["docs/task-cli.md"],
     reason: "All changed files are approved documentation paths.",
   });
 });
 
-void test("source, test, configuration, script, and unknown paths refuse reduction", () => {
+void test("root, process, source, configuration, and unknown paths refuse reduction", () => {
   for (const path of [
+    "README.md",
+    "AGENTS.md",
+    "docs/review-binding.md",
+    "docs/run-a-ticket.md",
+    "docs/verification.md",
+    "docs/note.md",
     "src/tasks.ts",
     "tests/tasks.test.ts",
     "package.json",
+    "feature_list.json",
+    "progress/current.md",
     "scripts/verify.sh",
     "notes.md",
   ]) {
-    const selection = selectLocalVerification(["docs/verification.md", path]);
+    const selection = selectLocalVerification(["docs/task-cli.md", path]);
     assert.equal(selection.gate, "feedback", path);
     assert.equal(selection.command, "feedback", path);
     assert.match(selection.reason, /reduced gate was refused/i, path);
@@ -53,8 +61,8 @@ void test("no changes use the normal feedback gate", () => {
 void test("the command reads an explicit Git base and reports its selection", async () => {
   const root = await createGitFixture();
   try {
-    await writeFixture(root, "docs/note.md", "# Note\n");
-    assert.deepEqual(await readLocalChangedPaths(root, "HEAD"), ["docs/note.md"]);
+    await writeFixture(root, "docs/task-cli.md", "# Tasks\n");
+    assert.deepEqual(await readLocalChangedPaths(root, "HEAD"), ["docs/task-cli.md"]);
 
     const result = await runSelector(root, "HEAD");
     assert.equal(result.exitCode, 0, result.stderr);
@@ -70,7 +78,7 @@ void test("the command defaults to origin/main", async () => {
   const root = await createGitFixture();
   try {
     await git(root, ["update-ref", "refs/remotes/origin/main", "HEAD"]);
-    await writeFixture(root, "docs/note.md", "# Note\n");
+    await writeFixture(root, "docs/task-cli.md", "# Tasks\n");
 
     const result = await runSelector(root);
     assert.equal(result.exitCode, 0, result.stderr);

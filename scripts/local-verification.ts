@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { readGitChangedPaths } from "./git-changed-paths.js";
+import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
 
 export type LocalGate = "documentation" | "feedback";
 
@@ -19,14 +20,11 @@ interface Options {
   root: string;
 }
 
-const ROOT_DOCUMENTATION = new Set(["README.md"]);
-
 export function selectLocalVerification(
   changedPaths: string[],
 ): LocalVerificationSelection {
-  const normalized = normalizePaths(changedPaths);
-  const refused = normalized.filter((path) => !isApprovedDocumentation(path));
-  if (normalized.length === 0) {
+  const classification = classifyLowRiskDocumentation(changedPaths);
+  if (classification.changedPaths.length === 0) {
     return {
       gate: "feedback",
       command: "feedback",
@@ -34,18 +32,18 @@ export function selectLocalVerification(
       reason: "No changed files were found; the reduced gate requires an explicit documentation change.",
     };
   }
-  if (refused.length > 0) {
+  if (!classification.approved) {
     return {
       gate: "feedback",
       command: "feedback",
-      changedPaths: normalized,
-      reason: `The reduced gate was refused because these paths are not approved documentation: ${refused.join(", ")}.`,
+      changedPaths: classification.changedPaths,
+      reason: `The reduced gate was refused because these paths are not approved documentation: ${classification.refusedPaths.join(", ")}.`,
     };
   }
   return {
     gate: "documentation",
     command: "verify:docs",
-    changedPaths: normalized,
+    changedPaths: classification.changedPaths,
     reason: "All changed files are approved documentation paths.",
   };
 }
@@ -54,18 +52,7 @@ export async function readLocalChangedPaths(
   root: string,
   base: string,
 ): Promise<string[]> {
-  return normalizePaths(await readGitChangedPaths(root, base));
-}
-
-function isApprovedDocumentation(path: string): boolean {
-  return ROOT_DOCUMENTATION.has(path) ||
-    (path.startsWith("docs/") && path.endsWith(".md"));
-}
-
-function normalizePaths(paths: string[]): string[] {
-  return [...new Set(paths.map((path) => path.replaceAll("\\", "/").replace(/^\.\//, "")))]
-    .filter(Boolean)
-    .sort();
+  return classifyLowRiskDocumentation(await readGitChangedPaths(root, base)).changedPaths;
 }
 
 function parseOptions(args: string[]): Options {
@@ -88,9 +75,10 @@ function parseOptions(args: string[]): Options {
   return { base, dryRun, root: resolve(paths[0] ?? ".") };
 }
 
-async function runCommand(root: string, command: string): Promise<void> {
+async function runCommand(root: string, command: string, base: string): Promise<void> {
   await new Promise<void>((resolveRun, reject) => {
-    const child = execFile("pnpm", ["run", command], { cwd: root }, (error) => {
+    const env = { ...process.env, HARNESS_BASE_REF: base };
+    const child = execFile("pnpm", ["run", command], { cwd: root, env }, (error) => {
       if (error) reject(new Error(`Local ${command} gate failed`, { cause: error }));
       else resolveRun();
     });
@@ -107,7 +95,7 @@ async function main(): Promise<void> {
   console.log(`Selected gate: ${selection.gate}`);
   console.log(`Reason: ${selection.reason}`);
   console.log(`Changed paths: ${selection.changedPaths.length}`);
-  if (!options.dryRun) await runCommand(options.root, selection.command);
+  if (!options.dryRun) await runCommand(options.root, selection.command, options.base);
 }
 
 function usageError(): Error {

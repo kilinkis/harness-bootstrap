@@ -20,6 +20,7 @@ const ALLOWED_STATUSES = new Set([
   "skipped",
 ]);
 const SAFE_FEATURE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+const MAX_ACTIVE_ACCEPTANCE_CRITERIA = 5;
 
 export async function validateHarnessState(root: string): Promise<HarnessFinding[]> {
   const findings: HarnessFinding[] = [];
@@ -98,7 +99,7 @@ function validateFeature(
   const label = id ?? `index ${index}`;
   const status = typeof value.status === "string" ? value.status : "";
   validateTitle(value.title, label, path, findings);
-  validateAcceptance(value.acceptance_criteria, label, path, findings);
+  validateAcceptance(value.acceptance_criteria, status, label, path, findings);
   validateStatus(status, label, path, findings);
   validateSkipReason(value.skip_reason, status, label, path, findings);
   const tracked = validateIssue(value, label, path, findings);
@@ -159,6 +160,7 @@ function validateTitle(
 
 function validateAcceptance(
   value: unknown,
+  status: string,
   label: string,
   path: string,
   findings: HarnessFinding[],
@@ -171,6 +173,16 @@ function validateAcceptance(
       findings,
       "FEATURE_ACCEPTANCE_MISSING",
       `${label}: non-empty acceptance criteria are required`,
+      path,
+    );
+    return;
+  }
+  if (Array.isArray(value) && (status === "in_progress" || status === "in_review") &&
+    value.length > MAX_ACTIVE_ACCEPTANCE_CRITERIA) {
+    addFinding(
+      findings,
+      "FEATURE_ACCEPTANCE_LIMIT",
+      `${label}: active feature has more than ${MAX_ACTIVE_ACCEPTANCE_CRITERIA} acceptance criteria`,
       path,
     );
   }

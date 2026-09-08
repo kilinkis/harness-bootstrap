@@ -53,7 +53,7 @@ Then enter the new worktree. Install dependencies when the project does not shar
 ```bash
 cd ../harness-TASK-012
 pnpm install --frozen-lockfile
-./scripts/verify.sh
+pnpm run feedback
 ```
 
 Do not create a worktree from a stale local branch. Do not use the same branch in two worktrees.
@@ -74,7 +74,7 @@ Each worktree follows the complete ticket lifecycle:
 4. Run `pnpm run feedback` before review.
 5. Write the implementation report.
 6. Complete an independent review and its report.
-7. Run `./scripts/verify.sh` on the final state.
+7. After approval, have the leader run `./scripts/verify.sh` once.
 8. Open a pull request that closes the claimed issue.
 9. Merge only after required remote checks pass.
 
@@ -87,7 +87,7 @@ Another parallel pull request can merge first. Update the remaining branch befor
 ```bash
 git fetch origin
 git merge --no-edit origin/main
-./scripts/verify.sh
+pnpm run feedback
 ```
 
 Stop if the merge reports a conflict. Inspect the competing changes before you resolve it. Do not discard another workstream's completed state.
@@ -99,7 +99,7 @@ Conflicts are most likely in these files:
 - `progress/history.md`: preserve entries from both branches.
 - Shared product files: resolve them from the accepted behavior, not from file order.
 
-Run the full gate again after every conflict resolution. Request another review when a resolution changes implementation behavior.
+Request another review when a resolution changes implementation behavior. After that approval, the leader runs the final full gate on the resolved snapshot.
 
 ## Remove a finished worktree
 

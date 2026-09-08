@@ -3,6 +3,9 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
+import { readGitChangedPaths } from "./git-changed-paths.js";
+import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
+
 export interface ReviewBindingFinding {
   code: string;
   message: string;
@@ -37,11 +40,12 @@ export async function computeImplementationDigest(root: string): Promise<string>
 
 export async function validateReviewBinding(
   root: string,
+  base = "origin/main",
 ): Promise<ReviewBindingFinding[]> {
   const findings: ReviewBindingFinding[] = [];
   const features = await readQueue(root, findings);
   if (!features) return findings;
-  const selected = selectFeature(features);
+  const selected = await selectFeature(root, base, features);
   if (!selected) return findings;
 
   const reportPath = `progress/review_${selected.id}.md`;
@@ -90,15 +94,21 @@ export async function validateReviewBinding(
   return findings;
 }
 
-function selectFeature(features: QueueFeature[]): QueueFeature | undefined {
+async function selectFeature(
+  root: string,
+  base: string,
+  features: QueueFeature[],
+): Promise<QueueFeature | undefined> {
   const active = features.find(({ status }) =>
     status === "in_progress" || status === "in_review"
   );
-  if (active?.status === "in_progress") return undefined;
-  if (active) return active;
-  return [...features].reverse().find(({ status, tracked }) =>
+  if (active) return active.status === "in_review" ? active : undefined;
+  const completed = [...features].reverse().find(({ status, tracked }) =>
     status === "done" && tracked
   );
+  if (!completed) return undefined;
+  const changed = await readGitChangedPaths(root, base);
+  return classifyLowRiskDocumentation(changed).approved ? undefined : completed;
 }
 
 async function readQueue(

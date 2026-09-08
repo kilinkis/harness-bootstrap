@@ -2,6 +2,8 @@
 
 Closes #
 
+Low-risk documentation lane: Not applicable, or record the classifier result.
+
 ## Summary
 
 - What changed:
@@ -14,8 +16,8 @@ Closes #
 
 ## Harness evidence
 
-- Implementation report: `progress/impl_TASK-___.md`
-- Review report: `progress/review_TASK-___.md`
+- Implementation report: `progress/impl_TASK-___.md`, or not applicable for the low-risk documentation lane.
+- Review report: `progress/review_TASK-___.md`, or use the change-request review for the low-risk documentation lane.
 - Verification command and result: `./scripts/verify.sh` —
 - Affected deployable targets: None, or list each target.
 - Production-build command and result: Not applicable, or provide the command and result.

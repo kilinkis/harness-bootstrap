@@ -33,7 +33,7 @@ pnpm start -- add "Ship the harness" --tag portfolio
 pnpm start -- list
 ```
 
-`verify.sh` validates the queue and runs the real test suite. It should be green before and after every feature.
+See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The leader runs it once after independent approval, and required CI runs it before merge.
 
 For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
 

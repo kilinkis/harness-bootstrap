@@ -115,7 +115,8 @@ void test("the optional guide keeps the merge gate mandatory", async () => {
   assert.match(agentGuide, /`docs\/impact-analysis\.md`/);
   assert.match(impactGuide, /advisory/i);
   assert.match(impactGuide, /does not replace the full merge gate/i);
-  assert.match(impactGuide, /Always run `\.\/scripts\/verify\.sh`/);
+  assert.match(impactGuide, /leader runs `\.\/scripts\/verify\.sh` after approval/i);
+  assert.match(impactGuide, /CI runs it before merge/i);
 });
 
 void test("the JSON command reads changed paths from an explicit Git base", async () => {

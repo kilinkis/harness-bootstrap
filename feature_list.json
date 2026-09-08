@@ -303,5 +303,18 @@
       "Temporary-fixture contracts cover event validation, append behavior, summaries, gate success and failure, and ignored default storage.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-020",
+    "title": "Reduce default harness workflow cost",
+    "status": "done",
+    "issue": "feature_list.json#TASK-020",
+    "acceptance_criteria": [
+      "Approved documentation-only changes use a low-risk lane without feature activation, progress reports, or local agent-role handoffs, while retaining automatic classification, change-request review, and full CI.",
+      "New active work items have at most five acceptance criteria, and guidance targets at most 300 added implementation lines unless a named owner records why the work cannot be split.",
+      "Normal implementation uses focused and fast checks, one final local full gate after approval, and a focused state check after evidence-only finalization.",
+      "Workflow metrics and their contracts remain available through explicit commands but do not run or record from the default fast, documentation, or full gates.",
+      "Contract tests protect the low-risk lane, feature-size rule, streamlined command composition, optional metrics boundary, and passing full gate."
+    ]
   }
 ]

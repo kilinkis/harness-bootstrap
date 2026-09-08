@@ -67,3 +67,7 @@ Added an automatically guarded documentation-only local gate. It derives changed
 ## 2026-09-08 — TASK-019
 
 Added a versioned, append-only JSONL log for workflow and agent usage metrics. Fast, documentation-only, and full verification entry points record outcome and wall time automatically. Agent-run events accept provider, model, input and output tokens, estimated cost, and wall time when available. The default log is ignored by Git and can be redirected for CI artifacts. Review found and resolved cross-process append corruption, unsafe numeric aggregation, and schema/runtime parity gaps.
+
+## 2026-09-08 — TASK-020
+
+Reduced default workflow cost with a narrow low-risk product-documentation lane, a five-criterion limit for active features, a 300-added-line sizing target, and one leader-owned local full gate after approval. Workflow metrics and their contracts remain available through explicit commands but no longer run in default gates. Review narrowed the documentation allowlist, preserved digest binding for non-low-risk changes with no active feature, and corrected inconsistent verification guidance. The final full gate passed with 7 product tests and 59 default harness contracts.
