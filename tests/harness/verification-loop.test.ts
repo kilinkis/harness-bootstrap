@@ -27,6 +27,19 @@ void test("the full gate contains every fast feedback check", async () => {
     "pnpm run feedback",
     "pnpm run test:harness",
   ]);
+  assert.deepEqual(manifest.scripts?.["verify:docs"]?.split(" && "), [
+    "pnpm run check:harness-state",
+    "pnpm run check:review-binding",
+    "pnpm run check:targets",
+    "pnpm run test:harness:docs",
+  ]);
+  assert.deepEqual(manifest.scripts?.["test:harness:docs"]?.split(" ").slice(2), [
+    "tests/harness/adoption-guidance.test.ts",
+    "tests/harness/impact-analysis.test.ts",
+    "tests/harness/local-verification.test.ts",
+    "tests/harness/repair-loop.test.ts",
+    "tests/harness/verification-loop.test.ts",
+  ]);
 });
 
 void test("the shell and CI entry points use the full gate", async () => {
@@ -36,6 +49,16 @@ void test("the shell and CI entry points use the full gate", async () => {
   assert.match(shellGate, /^#!\/usr\/bin\/env bash\nset -euo pipefail\n\npnpm run verify\n$/);
   assert.match(workflow, /run: \.\/scripts\/verify\.sh/);
   assert.doesNotMatch(workflow, /pnpm run feedback/);
+  assert.doesNotMatch(workflow, /verify:local|verify:docs/);
+});
+
+void test("the local selector remains separate from the full gate", async () => {
+  const manifest = JSON.parse(
+    await readRepositoryFile("package.json"),
+  ) as PackageManifest;
+
+  assert.equal(manifest.scripts?.["verify:local"], "tsx scripts/local-verification.ts");
+  assert.equal(manifest.scripts?.verify, "pnpm run feedback && pnpm run test:harness");
 });
 
 async function readRepositoryFile(relativePath: string): Promise<string> {

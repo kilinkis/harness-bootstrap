@@ -59,3 +59,7 @@ Added a deterministic digest that binds final review approval to the staged impl
 ## 2026-09-08 — TASK-017
 
 Added optional workspace impact analysis for focused implementation checks. It maps tracked and untracked Git changes to direct targets and transitive workspace consumers. It reports approved commands and uncertainty while the full merge gate stays mandatory. Review found and resolved incomplete-inventory and staged-rename gaps. Work is tracked in [GitHub Issue #39](https://github.com/kilinkis/harness-bootstrap/issues/39).
+
+## 2026-09-08 — TASK-018
+
+Added an automatically guarded documentation-only local gate. It derives changed paths from Git, refuses the reduced path for non-documentation changes, and runs documentation-facing harness contracts. The full gate remains mandatory in CI and before merge. Added an explicit skipped queue state with a required reason and recorded TASK-003 as skipped. Review found and resolved an omitted impact-analysis documentation contract.

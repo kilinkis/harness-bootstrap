@@ -1,6 +1,6 @@
-import { execFile } from "node:child_process";
 import { resolve } from "node:path";
 
+import { readGitChangedPaths } from "./git-changed-paths.js";
 import {
   analyzeImpact,
   type ImpactAnalysisResult,
@@ -14,7 +14,7 @@ interface Options {
 
 async function main(): Promise<void> {
   const options = parseOptions(process.argv.slice(2));
-  const changedPaths = await readChangedPaths(options.root, options.base);
+  const changedPaths = await readGitChangedPaths(options.root, options.base);
   const result = await analyzeImpact(options.root, changedPaths);
   if (options.json) console.log(JSON.stringify(result, null, 2));
   else printReport(result, options.base);
@@ -37,39 +37,6 @@ function parseOptions(args: string[]): Options {
   }
   if (paths.length > 1) throw usageError();
   return { base, json, root: resolve(paths[0] ?? ".") };
-}
-
-async function readChangedPaths(root: string, base: string): Promise<string[]> {
-  const [diffPaths, untrackedPaths] = await Promise.all([
-    readGitPaths(
-      root,
-      ["diff", "--no-renames", "--name-only", "-z", base, "--"],
-      base,
-    ),
-    readGitPaths(root, ["ls-files", "--others", "--exclude-standard", "-z"], base),
-  ]);
-  return [...new Set([...diffPaths, ...untrackedPaths])].sort();
-}
-
-function readGitPaths(
-  root: string,
-  args: string[],
-  base: string,
-): Promise<string[]> {
-  return new Promise((resolvePaths, reject) => {
-    execFile(
-      "git",
-      args,
-      { cwd: root, encoding: "utf8", maxBuffer: 10 * 1024 * 1024 },
-      (error, stdout) => {
-        if (error) {
-          reject(new Error(`Cannot read changes from Git base ${base}: ${error.message}`));
-          return;
-        }
-        resolvePaths(stdout.split("\0").filter(Boolean));
-      },
-    );
-  });
 }
 
 function printReport(result: ImpactAnalysisResult, base: string): void {

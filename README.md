@@ -92,9 +92,11 @@ Each role has a narrow responsibility: the leader plans and coordinates, the imp
 
 ## The feature queue
 
-Each feature has a stable ID, acceptance criteria, and one of four statuses:
+Each feature has a stable ID, acceptance criteria, and one of five statuses:
 
 `pending` → `in_progress` → `in_review` → `done`
+
+Use `skipped` only when work is explicitly removed from the queue. Add a non-empty `skip_reason` so the decision remains accountable.
 
 Only one item may be active (`in_progress` or `in_review`) at a time. This keeps the agent focused and makes handoffs obvious. Create a new feature by copying an existing object, using a new ID, and leaving its status as `pending`.
 

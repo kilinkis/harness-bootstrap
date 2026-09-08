@@ -12,7 +12,13 @@ import {
 
 export type { HarnessFinding } from "./harness-state-support.js";
 
-const ALLOWED_STATUSES = new Set(["pending", "in_progress", "in_review", "done"]);
+const ALLOWED_STATUSES = new Set([
+  "pending",
+  "in_progress",
+  "in_review",
+  "done",
+  "skipped",
+]);
 const SAFE_FEATURE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
 export async function validateHarnessState(root: string): Promise<HarnessFinding[]> {
@@ -94,8 +100,26 @@ function validateFeature(
   validateTitle(value.title, label, path, findings);
   validateAcceptance(value.acceptance_criteria, label, path, findings);
   validateStatus(status, label, path, findings);
+  validateSkipReason(value.skip_reason, status, label, path, findings);
   const tracked = validateIssue(value, label, path, findings);
   return id && ALLOWED_STATUSES.has(status) ? { id, status, tracked } : undefined;
+}
+
+function validateSkipReason(
+  value: unknown,
+  status: string,
+  label: string,
+  path: string,
+  findings: HarnessFinding[],
+): void {
+  if (status === "skipped" && (typeof value !== "string" || !value.trim())) {
+    addFinding(
+      findings,
+      "FEATURE_SKIP_REASON_MISSING",
+      `${label}: skipped feature needs a non-empty reason`,
+      path,
+    );
+  }
 }
 
 function validateFeatureId(

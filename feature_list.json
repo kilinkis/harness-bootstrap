@@ -21,7 +21,8 @@
   {
     "id": "TASK-003",
     "title": "Complete a task from the command line",
-    "status": "pending",
+    "status": "skipped",
+    "skip_reason": "The repository owner explicitly removed this sample feature from the work queue.",
     "acceptance_criteria": [
       "The CLI accepts a task ID for completion.",
       "Completing an existing open task persists its completed status.",
@@ -264,6 +265,23 @@
       "Temporary fixtures cover direct, reverse-dependent, transitive, global, uncertain, and Git command behavior.",
       "Documentation explains advisory use and warns against selective merge gating.",
       "Normal agent instructions link the guide without embedding the graph in normal context.",
+      "The full harness verification passes."
+    ]
+  },
+  {
+    "id": "TASK-018",
+    "title": "Add proportional local verification",
+    "status": "done",
+    "issue": "feature_list.json#TASK-018",
+    "acceptance_criteria": [
+      "The feature queue supports an explicit skipped status with a non-empty reason.",
+      "An automatic local verification command selects a reduced gate only when all changed files are approved documentation paths.",
+      "The reduced gate validates harness state, review binding, target inventory, and documentation-facing harness contracts.",
+      "The local command refuses the reduced gate when source, tests, configuration, scripts, or unknown paths changed.",
+      "The command supports an explicit Git base and reports the selected gate and reason.",
+      "The full verification gate remains mandatory before completion and merge and in CI.",
+      "Contract tests cover skipped queue entries, missing skip reasons, documentation-only selection, and refusal for non-documentation changes.",
+      "Verification guidance defines trivial changes narrowly and records how exceptions remain accountable.",
       "The full harness verification passes."
     ]
   }

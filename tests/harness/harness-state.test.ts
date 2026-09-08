@@ -21,6 +21,7 @@ interface FixtureFeature {
   title?: string;
   status?: string;
   issue?: string;
+  skip_reason?: string;
   acceptance_criteria?: string[];
 }
 
@@ -71,6 +72,27 @@ void test("valid tracked and legacy feature state passes", async () => {
     assert.deepEqual(await validateHarnessState(root), []);
   } finally {
     await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("a skipped feature needs a non-empty reason", async () => {
+  const validRoot = await createFixture({
+    features: [
+      feature({ status: "skipped", skip_reason: "The owner removed this work from scope." }),
+    ],
+  });
+  const missingRoot = await createFixture({
+    features: [feature({ status: "skipped" })],
+  });
+
+  try {
+    assert.deepEqual(await validateHarnessState(validRoot), []);
+    assert.deepEqual(codes(await validateHarnessState(missingRoot)), [
+      "FEATURE_SKIP_REASON_MISSING",
+    ]);
+  } finally {
+    await rm(validRoot, { recursive: true, force: true });
+    await rm(missingRoot, { recursive: true, force: true });
   }
 });
 

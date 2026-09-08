@@ -24,6 +24,26 @@ This command validates harness state and the approved target inventory. It then 
 
 The fast command is not a completion or merge gate.
 
+## Proportional local verification
+
+Use the automatic local selector for an early check:
+
+```bash
+pnpm run verify:local
+```
+
+The command compares the working tree with `origin/main` by default. This includes staged, unstaged, and untracked files. Use an explicit base when the branch targets a different ref:
+
+```bash
+pnpm run verify:local -- --base origin/develop
+```
+
+The selector reports the base, selected gate, and reason. It selects the reduced documentation gate only when every changed path is `README.md` or a Markdown file below `docs/`. An empty change set does not qualify. Source files, tests, configuration, scripts, root Markdown files that are not explicitly approved, and unknown paths route to `pnpm run feedback`.
+
+The reduced gate runs harness-state validation, review-binding validation, target-inventory validation, and the documentation-facing harness contracts. It is an iteration aid. Run `./scripts/verify.sh` before review completion and merge. CI continues to run only the full shell gate.
+
+This repository defines a trivial change as an edit limited to the approved documentation paths. The edit must not change executable code, tests, configuration, scripts, generated files, queue state, progress evidence, or other process controls. Do not override the automatic classification. If repository policy permits an emergency exception, record the excluded control, reason, approver, and expiry in the work item or change request. Required remote checks and accountable approval still apply.
+
 ## Project verification extension
 
 The commands in this repository verify the sample task CLI. They do not prove that an adopted project can build or deploy.
@@ -61,6 +81,7 @@ The shell gate runs `pnpm run verify`. The full command composes `pnpm run feedb
 The feedback command first runs `pnpm run check:harness-state`. This command validates the feature queue and its durable evidence:
 
 - Feature IDs, statuses, titles, and acceptance criteria are valid.
+- A skipped feature has a non-empty reason.
 - Only one feature is active in the shared workstream.
 - Active state agrees with `progress/current.md`.
 - Review state has an implementation report.
