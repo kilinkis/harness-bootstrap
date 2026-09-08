@@ -16,6 +16,7 @@ void test("the full gate contains every fast feedback check", async () => {
 
   assert.deepEqual(manifest.scripts?.feedback?.split(" && "), [
     "pnpm run check:harness-state",
+    "pnpm run check:review-binding",
     "pnpm run check:targets",
     "pnpm run check",
     "pnpm run lint",

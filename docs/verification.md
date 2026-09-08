@@ -73,12 +73,15 @@ The validator checks the presence and structure of evidence. It cannot prove tha
 
 After harness-state validation, the commands run complementary checks:
 
-1. `pnpm run check:targets` validates the approved target inventory against package discovery.
-2. `pnpm run check` performs TypeScript type checking.
-3. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
-4. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
-5. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
-6. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
+1. `pnpm run check:review-binding` binds review to the staged implementation snapshot.
+2. `pnpm run check:targets` validates the approved target inventory against package discovery.
+3. `pnpm run check` performs TypeScript type checking.
+4. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
+5. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
+6. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
+7. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, review binding, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
+
+Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is still `in_progress`. It enforces the binding during review and after local completion.
 
 Use `pnpm run analyze` when you need a full-codebase Fallow report rather than the changed-file merge gate. Its thresholds and CLI entry point are versioned in `.fallowrc.json`; duplication above 5% fails the analysis. The CRAP threshold is calibrated above Fallow's static estimates because this small Node test setup does not emit Istanbul coverage; cyclomatic, cognitive, and function-size limits remain independently enforced.
 

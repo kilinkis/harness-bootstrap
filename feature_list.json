@@ -227,5 +227,24 @@
       "The documentation states that repository checks cannot detect unreported attempts.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-016",
+    "title": "Bind review approval to implementation content",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/37",
+    "acceptance_criteria": [
+      "A TypeScript interface computes a deterministic SHA-256 digest from staged repository files.",
+      "The digest excludes feature_list.json and progress/ because completion state and the review report change after review.",
+      "A command prints the current implementation digest.",
+      "Review reports record Implementation digest: sha256:<digest>.",
+      "A standard gate validates the report digest for an in_review feature and for the latest completed feature.",
+      "A missing, malformed, or stale review digest fails with a stable finding code.",
+      "Staged implementation changes after review invalidate the approval.",
+      "Documentation requires the implementer to stage intended files before review and the reviewer to recompute the digest.",
+      "Temporary Git fixture contracts cover a valid binding, excluded evidence changes, missing binding, and stale binding.",
+      "Documentation states that untracked files are outside the digest and must be staged before review.",
+      "The full harness verification passes."
+    ]
   }
 ]
