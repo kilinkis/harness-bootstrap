@@ -35,3 +35,7 @@ Added a fast inner feedback command for harness state, types, lint rules, change
 ## 2026-09-01 — TASK-011
 
 Documented an optional worktree model for independent parallel tickets. Each worktree keeps one ticket, branch, agent, harness lifecycle, and full merge gate. GitHub issue assignment supplies visible cross-branch coordination. A review finding replaced a history-rewriting update command with a merge from the default branch. Work is tracked in [GitHub Issue #15](https://github.com/kilinkis/harness-bootstrap/issues/15).
+
+## 2026-09-08 — TASK-012
+
+Added an adoption checklist that prevents the bootstrap's passing demo gate from being mistaken for project build evidence. The checklist inventories deployable targets and relevant workspaces. It requires exact production builds, a project verification extension, deployment parity, required remote checks, and deliberate failing runs. Harness contracts keep the checklist visible from primary entry points. Review approved the change with no findings; work is tracked in [GitHub Issue #29](https://github.com/kilinkis/harness-bootstrap/issues/29).

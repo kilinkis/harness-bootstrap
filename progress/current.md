@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-011 documented optional parallel Git worktrees. The guide keeps one ticket, branch, worktree, and agent in each workstream. It uses issue assignment for visible coordination and retains the full harness lifecycle in every branch. Follow-up review replaced a history-rewriting update command and approved the result.
+TASK-012 added a root harness-adoption checklist. It requires target and workspace coverage, exact production builds, CI and deployment parity, and deliberate negative tests. The README, agent guide, verification guide, production-readiness guide, pull request template, and harness contracts reinforce the adoption boundary. Review approved the change with no unresolved findings.

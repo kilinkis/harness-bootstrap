@@ -24,6 +24,16 @@ This command validates harness state. It then checks types, lint rules, changed-
 
 The fast command is not a completion or merge gate.
 
+## Project verification extension
+
+The commands in this repository verify the sample task CLI. They do not prove that an adopted project can build or deploy.
+
+During adoption, define a project-owned command such as `verify:project`. It must cover every target recorded in `ADOPTION_CHECKLIST.md`. Include all required workspace type checks, tests, and production builds. Compose it into the full `verify` command, not only into an optional workflow.
+
+Do not assume that a root `tsc --noEmit` command covers a monorepo. Select TypeScript project references, workspace scripts, Turborepo, Nx, or another existing project mechanism based on the repository's build graph.
+
+Run a deliberate negative test after you configure the command. Introduce a temporary build failure and confirm that `./scripts/verify.sh` exits with a non-zero status. Restore the failure and run the full gate again. Record both results.
+
 ## Full gate
 
 Run the full harness gate before completion and merge:

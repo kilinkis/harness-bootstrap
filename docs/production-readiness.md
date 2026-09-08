@@ -2,6 +2,8 @@
 
 Use this checklist when you adapt the harness to a real product. Select gates that address credible product risks. Do not add a gate only because it appears in this document.
 
+First complete the root [Harness Adoption Checklist](../ADOPTION_CHECKLIST.md). It verifies that the full gate covers each deployable target, relevant workspace, and production build. This checklist adds product-specific risks after that baseline.
+
 ## Record a status
 
 Give each reviewed item one status:
@@ -67,7 +69,7 @@ Use this table to record the result:
 
 ### Deployment and rollback
 
-- [ ] Verify build artifacts and deployment configuration.
+- [ ] Verify each production build and artifact through the root adoption checklist.
 - [ ] Test database migrations and backward compatibility where applicable.
 - [ ] Define a rollback or roll-forward procedure.
 - [ ] Add smoke tests for the deployed environment.

@@ -153,5 +153,23 @@
       "The default one-active-feature rule and validator remain unchanged.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-012",
+    "title": "Make production-build adoption explicit",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/29",
+    "acceptance_criteria": [
+      "A root-level adoption checklist is visible from README.md and AGENTS.md.",
+      "The checklist inventories every deployable application and relevant workspace with type-check, test, build, CI, and deployment evidence.",
+      "The checklist requires the exact production build for every deployable target.",
+      "Verification documentation defines a project-owned verification extension point without imposing one monorepo tool.",
+      "The guidance requires a deliberate negative test that proves a broken production build fails the gate.",
+      "The guidance covers CI and deployment-provider parity, preview status, and smoke tests where applicable.",
+      "The pull request template asks for affected deployable targets and production-build evidence.",
+      "Harness contract tests keep the checklist and its primary entry-point links present.",
+      "The documentation states that template checks do not prove an adopted project is deployable.",
+      "The full harness verification passes."
+    ]
   }
 ]
