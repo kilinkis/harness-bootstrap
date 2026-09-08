@@ -272,7 +272,7 @@
     "id": "TASK-018",
     "title": "Add proportional local verification",
     "status": "done",
-    "issue": "feature_list.json#TASK-018",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/41",
     "acceptance_criteria": [
       "The feature queue supports an explicit skipped status with a non-empty reason.",
       "An automatic local verification command selects a reduced gate only when all changed files are approved documentation paths.",
@@ -289,7 +289,7 @@
     "id": "TASK-019",
     "title": "Record workflow and agent usage metrics",
     "status": "done",
-    "issue": "feature_list.json#TASK-019",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/42",
     "acceptance_criteria": [
       "A versioned event schema records append-only workflow metrics as JSON Lines.",
       "The default local metrics file is ignored by Git and its path can be overridden for CI artifact collection.",
@@ -308,7 +308,7 @@
     "id": "TASK-020",
     "title": "Reduce default harness workflow cost",
     "status": "done",
-    "issue": "feature_list.json#TASK-020",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/43",
     "acceptance_criteria": [
       "Approved documentation-only changes use a low-risk lane without feature activation, progress reports, or local agent-role handoffs, while retaining automatic classification, change-request review, and full CI.",
       "New active work items have at most five acceptance criteria, and guidance targets at most 300 added implementation lines unless a named owner records why the work cannot be split.",
