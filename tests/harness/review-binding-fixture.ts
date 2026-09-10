@@ -40,7 +40,9 @@ export async function addReviewReport(root: string): Promise<string> {
   const digest = await computeImplementationDigest(root);
   await writeFile(
     join(root, "progress/review_TASK-100.md"),
-    `# Review\n\nImplementation digest: ${digest}\n`,
+    `# Review TASK-100\n\nImplementation digest: ${digest}\n\n` +
+      "## Verdict\nApproved.\n\n## Scope reviewed\nFixture implementation.\n\n" +
+      "## Commands and results\nFocused checks passed.\n\n## Remaining risks\nNone.\n",
   );
   await runGit(root, ["add", "progress/review_TASK-100.md"]);
   return digest;

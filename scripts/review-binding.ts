@@ -1,8 +1,10 @@
+import { resolveFinalReviewPath } from "./final-review.js";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
+import { validateReviewReport } from "./harness-evidence.js";
 import { classifyDependencyMaintenance } from "./dependency-maintenance.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
 
@@ -51,7 +53,7 @@ export async function validateReviewBinding(
   const selected = selectFeature(features);
   if (!selected) return findings;
 
-  const reportPath = `progress/review_${selected.id}.md`;
+  const reportPath = await resolveFinalReviewPath(root, selected.id);
   let report: string;
   try {
     report = await readFile(resolve(root, reportPath), "utf8");
@@ -84,6 +86,9 @@ export async function validateReviewBinding(
     );
     return findings;
   }
+
+  validateReviewReport(report, reportPath, selected.id, findings);
+  if (findings.length > 0) return findings;
 
   const current = await computeImplementationDigest(root);
   if (declaration[1] === current) return findings;
