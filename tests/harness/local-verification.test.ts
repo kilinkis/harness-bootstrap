@@ -135,6 +135,8 @@ function runSelector(
   root: string,
   base?: string,
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
+  const env = { ...process.env };
+  delete env.HARNESS_BASE_REF;
   return new Promise((resolveResult, reject) => {
     const args = [join(REPOSITORY_ROOT, "scripts/local-verification.ts"), "--"];
     if (base) args.push("--base", base);
@@ -142,7 +144,7 @@ function runSelector(
     const child = execFile(
       TSX_BINARY,
       args,
-      { encoding: "utf8" },
+      { encoding: "utf8", env },
       (error, stdout, stderr) => {
         const exitCode = error && "code" in error && typeof error.code === "number"
           ? error.code
