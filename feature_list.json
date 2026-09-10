@@ -316,5 +316,18 @@
       "Workflow metrics and their contracts remain available through explicit commands but do not run or record from the default fast, documentation, or full gates.",
       "Contract tests protect the low-risk lane, feature-size rule, streamlined command composition, optional metrics boundary, and passing full gate."
     ]
+  },
+  {
+    "id": "TASK-021",
+    "title": "Add versioned harness releases and upgrade guidance",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/47",
+    "acceptance_criteria": [
+      "A versioned harness release marker has a validated semantic version and matching changelog entry.",
+      "Release notes state the adoption actions for the first tagged release.",
+      "Maintainer guidance defines how to publish an annotated tag and GitHub release.",
+      "Adopter guidance defines how to compare releases, adapt changes, verify the result, and record the new baseline without overwriting project-specific configuration.",
+      "Contract tests pass and the full harness verification passes."
+    ]
   }
 ]
