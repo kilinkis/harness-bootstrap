@@ -111,3 +111,7 @@ Allow project verification while preserving required harness stages, order, and 
 ## 2026-09-10 — TASK-030
 
 Reject tracked working-tree implementation that differs from the staged approval before final verification. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 96 harness contracts. Evidence: progress/impl_TASK-030.md and progress/review_TASK-030.md.
+
+## 2026-09-10 — TASK-031
+
+Restrict evidence exemptions to the original bootstrap definitions and require references and evidence for new completed work. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 100 harness contracts. Evidence: progress/impl_TASK-031.md and progress/review_TASK-031.md.

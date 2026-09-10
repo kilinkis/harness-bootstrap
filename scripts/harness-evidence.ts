@@ -52,11 +52,11 @@ export async function validateFeatureEvidence(
   features: Feature[],
   findings: HarnessFinding[],
 ): Promise<void> {
-  const completedTracked = features.filter(
-    ({ status, tracked }) => status === "done" && tracked,
+  const completedNormal = features.filter(
+    ({ status, legacy }) => status === "done" && !legacy,
   );
   const needsImplementation = features.filter(
-    ({ status, tracked }) => status === "in_review" || (status === "done" && tracked),
+    ({ status, legacy }) => status === "in_review" || (status === "done" && !legacy),
   );
 
   for (const feature of needsImplementation) {
@@ -67,10 +67,10 @@ export async function validateFeatureEvidence(
     }
   }
 
-  for (const feature of completedTracked) {
+  for (const feature of completedNormal) {
     await validateCompletedReview(root, feature.id, findings);
   }
-  await validateHistory(root, completedTracked, findings);
+  await validateHistory(root, completedNormal, findings);
 }
 
 async function validateCompletedReview(
@@ -116,7 +116,7 @@ async function validateHistory(
       addFinding(
         findings,
         "HISTORY_ENTRY_MISSING",
-        `${feature.id}: completed tracked feature is missing from history`,
+        `${feature.id}: completed feature is missing from history`,
         path,
       );
     }
