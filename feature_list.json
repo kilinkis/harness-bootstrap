@@ -384,13 +384,13 @@
     "id": "TASK-026",
     "title": "Use the final review as the approval authority",
     "acceptance_criteria": [
-      "Completed feature approval requires an approved verdict and required evidence in the canonical final review report.",
-      "Numbered review rounds cannot override a rejected or incomplete final report.",
+      "Completed features require approval and required evidence in one designated final report; new features use the canonical final filename.",
+      "Numbered review rounds cannot override a rejected or incomplete final report, except for an explicit fixed mapping of existing historical final approvals.",
       "Review binding and completion evaluate the same canonical report without rewriting historical reviews.",
       "Focused contracts cover old approvals, rejected final reviews, and valid canonical approval."
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/59",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "TASK-027",

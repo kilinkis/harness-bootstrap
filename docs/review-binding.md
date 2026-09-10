@@ -31,6 +31,15 @@ Implementation digest: sha256:<64 lowercase hexadecimal characters>
 
 5. State the verdict.
 
+Use `progress/review_<feature-id>.md` for the final approval. Include the feature ID, the digest line, and these exact headings:
+
+- `## Verdict`, followed by `Approved.` for approval or `Changes requested.` for rejection.
+- `## Scope reviewed`, with the inspected scope and findings.
+- `## Commands and results`, with independent verification evidence.
+- `## Remaining risks`, with unresolved risks or an explicit statement that none remain.
+
+The final report must contain its own verdict and evidence. Completion and binding read the same final report. Neither check combines numbered rounds or lets an earlier approval override a rejected, incomplete, or missing final report. Binding requires a valid approved report for both `in_review` work and the latest completed feature.
+
 The reviewer does not stage or edit implementation files. The review report is outside the digest scope. After approval and the final local full gate, the leader can finalize queue and progress evidence without changing the digest.
 
 ## Gate behavior
@@ -50,3 +59,18 @@ The full harness gate and required remote review still apply to maintenance. Thi
 Keep each changes-requested report in a numbered file such as `progress/review_TASK-003_round1.md`. Do not edit it. Reserve `progress/review_TASK-003.md` for the final approved report that completion checks read.
 
 This digest binds content. It does not prove reviewer identity or authority. Use required platform reviews or another trusted identity control when those guarantees are necessary.
+
+## Historical final reports
+
+Four completed bootstrap features recorded their actual final approvals under older filenames. The shared resolver in `scripts/final-review.ts` designates these existing reports:
+
+| Feature | Historical final report |
+| --- | --- |
+| TASK-005 | `progress/review_TASK-005_followup.md` |
+| TASK-009 | `progress/review_TASK-009_followup.md` |
+| TASK-011 | `progress/review_TASK-011_followup.md` |
+| TASK-022 | `progress/review_TASK-022_round1.md` |
+
+Each designation requires SHA-256 matches for both the original canonical report and the designated final report. Missing or changed history removes the designation. The normal canonical-report rules then apply. The selected historical report must independently contain the required approval and evidence. These exceptions do not combine reports or apply to new work with reused IDs.
+
+Preserve the historical reports. Do not change their recorded hashes to bypass a failure. When adopting a fresh queue without this bootstrap history, remove the four historical mappings and their history-specific contract from `tests/harness/canonical-review.test.ts`.

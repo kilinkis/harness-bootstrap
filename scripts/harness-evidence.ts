@@ -1,6 +1,4 @@
-import { readdir } from "node:fs/promises";
-import { resolve } from "node:path";
-
+import { resolveFinalReviewPath } from "./final-review.js";
 import {
   addFinding,
   containsFeatureId,
@@ -69,55 +67,32 @@ export async function validateFeatureEvidence(
     }
   }
 
-  const progressFiles = completedTracked.length
-    ? await readDirectory(root, "progress", findings)
-    : [];
   for (const feature of completedTracked) {
-    await validateCompletedReview(root, progressFiles, feature.id, findings);
+    await validateCompletedReview(root, feature.id, findings);
   }
   await validateHistory(root, completedTracked, findings);
 }
 
 async function validateCompletedReview(
   root: string,
-  progressFiles: string[],
   featureId: string,
   findings: HarnessFinding[],
 ): Promise<void> {
-  const prefix = `review_${featureId}`;
-  const reportFiles = progressFiles.filter(
-    (file) =>
-      file === `${prefix}.md` ||
-      (file.startsWith(`${prefix}_`) && file.endsWith(".md")),
-  );
-  if (reportFiles.length === 0) {
-    addFinding(
-      findings,
-      "REVIEW_REPORT_MISSING",
-      `${featureId}: completed tracked feature needs a review report`,
-      "progress",
-    );
-    return;
-  }
+  const path = await resolveFinalReviewPath(root, featureId);
+  const report = await readText(root, path, "REVIEW_REPORT_MISSING", findings);
+  if (report !== undefined) validateReviewReport(report, path, featureId, findings);
+}
 
-  const reports: string[] = [];
-  for (const file of reportFiles) {
-    const path = `progress/${file}`;
-    const report = await readText(root, path, "REVIEW_REPORT_MISSING", findings);
-    if (report !== undefined) {
-      reports.push(report);
-      validateFeatureIdentity(report, path, featureId, findings);
-    }
-  }
-  const combined = reports.join("\n");
-  validateSections(combined, `progress/${prefix}*.md`, REVIEW_SECTIONS, findings);
-  if (!reports.some(hasApprovedVerdict)) {
-    addFinding(
-      findings,
-      "REVIEW_APPROVAL_MISSING",
-      `${featureId}: completed tracked feature needs an approved review verdict`,
-      `progress/${prefix}*.md`,
-    );
+export function validateReviewReport(
+  report: string,
+  path: string,
+  featureId: string,
+  findings: HarnessFinding[],
+): void {
+  validateReport(report, path, featureId, REVIEW_SECTIONS, findings);
+  if (!hasApprovedVerdict(report)) {
+    addFinding(findings, "REVIEW_APPROVAL_MISSING",
+      `${featureId}: final review report needs an approved verdict`, path);
   }
 }
 
@@ -185,18 +160,5 @@ function validateSections(
         path,
       );
     }
-  }
-}
-
-async function readDirectory(
-  root: string,
-  path: string,
-  findings: HarnessFinding[],
-): Promise<string[]> {
-  try {
-    return await readdir(resolve(root, path));
-  } catch {
-    addFinding(findings, "PROGRESS_DIRECTORY_MISSING", "Progress directory is missing", path);
-    return [];
   }
 }
