@@ -38,4 +38,18 @@ The script changes add 170 net runtime lines across the nine fixes. Most new imp
 
 ## Publication
 
-All nine fixes are complete locally. GitHub issues #57 through #65 track them. No fix branch was pushed and no pull request was opened. Automatic approval review rejected the first push because external transfer to the GitHub remote requires explicit user authorization. That request remains pending; the rejected action was not retried. Remote CI and merge completion therefore remain unverified.
+The user authorized publication and merge through pull requests on 2026-09-10. GitHub issues #57 through #65 track the work. These requests carry the reviewed commits in order:
+
+| Work item | Pull request |
+| --- | --- |
+| TASK-024 | [#66](https://github.com/kilinkis/harness-bootstrap/pull/66) |
+| TASK-025 | [#67](https://github.com/kilinkis/harness-bootstrap/pull/67) |
+| TASK-026 | [#68](https://github.com/kilinkis/harness-bootstrap/pull/68) |
+| TASK-027 | [#69](https://github.com/kilinkis/harness-bootstrap/pull/69) |
+| TASK-028 | [#70](https://github.com/kilinkis/harness-bootstrap/pull/70) |
+| TASK-029 | [#71](https://github.com/kilinkis/harness-bootstrap/pull/71) |
+| TASK-030 | [#72](https://github.com/kilinkis/harness-bootstrap/pull/72) |
+| TASK-031 | [#73](https://github.com/kilinkis/harness-bootstrap/pull/73) |
+| TASK-032 | [#74](https://github.com/kilinkis/harness-bootstrap/pull/74) |
+
+GitHub records each request's current required-check and merge state. Merge only after the required harness-gate check passes on the final head. Historical implementation reports retain the publication status at the time they were written. The earlier automatic approval-review block was resolved by the user's explicit authorization.

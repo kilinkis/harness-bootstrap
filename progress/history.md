@@ -119,3 +119,7 @@ Restrict evidence exemptions to the original bootstrap definitions and require r
 ## 2026-09-10 — TASK-032
 
 Document the minimal adoption boundary and verify fresh project-owned success and failure through real core guards. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 102 harness contracts. Evidence: progress/impl_TASK-032.md and progress/review_TASK-032.md.
+
+## 2026-09-10 — Harness improvement delivery
+
+The user authorized publication and merge through PRs. Opened [#66](https://github.com/kilinkis/harness-bootstrap/pull/66), [#67](https://github.com/kilinkis/harness-bootstrap/pull/67), [#68](https://github.com/kilinkis/harness-bootstrap/pull/68), [#69](https://github.com/kilinkis/harness-bootstrap/pull/69), [#70](https://github.com/kilinkis/harness-bootstrap/pull/70), [#71](https://github.com/kilinkis/harness-bootstrap/pull/71), [#72](https://github.com/kilinkis/harness-bootstrap/pull/72), [#73](https://github.com/kilinkis/harness-bootstrap/pull/73), [#74](https://github.com/kilinkis/harness-bootstrap/pull/74) for TASK-024 through TASK-032. Required remote checks remain the merge authority. Startup feedback passed all fast checks and 7 product tests. No implementation changed during publication.
