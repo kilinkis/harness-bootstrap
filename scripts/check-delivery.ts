@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
+import { assertDeliverySnapshot } from "./review-binding.js";
+
 // The full command runs state and binding validation after this phase decision.
 // Keep their schema, evidence, and approval checks in their existing validators.
 async function main(): Promise<void> {
@@ -21,6 +23,7 @@ async function main(): Promise<void> {
       throw new Error("DELIVERY_APPROVAL_REQUIRED: finish implementation and obtain review before the full gate");
     }
   }
+  await assertDeliverySnapshot(resolve("."));
   console.log(`delivery phase: ${phase}`);
 }
 
