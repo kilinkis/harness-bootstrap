@@ -2,6 +2,8 @@
 
 > Do not trust a green harness gate until this checklist is complete for the target repository.
 
+Start with the [minimal adoption map](docs/adoption-map.md) for copy/adapt/omit decisions and runtime, install, and Git prerequisites.
+
 When replacing the bootstrap queue, remove its three historical evidence exemptions as described in the [historical evidence rules](docs/review-binding.md#historical-bootstrap-evidence). Give each new completed feature a local or remote work-item reference and normal reports.
 
 The bootstrap gate verifies the sample project only. It does not prove that another repository can build or deploy. Complete this checklist when you copy or adapt the harness.
@@ -121,13 +123,12 @@ The provider check complements the repository gate. It does not replace the loca
 
 A passing run is not sufficient evidence. Perform a deliberate negative test for each deployable build path.
 
-1. Create a temporary branch or uncommitted change.
-2. Introduce a known compilation or build-configuration failure.
-3. Run `./scripts/verify.sh`.
-4. Confirm that the command exits with a non-zero status before merge.
-5. Restore the intentional failure.
-6. Run `./scripts/verify.sh` again.
-7. Record both results in the adoption work item.
+1. During implementation, introduce a controlled compilation or build-configuration failure and run the project command directly.
+2. Confirm that the project command exits with a non-zero status, then restore the input.
+3. To prove full-gate propagation on the approved snapshot, use a controlled failing runtime or build configuration when available.
+4. Run `./scripts/verify.sh` and confirm that the project stage reports the failure. A delivery-phase or snapshot rejection does not prove build coverage.
+5. Restore the controlled input and run the final approved gate.
+6. Record both project-stage and full-gate evidence in the adoption work item. See the [minimal adoption map](docs/adoption-map.md) for the tested fixture and its limits.
 
 Do not commit the intentional failure. Do not weaken the gate to make the negative test pass.
 
