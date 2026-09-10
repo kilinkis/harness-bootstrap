@@ -2,10 +2,8 @@
 
 No feature is active.
 
-TASK-030: Reject tracked working-tree implementation that differs from the staged approval before final verification.
+TASK-030 is complete after the CI fixture-isolation repair. Independent re-review approved `sha256:2e15f540d795b8867bcd502f1b2574e80e4d169fd3b45fd8db99ba085bd2234b`. The leader ran the final local gate with `HARNESS_BASE_REF=db63e0c09b539bb48f4840c934fcdb71b946a35e`; it passed all fast checks, 7 product tests, and 96 harness contracts. Production behavior is unchanged by the repair.
 
-Independent review approved `sha256:83b96f8b1ad293cd96c82570488e4ffde7dbc0bc22d1d863fb5588c32362151d`. The leader ran `./scripts/verify.sh` after approval. It passed with 7 product tests and 96 harness contracts.
+The user authorized publication and merge. PRs #66 through #74 track delivery in order. Merge requires successful remote checks on each final head. GitHub is the authority for current merge status.
 
-Pending work: TASK-031, TASK-032.
-
-Publication remains subject to explicit user authorization requested after automatic approval review rejected the TASK-024 push. No rejected publication action was retried. Existing untracked output/ and tmp/ are unrelated user artifacts.
+Unrelated output/ and tmp/ user artifacts remain untouched.
