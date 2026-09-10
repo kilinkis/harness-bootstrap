@@ -99,3 +99,7 @@ Completion and binding validate one designated final review, with content-pinned
 ## 2026-09-10 — TASK-027
 
 Full verification now distinguishes approved local work from finalized CI delivery while keeping development feedback permissive. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 85 harness contracts. Evidence: progress/impl_TASK-027.md and progress/review_TASK-027.md.
+
+## 2026-09-10 — TASK-028
+
+Use explicit common-ancestor comparison bases for Fallow and selectors, including safe first-push full analysis. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 89 harness contracts. Evidence: progress/impl_TASK-028.md and progress/review_TASK-028.md.

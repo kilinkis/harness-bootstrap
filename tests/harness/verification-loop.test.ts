@@ -57,6 +57,7 @@ void test("the shell and CI entry points use the full gate", async () => {
 
   assert.match(shellGate, /HARNESS_DELIVERY_PHASE="\$phase" pnpm run verify/);
   assert.match(workflow, /run: \.\/scripts\/verify\.sh ci/);
+  assert.match(workflow, /HARNESS_BASE_REF:.*github\.event\.pull_request\.base\.sha.*github\.event\.before/);
   assert.doesNotMatch(workflow, /pnpm run feedback/);
   assert.doesNotMatch(workflow, /verify:local|verify:docs/);
 });

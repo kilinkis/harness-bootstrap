@@ -32,7 +32,7 @@ Use the automatic local selector for an early check:
 pnpm run verify:local
 ```
 
-The command compares the working tree with `origin/main` by default. This includes staged, unstaged, and untracked files. Use an explicit base when the branch targets a different ref:
+The command compares the working tree with the resolved comparison baseline. This includes staged, unstaged, and untracked files. It defaults to `origin/main`; `HARNESS_BASE_REF` overrides that target, and an explicit `--base` takes precedence:
 
 ```bash
 pnpm run verify:local -- --base origin/develop
@@ -111,7 +111,7 @@ After harness-state validation, the commands run complementary checks:
 3. `pnpm run check:targets` validates the approved target inventory against package discovery.
 4. `pnpm run check` performs TypeScript type checking.
 5. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
-6. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
+6. `pnpm run analyze:changes` resolves the shared comparison baseline and passes its commit explicitly to Fallow's new-only audit. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
 7. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
 8. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, release-marker validation, review binding, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
 
@@ -121,7 +121,7 @@ Dependency maintenance is the only additional no-active-feature exception. It pe
 
 Use `pnpm run analyze` when you need a full-codebase Fallow report rather than the changed-file merge gate. Its thresholds and CLI entry point are versioned in `.fallowrc.json`; duplication above 5% fails the analysis. The CRAP threshold is calibrated above Fallow's static estimates because this small Node test setup does not emit Istanbul coverage; cyclomatic, cognitive, and function-size limits remain independently enforced.
 
-For a feature, add the smallest focused command that demonstrates its behavior. The implementer runs focused checks and the fast loop before review. The reviewer runs independent focused checks. After approval, the leader runs the one final local full gate on the approved snapshot. CI checks out full Git history so Fallow can resolve the correct merge base.
+For a feature, add the smallest focused command that demonstrates its behavior. The implementer runs focused checks and the fast loop before review. The reviewer runs independent focused checks. After approval, the leader runs the one final local full gate on the approved snapshot. CI checks out full Git history and supplies the pull-request base SHA or pre-push SHA for comparison.
 
 After the full gate passes, the leader makes the evidence-only finalization changes in `feature_list.json` and `progress/`. The leader then runs `pnpm run check:harness-state` as a focused state check. These files are outside the reviewed implementation digest.
 
@@ -132,3 +132,21 @@ Record exact commands and exit results in the implementation report. A passing c
 Workflow metrics are optional. Use their explicit commands when adoption data is needed. See [workflow metrics](workflow-metrics.md) for gate recording, contract tests, storage, privacy, CI export, agent usage, summaries, and evidence limits.
 
 Use the [bounded repair loop](repair-loop.md) when a deterministic command fails. Record each repair attempt in the implementation report. Stop when the repair cycle uses its three-attempt budget.
+
+## Comparison baseline
+
+Fallow change analysis, the local selector, and impact analysis use one resolver. Selection precedence is an explicit selector `--base`, then `HARNESS_BASE_REF`, then `origin/main`. The resolver finds the selected target's common ancestor with `HEAD` and returns its commit SHA. A feature branch's own upstream never selects the baseline. Pushed feature commits therefore remain in scope when the upstream already points at `HEAD`.
+
+The local selector forwards the resolved SHA to its selected command. Fallow receives that SHA through an explicit `audit --base` argument. Human-readable output records the requested ref and resolved commit. To verify against a different default branch, use:
+
+```bash
+HARNESS_BASE_REF=origin/develop pnpm run feedback
+pnpm run verify:local -- --base origin/develop
+pnpm run impact --base origin/develop
+```
+
+The checked-in CI workflow supplies the pull-request target SHA for PR runs and the event's pre-push SHA for default-branch pushes. Normal pre-push ancestors resolve to that exact prior commit. Fetch full history before verification. Missing refs, missing common history, and invalid nonzero refs fail with `COMPARISON_BASE_INVALID`; they do not fall back to `HEAD` or an empty diff.
+
+GitHub represents the first push with an all-zero before SHA. That value selects full analysis. The selectors enumerate all tracked and unignored untracked paths. The Fallow adapter runs its full command with `--fail-on-issues`, so existing findings remain blocking on the first push. This mode does not require a fabricated predecessor commit.
+
+Review binding uses a different baseline: the immutable implementation snapshot approved in the final report. Comparison-base configuration does not change that approval anchor. Use the raw `pnpm exec fallow` CLI for manual analysis options; the standard change-analysis command owns its scope and takes its target from `HARNESS_BASE_REF`.

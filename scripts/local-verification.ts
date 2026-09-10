@@ -2,6 +2,7 @@ import { execFile } from "node:child_process";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { resolveComparisonBase } from "./comparison-base.js";
 import { readGitChangedPaths } from "./git-changed-paths.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
 
@@ -15,7 +16,7 @@ export interface LocalVerificationSelection {
 }
 
 interface Options {
-  base: string;
+  base: string | undefined;
   dryRun: boolean;
   root: string;
 }
@@ -50,13 +51,13 @@ export function selectLocalVerification(
 
 export async function readLocalChangedPaths(
   root: string,
-  base: string,
+  base: string | null,
 ): Promise<string[]> {
   return classifyLowRiskDocumentation(await readGitChangedPaths(root, base)).changedPaths;
 }
 
 function parseOptions(args: string[]): Options {
-  let base = "origin/main";
+  let base: string | undefined;
   let dryRun = false;
   const paths: string[] = [];
   for (let index = 0; index < args.length; index += 1) {
@@ -89,13 +90,14 @@ async function runCommand(root: string, command: string, base: string): Promise<
 
 async function main(): Promise<void> {
   const options = parseOptions(process.argv.slice(2));
-  const changedPaths = await readLocalChangedPaths(options.root, options.base);
+  const base = await resolveComparisonBase(options.root, options.base);
+  const changedPaths = await readLocalChangedPaths(options.root, base.commit);
   const selection = selectLocalVerification(changedPaths);
-  console.log(`Local verification base: ${options.base}`);
+  console.log(`Local verification base: ${base.ref} (${base.commit ?? "full analysis"})`);
   console.log(`Selected gate: ${selection.gate}`);
   console.log(`Reason: ${selection.reason}`);
   console.log(`Changed paths: ${selection.changedPaths.length}`);
-  if (!options.dryRun) await runCommand(options.root, selection.command, options.base);
+  if (!options.dryRun) await runCommand(options.root, selection.command, base.commit ?? base.ref);
 }
 
 function usageError(): Error {

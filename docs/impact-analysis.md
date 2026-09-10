@@ -14,7 +14,7 @@ Use JSON when another tool must read the result:
 pnpm --silent run impact --json --base origin/main
 ```
 
-The command reads tracked changes against the base ref. It also reads untracked files that Git does not ignore. It treats each side of a move as a changed path. It maps each path to the most specific discovered target. It then follows package dependencies in reverse to find workspace consumers. A root package-manager or TypeScript configuration change affects every target.
+The command uses the [shared comparison baseline](verification.md#comparison-baseline): explicit `--base`, then `HARNESS_BASE_REF`, then `origin/main`. It resolves the selected target's common ancestor with `HEAD` and reads tracked changes against that commit. An all-zero first-push SHA selects every tracked path. It also reads untracked files that Git does not ignore. It treats each side of a move as a changed path. It maps each path to the most specific discovered target. It then follows package dependencies in reverse to find workspace consumers. A root package-manager or TypeScript configuration change affects every target.
 
 Each affected target contains:
 
