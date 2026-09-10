@@ -115,3 +115,7 @@ Reject tracked working-tree implementation that differs from the staged approval
 ## 2026-09-10 — TASK-031
 
 Restrict evidence exemptions to the original bootstrap definitions and require references and evidence for new completed work. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 100 harness contracts. Evidence: progress/impl_TASK-031.md and progress/review_TASK-031.md.
+
+## 2026-09-10 — TASK-032
+
+Document the minimal adoption boundary and verify fresh project-owned success and failure through real core guards. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 102 harness contracts. Evidence: progress/impl_TASK-032.md and progress/review_TASK-032.md.

@@ -1,6 +1,6 @@
 # Adoption Handoff
 
-Use this protocol when an agent adapts the harness to an existing repository.
+Use this protocol when an agent adapts the harness to an existing repository. Start with the [minimal adoption map](adoption-map.md) to select files and establish runtime, installation, and Git prerequisites.
 
 ## Completion boundary
 

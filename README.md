@@ -2,7 +2,7 @@
 
 A reusable project template for AI-assisted software work: small, verifiable changes, clear handoffs, and an audit trail that survives the chat session.
 
-> **Adopting this harness?** Complete the [Harness Adoption Checklist](ADOPTION_CHECKLIST.md) before you trust a green gate. The bootstrap checks do not prove that your applications can build or deploy.
+> **Adopting this harness?** Start with the [minimal adoption map](docs/adoption-map.md). Complete the [Harness Adoption Checklist](ADOPTION_CHECKLIST.md) before you trust a green gate. The bootstrap checks do not prove that your applications can build or deploy.
 
 The demo application is deliberately small—a local task CLI. The point is the structure around it: explicit work queues, durable progress records, independent review, and executable verification. Share this repository with an AI agent as a reference when you want it to establish the same working structure in an existing project.
 
@@ -27,11 +27,16 @@ The structure is intentionally small. A useful harness should provide the constr
 
 ## Quick start
 
+Use Node 24, pnpm 10.34.5, Git, and Bash. Clone with the default branch history available. Install the locked dependencies before running checks:
+
 ```bash
-./scripts/verify.sh
+pnpm install --frozen-lockfile
+pnpm run feedback
 pnpm start -- add "Ship the harness" --tag portfolio
 pnpm start -- list
 ```
+
+Run `./scripts/verify.sh` for final local verification after approval. CI uses `./scripts/verify.sh ci`. See the [minimal adoption map](docs/adoption-map.md) for Git-base prerequisites and fresh-project setup.
 
 See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The leader runs it once after independent approval, and required CI runs it before merge.
 
