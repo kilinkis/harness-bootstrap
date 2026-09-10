@@ -62,7 +62,7 @@ Approve the inventory with the [target inventory guide](target-inventory.md). Th
 
 Do not put the audit in the standard gate before you approve and configure the inventory. The audit reports incomplete adoption decisions. It does not replace the commands that enforce those decisions.
 
-During adoption, define a project-owned command such as `verify:project`. It must cover every target recorded in `ADOPTION_CHECKLIST.md`. Include all required workspace type checks, tests, and production builds. Compose it into the full `verify` command, not only into an optional workflow.
+During adoption, define a project-owned command such as `verify:project`. It must cover every target recorded in `ADOPTION_CHECKLIST.md`. Include all required workspace type checks, tests, and production builds. Compose it into the full `verify` command, not only into an optional workflow. The supported shape is `pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness`. Keep each required stage in order and preserve `&&` failure propagation. The project stage is optional for the sample CLI and required when an adopter defines project verification.
 
 Do not assume that a root `tsc --noEmit` command covers a monorepo. Select TypeScript project references, workspace scripts, Turborepo, Nx, or another existing project mechanism based on the repository's build graph.
 
@@ -150,3 +150,11 @@ The checked-in CI workflow supplies the pull-request target SHA for PR runs and 
 GitHub represents the first push with an all-zero before SHA. That value selects full analysis. The selectors enumerate all tracked and unignored untracked paths. The Fallow adapter runs its full command with `--fail-on-issues`, so existing findings remain blocking on the first push. This mode does not require a fabricated predecessor commit.
 
 Review binding uses a different baseline: the immutable implementation snapshot approved in the final report. Comparison-base configuration does not change that approval anchor. Use the raw `pnpm exec fallow` CLI for manual analysis options; the standard change-analysis command owns its scope and takes its target from `HARNESS_BASE_REF`.
+
+## Reusable command contracts
+
+The verification-loop contracts accept both the sample full gate and the documented `verify:project` extension. They require the delivery guard, feedback, and harness tests in order. The optional project stage runs between feedback and harness tests. These checks support that simple sequential command shape; they do not parse arbitrary shell programs.
+
+The project-gate contracts execute an isolated copy of the reusable contract with the extension enabled. Temporary stub commands prove execution order and that failure in any required stage, including the project check, stops later work. No project build is executed by those fixtures.
+
+Assertions named "sample bootstrap" describe this repository's optional documentation and metrics command defaults. Adapt those sample expectations when changing optional capabilities during adoption. Keep the required-stage and failure-propagation contracts.

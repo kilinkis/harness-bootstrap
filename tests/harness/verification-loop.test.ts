@@ -9,7 +9,7 @@ interface PackageManifest {
   scripts?: Record<string, string>;
 }
 
-void test("the full gate contains every fast feedback check", async () => {
+void test("required harness checks permit the documented project extension", async () => {
   const manifest = JSON.parse(
     await readRepositoryFile("package.json"),
   ) as PackageManifest;
@@ -24,11 +24,7 @@ void test("the full gate contains every fast feedback check", async () => {
     "pnpm run analyze:changes",
     "pnpm run test:product",
   ]);
-  assert.deepEqual(manifest.scripts?.verify?.split(" && "), [
-    "pnpm run check:delivery",
-    "pnpm run feedback",
-    "pnpm run test:harness",
-  ]);
+  assertFullGateComposition(manifest.scripts);
   assert.deepEqual(manifest.scripts?.["verify:docs"]?.split(" && "), [
     "pnpm run check:harness-state",
     "pnpm run check:release",
@@ -36,6 +32,10 @@ void test("the full gate contains every fast feedback check", async () => {
     "pnpm run check:targets",
     "pnpm run test:harness:docs",
   ]);
+});
+
+void test("sample bootstrap retains its optional documentation and metrics commands", async () => {
+  const manifest = JSON.parse(await readRepositoryFile("package.json")) as PackageManifest;
   assert.deepEqual(manifest.scripts?.["test:harness:docs"]?.split(" ").slice(2), [
     "tests/harness/adoption-guidance.test.ts",
     "tests/harness/harness-release.test.ts",
@@ -68,7 +68,7 @@ void test("the local selector remains separate from the full gate", async () => 
   ) as PackageManifest;
 
   assert.equal(manifest.scripts?.["verify:local"], "tsx scripts/local-verification.ts");
-  assert.equal(manifest.scripts?.verify, "pnpm run check:delivery && pnpm run feedback && pnpm run test:harness");
+  assertFullGateComposition(manifest.scripts);
 });
 
 void test("workflow guidance protects the low-risk and streamlined lanes", async () => {
@@ -108,4 +108,13 @@ void test("workflow guidance protects the low-risk and streamlined lanes", async
 
 async function readRepositoryFile(relativePath: string): Promise<string> {
   return readFile(new URL(relativePath, `file://${REPOSITORY_ROOT}/`), "utf8");
+}
+
+function assertFullGateComposition(scripts: Record<string, string> | undefined): void {
+  const commands = scripts?.verify?.split(/\s*&&\s*/);
+  const project = "pnpm run verify:project";
+  const hasProject = commands?.includes(project);
+  assert.deepEqual(commands, ["pnpm run check:delivery", "pnpm run feedback",
+    ...(hasProject ? [project] : []), "pnpm run test:harness"]);
+  if (hasProject) assert.ok(scripts?.["verify:project"]?.trim(), "Define the project verification command");
 }
