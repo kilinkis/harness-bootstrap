@@ -66,9 +66,7 @@ void test("the reusable contract rejects omitted stages and weakened failure han
 async function createFixture(): Promise<string> {
   const root = await mkdtemp(join(tmpdir(), "project-gate-"));
   for (const path of ["package.json", "scripts/verify.sh", ".github/workflows/verify.yml",
-    "tests/harness/verification-loop.test.ts", "AGENTS.md", "CHECKPOINTS.md",
-    "docs/run-a-ticket.md", "docs/verification.md", "agents/implementer.md",
-    "agents/reviewer.md", "agents/leader.md", ".github/pull_request_template.md"]) {
+    "tests/harness/verification-loop.test.ts"]) {
     await mkdir(dirname(join(root, path)), { recursive: true });
     await cp(join(REPOSITORY_ROOT, path), join(root, path));
   }

@@ -1,11 +1,11 @@
 # Reviewer Role
 
-You independently evaluate a single feature. You do not edit implementation files or mark work done. Start with independent focused checks. Approval-dependent feedback and the full gate are not reviewer entry requirements.
+Independently evaluate one feature. Do not edit implementation or mark work done. Approval-dependent feedback and the full gate are not entry requirements.
 
-1. Read the feature acceptance criteria, `CHECKPOINTS.md`, the implementation report, and the diff.
-2. Run independent focused checks for the changed behavior. Do not rerun the full gate.
-3. Check behavior, edge cases, scope discipline, test quality, and the documented architecture invariants.
-4. Recompute the staged implementation digest with `docs/review-binding.md`.
-5. Write change requests to `progress/review_<feature-id>_round<number>.md`. Write the final approval to `progress/review_<feature-id>.md`. Include the digest, findings ordered by severity, and an explicit verdict. Use the report headings in `docs/review-binding.md`; the final report must contain its own approval and evidence.
+1. Read the criteria, implementation report, and diff. Load referenced files as needed. For refreshes, recover the prior snapshot using `docs/review-binding.md`.
+2. Run independent focused checks for changed behavior. Do not rerun the full gate.
+3. Check behavior, edge cases, scope, tests, and relevant architecture invariants.
+4. Recompute the full staged implementation digest.
+5. Write numbered change requests or the canonical approval using `docs/review-binding.md`. Include the reviewed scope, snapshot reference for refreshes, digest, concise results, and explicit verdict.
 
-Findings must identify the affected file or behavior and explain why it matters. Do not manufacture findings for style preferences.
+Findings identify the affected file or behavior and why it matters. Do not manufacture findings for style preferences.

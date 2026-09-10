@@ -143,3 +143,7 @@ The isolated local-selector fixture no longer inherits the outer repository base
 ## 2026-09-10 — TASK-032 CI repair approval
 
 The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 102 harness contracts. Earlier approval evidence is preserved as numbered history.
+
+## TASK-033: Reduce routine harness cost
+
+Completed the five criteria in issue #75. One implementer and one independent reviewer replace the mandatory three-agent routine; approval refreshes retain committed history in Git. Direct snapshot cases replace repeated command pipelines, and useful link checks replace prose policing. Independent focused review approved the staged digest. The final local gate passed 7 product and 94 harness tests. Measurements and limitations are in `impl_TASK-033.md`; delivery status is tracked by the issue and PR.

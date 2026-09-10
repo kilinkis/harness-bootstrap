@@ -12,17 +12,6 @@ const CORE_SCRIPTS = ["verify.sh", "check-delivery.ts", "check-harness-state.ts"
   "check-target-inventory.ts", "adoption-audit.ts", "adoption-audit-types.ts", "adoption-findings.ts",
   "adoption-inventory.ts", "adoption-target-discovery.ts"];
 
-void test("primary adoption links expose copy, adapt, omit, optional, and first-run decisions", async () => {
-  for (const path of ["README.md", "ADOPTION_CHECKLIST.md", "docs/adoption-handoff.md"]) {
-    assert.match(await readFile(join(REPOSITORY_ROOT, path), "utf8"), /\]\((?:docs\/)?adoption-map\.md\)/);
-  }
-  const map = await readFile(join(REPOSITORY_ROOT, "docs/adoption-map.md"), "utf8");
-  for (const term of ["Copy", "Adapt", "Omit", "Optional", "Node 24", "pnpm install --frozen-lockfile",
-    "HARNESS_BASE_REF", "origin/main", "all-zero", "verify.sh ci", "legacy-bootstrap.ts", "final-review.ts"]) {
-    assert.ok(map.includes(term), term);
-  }
-});
-
 void test("a fresh adoption executes a real project check and propagates its failure", async () => {
   const root = await createAdoption();
   try {

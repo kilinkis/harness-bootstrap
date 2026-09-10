@@ -4,7 +4,7 @@ A review approves one implementation snapshot. It does not approve later changes
 
 This protocol applies to the normal feature workflow. An automatically classified low-risk documentation change uses change-request review and full CI instead of local role reports and a digest.
 
-The harness represents the staged implementation snapshot with a SHA-256 digest. The digest uses each staged file path, Git mode, and Git object ID. It excludes `feature_list.json` and all files in `progress/`. Those files must change when the leader records review and completion state.
+The harness represents the staged implementation snapshot with a SHA-256 digest. The digest uses each staged file path, Git mode, and Git object ID. It excludes `feature_list.json` and all files in `progress/`. Those files must change when the implementer records review and completion state.
 
 ## Implementer handoff
 
@@ -40,13 +40,21 @@ Use `progress/review_<feature-id>.md` for the final approval. Include the featur
 
 The final report must contain its own verdict and evidence. Completion and binding read the same final report. Neither check combines numbered rounds or lets an earlier approval override a rejected, incomplete, or missing final report. Binding requires a valid approved report for both `in_review` work and the latest completed feature.
 
-The reviewer does not stage or edit implementation files. The review report is outside the digest scope. After approval and the final local full gate, the leader can finalize queue and progress evidence without changing the digest.
+The reviewer does not stage or edit implementation files. The review report is outside the digest scope. After approval and the final local full gate, the implementer can finalize queue and progress evidence without changing the digest.
+
+## Approval refresh
+
+Return changed implementation to `in_progress` and stage the intended snapshot. Keep one canonical approval. The reviewer records the prior review commit and recoverable approved implementation commit or snapshot, verifies its digest, and reviews the delta and interactions. A report or digest alone cannot recover source; without that source, review the full current change.
+
+Run relevant independent focused checks and recompute the full index digest. Replace the canonical approval with a self-contained verdict, prior snapshot reference, scope, results, risks, and new digest. Committed prior approvals remain in Git without duplicate archives. Preserve an uncommitted prior approval verbatim in a numbered report first. Historical and numbered reports remain immutable.
+
+Run the final full gate on the newly approved implementation. Evidence-only finalization needs no new review. Required remote checks, whole-index binding, and delivery guards remain unchanged.
 
 ## Gate behavior
 
 `pnpm run check:review-binding` runs in the standard gate. It validates an `in_review` feature and skips `in_progress` work. When no feature is active, it validates the latest completed tracked approval.
 
-The gate fails when the active review digest is missing, malformed, or different from the staged implementation. If implementation changes after review, return the feature to implementation. Stage the new snapshot. Run verification and review again. The leader checks this binding in the full gate before evidence-only finalization.
+The gate fails when the active review digest is missing, malformed, or different from the staged implementation. If implementation changes after review, use the [approval refresh procedure](#approval-refresh). The implementer checks this binding in the full gate before evidence-only finalization.
 
 When no feature is active, the latest completed review permits two narrow maintenance lanes: `docs/task-cli.md` documentation and dependency maintenance. Dependency maintenance can change only `pnpm-lock.yaml`, dependency or `packageManager` fields in `package.json`, and the pnpm setup version in `.github/workflows/verify.yml`. Scripts, source, arbitrary manifest fields, other workflow changes, and unknown implementation paths remain digest-bound. Queue and progress evidence retain the digest exclusions described above.
 

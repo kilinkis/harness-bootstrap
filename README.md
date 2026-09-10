@@ -8,7 +8,7 @@ The demo application is deliberately small—a local task CLI. The point is the 
 
 ## Why this exists
 
-AI agents are most useful when their work is constrained by a system, not a long chat prompt. This repository makes that system visible and versionable. It separates planning, implementation, and review into distinct agent roles, so each agent receives only the context needed for its job instead of carrying a mixed, ever-growing conversation.
+AI agents are most useful when their work is constrained by a system, not a long chat prompt. This repository makes that system visible and versionable. One implementer carries a feature from planning through delivery, and one reviewer checks it independently. Each reads the relevant files and evidence instead of exchanging copies of the whole conversation.
 
 The structure is intentionally small. A useful harness should provide the constraints and evidence an agent needs, without becoming a second application that overwhelms its context window.
 
@@ -38,7 +38,7 @@ pnpm start -- list
 
 Run `./scripts/verify.sh` for final local verification after approval. CI uses `./scripts/verify.sh ci`. See the [minimal adoption map](docs/adoption-map.md) for Git-base prerequisites and fresh-project setup.
 
-See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The leader runs it once after independent approval, and required CI runs it before merge.
+See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The implementer runs it once after independent approval, and required CI runs it before merge.
 
 For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
 
@@ -70,17 +70,12 @@ The intended loop is:
 
 ```mermaid
 flowchart LR
-    leader[Leader<br/>selects and plans] --> implementer[Implementer<br/>changes code and tests]
-    implementer --> reviewer[Reviewer<br/>evaluates independently]
-    reviewer -->|approved| leader
+    implementer[Implementer: plan and implement] --> reviewer[Independent reviewer]
     reviewer -->|changes requested| implementer
-
-    leader -.-> current[(progress/current.md)]
-    implementer -.-> implementation[(progress/impl_*.md)]
-    reviewer -.-> review[(progress/review_*.md)]
+    reviewer -->|approved| delivery[Same implementer: final gate and delivery]
 ```
 
-Each role has a narrow responsibility: the leader plans and coordinates, the implementer changes code, and the reviewer evaluates it independently. Agents return short status messages; the useful detail is written to files in `progress/`. That avoids losing decisions when a chat is compacted or a session ends.
+A separate coordinator is optional for independent workstreams or external decisions. Keep cohesive fixes in one work item and PR. Use short reports and file references for review. The [review-binding protocol](docs/review-binding.md) defines approval refreshes without duplicating committed reports.
 
 ## Repository map
 
@@ -92,7 +87,7 @@ Each role has a narrow responsibility: the leader plans and coordinates, the imp
 ├── feature_list.json         # Small, machine-readable work queue
 ├── docs/                     # Architecture, workflow, verification, optional MCPs
 ├── progress/                 # Versioned session records and reports
-├── agents/                   # Tool-neutral leader, implementer, reviewer prompts
+├── agents/                   # Implementer, reviewer, optional coordinator prompts
 ├── .github/                  # GitHub issue/PR templates and CI workflow
 ├── scripts/verify.sh         # Harness gate: validates state + runs tests
 ├── src/                      # Minimal TypeScript task CLI

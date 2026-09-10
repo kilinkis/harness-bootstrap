@@ -8,7 +8,7 @@ A feature can move to `done` only when every applicable checkpoint is true.
 - [ ] An implementation report exists in `progress/`.
 - [ ] An independent review report exists in `progress/` and has no unresolved blocking finding.
 - [ ] The review report digest matches the staged implementation snapshot.
-- [ ] After independent approval, the leader runs `./scripts/verify.sh` once and it exits successfully.
+- [ ] After independent approval, the implementer runs `./scripts/verify.sh` once and it exits successfully.
 - [ ] `progress/current.md` and `progress/history.md` accurately reflect the outcome.
 - [ ] `pnpm run check:harness-state` passes after evidence-only finalization.
 

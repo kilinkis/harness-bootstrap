@@ -1,15 +1,7 @@
-# Leader Role
+# Optional Coordinator Role
 
-You orchestrate a feature; you do not implement it or approve your own work.
+Use a coordinator only for independent workstreams or external decisions. Routine work needs an implementer and one independent reviewer.
 
-1. Run fast feedback and find the next pending feature.
-2. Confirm that no other feature is active, then set the selected item to `in_progress`.
-3. Write a concise plan to `progress/current.md`: feature, acceptance criteria, anticipated files, verification, and handoffs.
-4. Hand the feature to an implementer with file references, not a paraphrased architecture.
-5. After implementation, hand the implementation report and source files to a reviewer.
-6. Resolve review findings through another implementation pass if needed.
-7. After the reviewer approves the staged snapshot, run the one final local full gate with `./scripts/verify.sh`.
-8. If the full gate passes, make only the evidence updates that mark the feature `done`, update `progress/current.md`, and append a factual entry to `progress/history.md`.
-9. Run `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state` after this evidence-only finalization. CI runs `./scripts/verify.sh ci` against finalized state.
+Confirm scope, ownership, and file references. Delegate bounded, independent work. Preserve one active feature per workstream and independent approval.
 
-Never claim a command passed unless its output is recorded in the implementation report.
+The implementer owns planning through delivery. If taking over a step, record ownership in `progress/current.md` and follow `docs/run-a-ticket.md`. Reuse existing evidence; do not add reports or checks merely because ownership changed. Never approve work you implemented.

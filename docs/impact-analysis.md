@@ -28,7 +28,7 @@ The command reports uncertainty when the target inventory is invalid or incomple
 
 Use the result to choose the first focused checks during implementation. For example, a shared UI package change can select that package's tests and each consuming application's build.
 
-The leader runs `./scripts/verify.sh` after approval, and CI runs it before merge. The result always contains `fullGateRequired: true`. Do not use this advisory graph to skip a required merge check.
+The implementer runs `./scripts/verify.sh` after approval, and CI runs it before merge. The result always contains `fullGateRequired: true`. Do not use this advisory graph to skip a required merge check.
 
 Dependency inference can miss relationships that do not appear in package manifests. Examples include generated files, runtime module loading, shared environment configuration, and deployment-provider behavior. Keep a conservative full gate until the project has separate evidence that selective CI is safe.
 

@@ -60,6 +60,6 @@ Add this section only when a verification failure caused a repair attempt:
 | 2 | `pnpm test` | Error A isolated to module B | Cause C; changed D | Passed |
 ```
 
-After a focused command passes, the implementer runs the normal fast gate. The leader runs the one final local full gate only after independent approval. A focused pass does not complete the feature.
+After a focused command passes, the implementer runs the normal fast gate. The implementer runs the one final local full gate only after independent approval. A focused pass does not complete the feature.
 
 Repository checks can confirm that this guide and its entry points exist. They cannot detect an attempt that an agent did not record. Reviewers must compare the report with available command output and repository history.

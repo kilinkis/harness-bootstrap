@@ -4,7 +4,7 @@ This repository is a harness: follow the system before changing the product.
 
 ## Start here
 
-1. Run `pnpm run feedback` when entering as leader or implementer. When taking the reviewer role, read `agents/reviewer.md` first and start with independent focused checks.
+1. Run `pnpm run feedback` at implementation startup unless this snapshot and environment already passed. Reviewers start with `agents/reviewer.md` and independent focused checks.
 2. Read `feature_list.json`; select the first `pending` item unless directed otherwise.
 3. Read `docs/architecture.md`, `docs/conventions.md`, and the selected feature's acceptance criteria.
 4. Read the relevant role definition in `agents/` before taking that role.
@@ -13,6 +13,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 
 ## Operating rules
 
+- Default to one implementer who plans and finalizes, plus one independent reviewer. A separate coordinator is optional.
 - Work on exactly one feature at a time. Do not start a second active item.
 - Treat acceptance criteria as the contract. Clarify or update the feature before coding if they are insufficient.
 - Keep durable state in `progress/`, not only in conversation.
@@ -28,12 +29,18 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 ## Delivery workflow
 
 - Track every non-trivial change in a work item with at most five acceptance criteria.
-- Target at most 300 added implementation lines. Split larger work unless a named owner records why it cannot be split.
+- Target at most 300 added implementation lines; record a named owner and reason for exceptions. Keep cohesive fixes in one item and PR. Split independently verifiable outcomes; finish delivery before starting dependent work.
 - Create a feature branch from the default branch; do not commit directly to the protected branch.
 - For normal work, open a pull or merge request that links the work item with closing syntax. Record the classifier result instead for the low-risk documentation lane.
 - For normal changes, include implementation and review reports, verification evidence, and remaining risks in the request.
-- The implementer runs focused and fast checks. The reviewer runs independent focused checks. After approval, the leader runs the one final local full gate.
+- The implementer runs focused and fast checks. The reviewer runs independent focused checks. After approval, the same implementer runs the one final local full gate and finalizes evidence.
 - Merge only after the completion checkpoints and required remote checks pass.
+
+## Context and evidence cost
+
+Start with active criteria, current state, and the relevant diff. Load referenced files as needed. Hand off paths, digest, changed scope, and unresolved questions; do not copy whole histories.
+
+Record commands, outcomes/counts, and material risks, with only necessary error excerpts. Reference raw logs. Repeat deterministic checks only for changed code, environment, or new evidence; independent review and the final approved gate remain required.
 
 ## Navigation
 
