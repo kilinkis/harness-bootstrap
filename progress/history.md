@@ -71,3 +71,7 @@ Added a versioned, append-only JSONL log for workflow and agent usage metrics. F
 ## 2026-09-08 — TASK-020
 
 Reduced default workflow cost with a narrow low-risk product-documentation lane, a five-criterion limit for active features, a 300-added-line sizing target, and one leader-owned local full gate after approval. Workflow metrics and their contracts remain available through explicit commands but no longer run in default gates. Review narrowed the documentation allowlist, preserved digest binding for non-low-risk changes with no active feature, and corrected inconsistent verification guidance. The final full gate passed with 7 product tests and 59 default harness contracts. Work is tracked in [GitHub Issue #43](https://github.com/kilinkis/harness-bootstrap/issues/43).
+
+## 2026-09-10 — TASK-021
+
+Added a stable release marker, a harness changelog, and local release validation. Added optional guidance for immutable tags and safe upgrades of adapted repositories. The first tagged baseline is `v0.1.0`. Review approved the change with no findings. Work is tracked in [GitHub Issue #47](https://github.com/kilinkis/harness-bootstrap/issues/47).

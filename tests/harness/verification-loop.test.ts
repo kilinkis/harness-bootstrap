@@ -16,6 +16,7 @@ void test("the full gate contains every fast feedback check", async () => {
 
   assert.deepEqual(manifest.scripts?.feedback?.split(" && "), [
     "pnpm run check:harness-state",
+    "pnpm run check:release",
     "pnpm run check:review-binding",
     "pnpm run check:targets",
     "pnpm run check",
@@ -29,12 +30,14 @@ void test("the full gate contains every fast feedback check", async () => {
   ]);
   assert.deepEqual(manifest.scripts?.["verify:docs"]?.split(" && "), [
     "pnpm run check:harness-state",
+    "pnpm run check:release",
     "pnpm run check:review-binding",
     "pnpm run check:targets",
     "pnpm run test:harness:docs",
   ]);
   assert.deepEqual(manifest.scripts?.["test:harness:docs"]?.split(" ").slice(2), [
     "tests/harness/adoption-guidance.test.ts",
+    "tests/harness/harness-release.test.ts",
     "tests/harness/impact-analysis.test.ts",
     "tests/harness/local-verification.test.ts",
     "tests/harness/repair-loop.test.ts",

@@ -44,6 +44,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 | Commands and evidence required | `docs/verification.md` |
 | Failed verification repair loop | `docs/repair-loop.md` |
 | Review-to-implementation binding | `docs/review-binding.md` |
+| Harness releases and upgrades | `docs/upgrading.md` |
 | Optional affected-target analysis | `docs/impact-analysis.md` |
 | Ticket-to-merge workflow | `docs/run-a-ticket.md` |
 | Harness adoption and build coverage | `ADOPTION_CHECKLIST.md` |

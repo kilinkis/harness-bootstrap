@@ -20,7 +20,7 @@ Run the inner feedback loop before review:
 pnpm run feedback
 ```
 
-This command validates harness state and the approved target inventory. It then checks types, lint rules, changed-file Fallow findings, and product behavior. It omits harness contract tests to reduce feedback time.
+This command validates harness state, the harness release marker, and the approved target inventory. It then checks types, lint rules, changed-file Fallow findings, and product behavior. It omits harness contract tests to reduce feedback time.
 
 The fast command is not a completion or merge gate.
 
@@ -40,7 +40,7 @@ pnpm run verify:local -- --base origin/develop
 
 The selector reports the base, selected gate, and reason. It selects the reduced documentation gate only when every changed path is the allowlisted product guide `docs/task-cli.md`. An empty change set does not qualify. Root documents, process documents, source files, tests, configuration, scripts, and unknown paths route to `pnpm run feedback`.
 
-The reduced gate runs harness-state validation, review-binding validation, target-inventory validation, and the documentation-facing harness contracts. The selector forwards its Git base to the binding check. An approved documentation-only change can use the low-risk lane in `run-a-ticket.md`. That lane does not activate a queue item or create local progress reports and role handoffs. It still requires change-request review and the full CI gate. CI continues to run only the full shell gate.
+The reduced gate runs harness-state validation, release-marker validation, review-binding validation, target-inventory validation, and the documentation-facing harness contracts. The selector forwards its Git base to the binding check. An approved documentation-only change can use the low-risk lane in `run-a-ticket.md`. That lane does not activate a queue item or create local progress reports and role handoffs. It still requires change-request review and the full CI gate. CI continues to run only the full shell gate.
 
 This repository defines a trivial change as an edit limited to the approved documentation paths. The edit must not change executable code, tests, configuration, scripts, generated files, queue state, progress evidence, or other process controls. Do not override the automatic classification. If repository policy permits an emergency exception, record the excluded control, reason, approver, and expiry in the work item or change request. Required remote checks and accountable approval still apply.
 
@@ -94,13 +94,14 @@ The validator checks the presence and structure of evidence. It cannot prove tha
 
 After harness-state validation, the commands run complementary checks:
 
-1. `pnpm run check:review-binding` binds review to the staged implementation snapshot.
-2. `pnpm run check:targets` validates the approved target inventory against package discovery.
-3. `pnpm run check` performs TypeScript type checking.
-4. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
-5. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
-6. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
-7. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, review binding, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
+1. `pnpm run check:release` validates `HARNESS_VERSION` and its matching changelog entry.
+2. `pnpm run check:review-binding` binds review to the staged implementation snapshot.
+3. `pnpm run check:targets` validates the approved target inventory against package discovery.
+4. `pnpm run check` performs TypeScript type checking.
+5. `pnpm run lint` applies type-aware ESLint rules and the repository's file-length limit.
+6. `pnpm run analyze:changes` runs Fallow's new-only audit against the branch's merge base. It checks changed files for dead code, dependency problems, cycles, complexity, large functions, and duplication.
+7. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
+8. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, release-marker validation, review binding, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
 
 Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is `in_progress`. When no feature is active, only changes limited to `docs/task-cli.md` bypass the latest completed binding; all other changes validate the latest completed tracked approval. The gate enforces the active binding while a feature is `in_review`, including the leader's post-approval full gate.
 
