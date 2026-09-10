@@ -14,7 +14,7 @@
     "check": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "analyze": "fallow",
-    "analyze:changes": "fallow audit",
+    "analyze:changes": "tsx scripts/analyze-changes.ts",
     "metrics:gate": "tsx scripts/record-gate.ts",
     "metrics:agent": "tsx scripts/record-agent-run.ts",
     "metrics:summary": "tsx scripts/summarize-metrics.ts",

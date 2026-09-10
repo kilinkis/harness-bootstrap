@@ -1,5 +1,6 @@
 import { resolve } from "node:path";
 
+import { resolveComparisonBase } from "./comparison-base.js";
 import { readGitChangedPaths } from "./git-changed-paths.js";
 import {
   analyzeImpact,
@@ -7,21 +8,22 @@ import {
 } from "./impact-analysis.js";
 
 interface Options {
-  base: string;
+  base: string | undefined;
   json: boolean;
   root: string;
 }
 
 async function main(): Promise<void> {
   const options = parseOptions(process.argv.slice(2));
-  const changedPaths = await readGitChangedPaths(options.root, options.base);
+  const base = await resolveComparisonBase(options.root, options.base);
+  const changedPaths = await readGitChangedPaths(options.root, base.commit);
   const result = await analyzeImpact(options.root, changedPaths);
   if (options.json) console.log(JSON.stringify(result, null, 2));
-  else printReport(result, options.base);
+  else printReport(result, `${base.ref} (${base.commit ?? "full analysis"})`);
 }
 
 function parseOptions(args: string[]): Options {
-  let base = "origin/main";
+  let base: string | undefined;
   let json = false;
   const paths: string[] = [];
   for (let index = 0; index < args.length; index += 1) {

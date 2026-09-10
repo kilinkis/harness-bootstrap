@@ -415,7 +415,7 @@
       "Focused Git and command contracts cover pushed branches, detached checkout inputs, default-branch pushes, and invalid bases."
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/61",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "TASK-029",

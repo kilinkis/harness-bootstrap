@@ -2,12 +2,13 @@ import { execFile } from "node:child_process";
 
 export async function readGitChangedPaths(
   root: string,
-  base: string,
+  base: string | null,
 ): Promise<string[]> {
   const [tracked, untracked] = await Promise.all([
     readGitPaths(
       root,
-      ["diff", "--no-renames", "--name-only", "-z", base, "--"],
+      base === null ? ["ls-files", "--cached", "-z"]
+        : ["diff", "--no-renames", "--name-only", "-z", base, "--"],
       base,
     ),
     readGitPaths(root, ["ls-files", "--others", "--exclude-standard", "-z"], base),
@@ -18,7 +19,7 @@ export async function readGitChangedPaths(
 function readGitPaths(
   root: string,
   args: string[],
-  base: string,
+  base: string | null,
 ): Promise<string[]> {
   return new Promise((resolvePaths, reject) => {
     execFile(
