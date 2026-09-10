@@ -342,5 +342,18 @@
       "Primary entry points and focused contract tests keep the adoption handoff guidance visible and prevent its completion boundary from regressing.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-023",
+    "title": "Allow verified dependency maintenance pull requests",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/55",
+    "acceptance_criteria": [
+      "Review binding bypasses the latest completed digest only for a deterministic dependency-maintenance change.",
+      "The classification permits only pnpm lockfile changes, package dependency or package-manager changes, and the pnpm setup version in the verification workflow.",
+      "Source, scripts, arbitrary manifest fields, other workflow changes, queue evidence, and unknown paths remain digest-bound.",
+      "The full harness gate remains mandatory and contracts cover accepted and rejected dependency-maintenance changes.",
+      "The full harness verification passes."
+    ]
   }
 ]

@@ -79,3 +79,7 @@ Added a stable release marker, a harness changelog, and local release validation
 ## 2026-09-10 — TASK-022
 
 Added an adoption handoff protocol that separates harness adoption, project-gate adoption, and product readiness. Adopting agents must execute the checklist, record evidence and unresolved decisions, and identify the first actionable production-readiness work item. Entry-point contracts keep the completion boundary visible. The repaired leader-owned full gate passed with 7 product tests and 64 harness contracts.
+
+## 2026-09-10 — TASK-023
+
+Added a narrow dependency-maintenance exception to review binding. It allows only pnpm lockfile changes, dependency or package-manager declarations, and the pnpm setup version in the verification workflow when no feature is active. Source, scripts, arbitrary manifest fields, other workflow changes, queue evidence, and unknown paths remain bound to the latest approval. The leader-owned full gate passed with 7 product tests and 68 harness contracts. Work is tracked in [GitHub Issue #55](https://github.com/kilinkis/harness-bootstrap/issues/55).
