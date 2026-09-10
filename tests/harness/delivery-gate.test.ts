@@ -4,17 +4,16 @@ import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 
-import { computeImplementationDigest } from "../../scripts/review-binding.js";
+import { assertDeliverySnapshot, computeImplementationDigest } from "../../scripts/review-binding.js";
 
 import { addReviewReport, createFixture, finalizeFeature, runGit,
   writeFeatureQueue } from "./review-binding-fixture.js";
 
 const REPOSITORY_ROOT = join(import.meta.dirname, "../..");
 
-void test("feedback permits development but both full entry points reject it", async () => {
+void test("both full entry points reject development", async () => {
   const root = await deliveryFixture("in_progress");
   try {
-    assert.equal((await runEntry(root, "feedback")).code, 0);
     for (const entry of ["local", "verify"]) {
       const result = await runEntry(root, entry);
       assert.notEqual(result.code, 0, entry);
@@ -59,8 +58,6 @@ void test("CI accepts completed approval and permitted maintenance but rejects s
   try {
     await addReviewReport(root);
     await finalizeFeature(root);
-    const completed = await runEntry(root, "ci");
-    assert.equal(completed.code, 0, completed.output);
     await mkdir(join(root, "docs"));
     await writeFile(join(root, "docs/task-cli.md"), "# Updated task guide\n");
     await writeFile(join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n# maintenance\n");
@@ -90,18 +87,17 @@ void test("unknown delivery phases fail before running the full pipeline", async
   }
 });
 
-void test("final entry points reject tracked implementation changes after staged approval", async () => {
+void test("the snapshot guard rejects content, deletion, mode, and staged-new-file changes", async () => {
   for (const change of ["content", "deletion", "mode", "staged addition"]) {
-    const root = await deliveryFixture("in_review");
+    const root = await createFixture();
     try {
       const path = join(root, "src/value.ts");
-      await addReviewReport(root);
-      await finalizeFeature(root);
       if (change === "staged addition") {
         await writeFile(join(root, "src/new.ts"), "export const added = 1;\n");
         await runGit(root, ["add", "src/new.ts"]);
       }
-      const digest = await addReviewReport(root);
+      const digest = await computeImplementationDigest(root);
+      await assertDeliverySnapshot(root);
       if (change === "deletion") await rm(path);
       else if (change === "mode") {
         await runGit(root, ["config", "core.fileMode", "false"]);
@@ -111,16 +107,25 @@ void test("final entry points reject tracked implementation changes after staged
           "export const changed = 2;\n");
       }
       assert.equal(await computeImplementationDigest(root), digest);
-      for (const entry of ["local", "verify", "ci"]) {
-        const result = await runEntry(root, entry);
-        assert.notEqual(result.code, 0, `${change}: ${entry}`);
-        assert.match(result.output, /DELIVERY_SNAPSHOT_MISMATCH/);
-        assert.doesNotMatch(result.output, /HARNESS_TESTS_EXECUTED/);
-      }
+      await assert.rejects(assertDeliverySnapshot(root), /DELIVERY_SNAPSHOT_MISMATCH/);
       assert.equal(await computeImplementationDigest(root), digest, "the guard must not stage changes");
     } finally {
       await rm(root, { recursive: true, force: true });
     }
+  }
+});
+
+void test("direct verify stops at the snapshot guard before downstream checks", async () => {
+  const root = await deliveryFixture("in_review");
+  try {
+    await addReviewReport(root);
+    await writeFile(join(root, "src/value.ts"), "export const value = 2;\n");
+    const result = await runEntry(root, "verify");
+    assert.notEqual(result.code, 0);
+    assert.match(result.output, /DELIVERY_SNAPSHOT_MISMATCH/);
+    assert.doesNotMatch(result.output, /harness state: valid|HARNESS_TESTS_EXECUTED/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 });
 
@@ -140,11 +145,10 @@ void test("feedback permits unstaged development and final delivery permits evid
     await mkdir(join(root, "output"));
     await writeFile(join(root, "output/user-artifact.txt"), "preserve me\n");
     const digest = await computeImplementationDigest(root);
-    for (const entry of ["local", "verify", "ci"]) {
-      const result = await runEntry(root, entry);
-      assert.equal(result.code, 0, result.output);
-      assert.match(result.output, /HARNESS_TESTS_EXECUTED/);
-    }
+    await assertDeliverySnapshot(root);
+    const result = await runEntry(root, "ci");
+    assert.equal(result.code, 0, result.output);
+    assert.match(result.output, /HARNESS_TESTS_EXECUTED/);
     assert.equal(await readFile(join(root, "output/user-artifact.txt"), "utf8"), "preserve me\n");
     assert.equal(await computeImplementationDigest(root), digest);
   } finally {

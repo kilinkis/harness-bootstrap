@@ -41,7 +41,6 @@ void test("sample bootstrap retains its optional documentation and metrics comma
     "tests/harness/harness-release.test.ts",
     "tests/harness/impact-analysis.test.ts",
     "tests/harness/local-verification.test.ts",
-    "tests/harness/repair-loop.test.ts",
     "tests/harness/verification-loop.test.ts",
   ]);
   assert.equal(manifest.scripts?.["test:harness:metrics"], "tsx --test tests/metrics/*.test.ts");
@@ -69,41 +68,6 @@ void test("the local selector remains separate from the full gate", async () => 
 
   assert.equal(manifest.scripts?.["verify:local"], "tsx scripts/local-verification.ts");
   assertFullGateComposition(manifest.scripts);
-});
-
-void test("workflow guidance protects the low-risk and streamlined lanes", async () => {
-  const [agents, ticket, verification, checkpoints, implementer, reviewer, leader, request] =
-    await Promise.all([
-      readRepositoryFile("AGENTS.md"),
-      readRepositoryFile("docs/run-a-ticket.md"),
-      readRepositoryFile("docs/verification.md"),
-      readRepositoryFile("CHECKPOINTS.md"),
-      readRepositoryFile("agents/implementer.md"),
-      readRepositoryFile("agents/reviewer.md"),
-      readRepositoryFile("agents/leader.md"),
-      readRepositoryFile(".github/pull_request_template.md"),
-    ]);
-
-  assert.match(ticket, /Low-risk documentation lane/);
-  assert.match(ticket, /allowlist contains only `docs\/task-cli\.md`/i);
-  assert.match(ticket, /Root documents.*process documents.*excluded/i);
-  assert.match(ticket, /does not activate a feature|do not activate a feature/i);
-  assert.match(ticket, /change-request review/i);
-  assert.match(ticket, /required full CI/i);
-  assert.match(request, /low-risk documentation lane/i);
-  assert.match(agents, /at most five acceptance criteria/i);
-  assert.match(ticket, /300 added implementation lines/i);
-  assert.match(ticket, /named owner/i);
-  assert.match(implementer, /focused check.*fast feedback/is);
-  assert.doesNotMatch(implementer, /then `\.\/scripts\/verify\.sh`/);
-  assert.match(reviewer, /independent focused/i);
-  assert.match(agents, /reviewer role.*independent focused/i);
-  assert.match(verification, /CI phase rejects both `in_progress` and `in_review`/);
-  assert.match(leader, /after.*approv.*\.\/scripts\/verify\.sh/is);
-  assert.match(checkpoints, /after independent approval/i);
-  assert.match(verification, /evidence-only finalization/i);
-  assert.match(verification, /no feature is active.*latest completed tracked approval/i);
-  assert.match(verification, /cumulative staged documentation and dependency changes.*committed review baseline/i);
 });
 
 async function readRepositoryFile(relativePath: string): Promise<string> {

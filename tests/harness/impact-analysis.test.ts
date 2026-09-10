@@ -104,21 +104,6 @@ void test("an incomplete inventory produces command uncertainty", async () => {
   }
 });
 
-void test("the optional guide keeps the merge gate mandatory", async () => {
-  const agentGuide = await readFile(join(REPOSITORY_ROOT, "AGENTS.md"), "utf8");
-  const impactGuide = await readFile(
-    join(REPOSITORY_ROOT, "docs", "impact-analysis.md"),
-    "utf8",
-  );
-
-  assert.match(agentGuide, /Optional affected-target analysis/);
-  assert.match(agentGuide, /`docs\/impact-analysis\.md`/);
-  assert.match(impactGuide, /advisory/i);
-  assert.match(impactGuide, /does not replace the full merge gate/i);
-  assert.match(impactGuide, /leader runs `\.\/scripts\/verify\.sh` after approval/i);
-  assert.match(impactGuide, /CI runs it before merge/i);
-});
-
 void test("the JSON command reads changed paths from an explicit Git base", async () => {
   const root = await createWorkspaceFixture();
 

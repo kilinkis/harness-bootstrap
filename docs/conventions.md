@@ -8,7 +8,7 @@
 - Name implementation reports with the feature ID: `impl_TASK-003.md`.
 - Put change-request reviews in numbered files such as `review_TASK-003_round1.md`.
 - Reserve `review_TASK-003.md` for the final approved report.
-- Do not edit a reviewer report after it is written. Add another numbered round when circumstances change.
+- Numbered change-request reports and historical evidence are immutable. Only the reviewer may refresh the canonical approval using [review binding](review-binding.md#approval-refresh).
 
 ## Technical prose
 

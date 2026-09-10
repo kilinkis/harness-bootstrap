@@ -465,5 +465,18 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/65",
     "status": "done"
+  },
+  {
+    "id": "TASK-033",
+    "title": "Reduce routine harness coordination and verification cost",
+    "acceptance_criteria": [
+      "Routine work defaults to one implementer who also plans and finalizes and one independent reviewer; a separate coordinator is optional. Instructions limit context, handoffs, and repeated checks.",
+      "Review refreshes inspect the changed scope and retain one canonical approval, using Git history for committed prior approvals and preserving uncommitted prior evidence. Whole-index binding and required gates remain intact; dependent PR stacks are not the default.",
+      "Remove tests that police prose wording while retaining executable contracts and useful documentation-link checks.",
+      "Exercise delivery snapshot edge cases directly against the guard, with representative CLI integration coverage for local, direct verify, and CI entry points and failure propagation.",
+      "Record concrete before/after test or process measurements, limitations, and verification evidence. No new dependencies or orchestration framework."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/75",
+    "status": "done"
   }
 ]

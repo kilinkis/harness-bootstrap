@@ -70,7 +70,7 @@ Run a deliberate negative test after you configure the command. Introduce a temp
 
 ## Full gate
 
-After independent approval, the leader runs the full harness gate once before evidence finalization and merge:
+After independent approval, the implementer runs the full harness gate once before evidence finalization and merge:
 
 ```bash
 ./scripts/verify.sh
@@ -78,7 +78,7 @@ After independent approval, the leader runs the full harness gate once before ev
 
 The shell gate defaults to the `local` delivery phase. It runs `pnpm run verify`, which checks the delivery phase, then composes `pnpm run feedback` with `pnpm run test:harness`. Direct `pnpm run verify` also defaults to the guarded local phase. Default gates do not record workflow metrics or run metric contracts.
 
-The local phase rejects `in_progress` work. An `in_review` feature must pass the existing state and binding checks with its own approved final report, required evidence, and matching digest. The leader runs this phase before marking the feature done. Both delivery phases reject tracked implementation differences between the working tree and index before downstream checks run. This includes content, deletions, and executable-mode changes. Queue and progress evidence retain their review-digest exclusions. The check leaves untracked artifacts untouched and never stages changes. Ordinary feedback remains available during unstaged development.
+The local phase rejects `in_progress` work. An `in_review` feature must pass the existing state and binding checks with its own approved final report, required evidence, and matching digest. The implementer runs this phase before marking the feature done. Both delivery phases reject tracked implementation differences between the working tree and index before downstream checks run. This includes content, deletions, and executable-mode changes. Queue and progress evidence retain their review-digest exclusions. The check leaves untracked artifacts untouched and never stages changes. Ordinary feedback remains available during unstaged development.
 
 CI invokes the explicit finalized-state phase:
 
@@ -88,7 +88,7 @@ CI invokes the explicit finalized-state phase:
 
 The CI phase rejects both `in_progress` and `in_review` features. Completed work must still pass the existing state, review, digest, and history checks. Approved maintenance changes remain valid through the documented binding exception. An empty active queue does not skip the existing validators.
 
-The shell forwards its selected phase through `HARNESS_DELIVERY_PHASE`. The `check:delivery` command makes only the phase decision; subsequent feedback validates schema, evidence, and approval without repeating those checks in the phase guard. Unknown phases fail. To check the finalized phase decision alone after evidence finalization, run `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery`, followed by `pnpm run check:harness-state`.
+The shell forwards its selected phase through `HARNESS_DELIVERY_PHASE`. The `check:delivery` command checks the delivery phase and tracked snapshot; subsequent feedback validates schema, evidence, and approval. Unknown phases fail. To check the finalized delivery boundary after evidence finalization, run `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery`, followed by `pnpm run check:harness-state`.
 
 The feedback command first runs `pnpm run check:harness-state`. This command validates the feature queue and its durable evidence:
 
@@ -115,15 +115,15 @@ After harness-state validation, the commands run complementary checks:
 7. `pnpm run test:product` checks the sample task CLI's behavior in the fast loop.
 8. `pnpm run test:harness` runs only in the full gate. It generates isolated fixtures proving harness-state validation, release-marker validation, review binding, target-inventory validation, command composition, ESLint, and Fallow reject representative policy violations and accept valid state.
 
-Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is `in_progress`. When no feature is active, the latest completed tracked approval remains binding. Every completed feature needs a nonempty local or remote work-item reference and normal evidence, except the three pinned original bootstrap definitions described in the [historical evidence rules](review-binding.md#historical-bootstrap-evidence). Omitting a reference cannot exempt new work. The documented maintenance exception compares cumulative staged documentation and dependency changes with the verified committed review baseline. The gate enforces the active binding while a feature is `in_review`, including the leader's post-approval full gate.
+Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is `in_progress`. When no feature is active, the latest completed tracked approval remains binding. Every completed feature needs a nonempty local or remote work-item reference and normal evidence, except the three pinned original bootstrap definitions described in the [historical evidence rules](review-binding.md#historical-bootstrap-evidence). Omitting a reference cannot exempt new work. The documented maintenance exception compares cumulative staged documentation and dependency changes with the verified committed review baseline. The gate enforces the active binding while a feature is `in_review`, including the implementer's post-approval full gate.
 
 Dependency maintenance is the only additional no-active-feature exception. It permits pnpm lockfile changes, dependency or package-manager declarations in `package.json`, and the pnpm setup version in the verification workflow. It does not permit scripts, source, arbitrary manifest fields, other workflow changes or unknown implementation files. Queue and progress evidence retain their digest exclusions. The full gate and required remote review remain mandatory.
 
 Use `pnpm run analyze` when you need a full-codebase Fallow report rather than the changed-file merge gate. Its thresholds and CLI entry point are versioned in `.fallowrc.json`; duplication above 5% fails the analysis. The CRAP threshold is calibrated above Fallow's static estimates because this small Node test setup does not emit Istanbul coverage; cyclomatic, cognitive, and function-size limits remain independently enforced.
 
-For a feature, add the smallest focused command that demonstrates its behavior. The implementer runs focused checks and the fast loop before review. The reviewer runs independent focused checks. After approval, the leader runs the one final local full gate on the approved snapshot. CI checks out full Git history and supplies the pull-request base SHA or pre-push SHA for comparison.
+For a feature, add the smallest focused command that demonstrates its behavior. The implementer runs focused checks and the fast loop before review. The reviewer runs independent focused checks. After approval, the implementer runs the one final local full gate on the approved snapshot. CI checks out full Git history and supplies the pull-request base SHA or pre-push SHA for comparison.
 
-After the full gate passes, the leader makes the evidence-only finalization changes in `feature_list.json` and `progress/`. The leader then runs `pnpm run check:harness-state` as a focused state check. These files are outside the reviewed implementation digest.
+After the full gate passes, the implementer makes the evidence-only finalization changes in `feature_list.json` and `progress/`. The implementer then runs `pnpm run check:harness-state` as a focused state check. These files are outside the reviewed implementation digest.
 
 Harness-state and Fallow contract fixtures are created under the operating system's temporary directory. The type-aware ESLint fixture is created within the test tree so TypeScript's project service can resolve it. Every fixture is removed in a `finally` block, so intentionally invalid state never remains in the repository or enters the normal pre-test analysis.
 

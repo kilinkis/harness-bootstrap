@@ -74,7 +74,7 @@ Each worktree follows the complete ticket lifecycle:
 4. Run `pnpm run feedback` before review.
 5. Write the implementation report.
 6. Complete an independent review and its report.
-7. After approval, have the leader run `./scripts/verify.sh` once.
+7. After approval, have the implementer run `./scripts/verify.sh` once.
 8. Open a pull request that closes the claimed issue.
 9. Merge only after required remote checks pass.
 
@@ -99,7 +99,7 @@ Conflicts are most likely in these files:
 - `progress/history.md`: preserve entries from both branches.
 - Shared product files: resolve them from the accepted behavior, not from file order.
 
-Request another review when a resolution changes implementation behavior. After that approval, the leader runs the final full gate on the resolved snapshot.
+For implementation changes, use [approval refresh](review-binding.md#approval-refresh) after resolving the merge. After that approval, the implementer runs the final full gate on the resolved snapshot.
 
 ## Remove a finished worktree
 

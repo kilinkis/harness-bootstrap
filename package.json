@@ -19,7 +19,7 @@
     "metrics:agent": "tsx scripts/record-agent-run.ts",
     "metrics:summary": "tsx scripts/summarize-metrics.ts",
     "test:product": "tsx --test tests/*.test.ts",
-    "test:harness:docs": "tsx --test tests/harness/adoption-guidance.test.ts tests/harness/harness-release.test.ts tests/harness/impact-analysis.test.ts tests/harness/local-verification.test.ts tests/harness/repair-loop.test.ts tests/harness/verification-loop.test.ts",
+    "test:harness:docs": "tsx --test tests/harness/adoption-guidance.test.ts tests/harness/harness-release.test.ts tests/harness/impact-analysis.test.ts tests/harness/local-verification.test.ts tests/harness/verification-loop.test.ts",
     "test:harness:metrics": "tsx --test tests/metrics/*.test.ts",
     "test:harness": "tsx --test tests/harness/*.test.ts",
     "test": "pnpm run test:product && pnpm run test:harness",
