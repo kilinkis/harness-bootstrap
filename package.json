@@ -27,8 +27,9 @@
     "verify:docs": "pnpm run check:harness-state && pnpm run check:release && pnpm run check:review-binding && pnpm run check:targets && pnpm run test:harness:docs",
     "verify:local": "tsx scripts/local-verification.ts",
     "impact": "tsx scripts/analyze-impact.ts",
-    "verify": "pnpm run feedback && pnpm run test:harness",
-    "start": "tsx src/cli.ts"
+    "verify": "pnpm run check:delivery && pnpm run feedback && pnpm run test:harness",
+    "start": "tsx src/cli.ts",
+    "check:delivery": "tsx scripts/check-delivery.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

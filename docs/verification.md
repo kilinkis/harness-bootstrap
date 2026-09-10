@@ -22,7 +22,7 @@ pnpm run feedback
 
 This command validates harness state, the harness release marker, and the approved target inventory. It then checks types, lint rules, changed-file Fallow findings, and product behavior. It omits harness contract tests to reduce feedback time.
 
-The fast command is not a completion or merge gate.
+The fast command is not a completion or merge gate. It permits ordinary `in_progress` work. A reviewer starts with independent focused checks before creating approval evidence; feedback does not need to pass as reviewer entry when that approval is still missing.
 
 ## Proportional local verification
 
@@ -76,7 +76,19 @@ After independent approval, the leader runs the full harness gate once before ev
 ./scripts/verify.sh
 ```
 
-The shell gate runs `pnpm run verify`. This command composes `pnpm run feedback` with `pnpm run test:harness`. CI uses the same shell gate. Default gates do not record workflow metrics or run metric contracts.
+The shell gate defaults to the `local` delivery phase. It runs `pnpm run verify`, which checks the delivery phase, then composes `pnpm run feedback` with `pnpm run test:harness`. Direct `pnpm run verify` also defaults to the guarded local phase. Default gates do not record workflow metrics or run metric contracts.
+
+The local phase rejects `in_progress` work. An `in_review` feature must pass the existing state and binding checks with its own approved final report, required evidence, and matching digest. The leader runs this phase before marking the feature done.
+
+CI invokes the explicit finalized-state phase:
+
+```bash
+./scripts/verify.sh ci
+```
+
+The CI phase rejects both `in_progress` and `in_review` features. Completed work must still pass the existing state, review, digest, and history checks. Approved maintenance changes remain valid through the documented binding exception. An empty active queue does not skip the existing validators.
+
+The shell forwards its selected phase through `HARNESS_DELIVERY_PHASE`. The `check:delivery` command makes only the phase decision; subsequent feedback validates schema, evidence, and approval without repeating those checks in the phase guard. Unknown phases fail. To check the finalized phase decision alone after evidence finalization, run `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery`, followed by `pnpm run check:harness-state`.
 
 The feedback command first runs `pnpm run check:harness-state`. This command validates the feature queue and its durable evidence:
 

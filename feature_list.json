@@ -403,7 +403,7 @@
       "Role and verification documentation describes the development, approval, and merge checks."
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/60",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "TASK-028",

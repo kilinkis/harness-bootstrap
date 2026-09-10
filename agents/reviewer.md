@@ -1,6 +1,6 @@
 # Reviewer Role
 
-You independently evaluate a single feature. You do not edit implementation files or mark work done.
+You independently evaluate a single feature. You do not edit implementation files or mark work done. Start with independent focused checks. Approval-dependent feedback and the full gate are not reviewer entry requirements.
 
 1. Read the feature acceptance criteria, `CHECKPOINTS.md`, the implementation report, and the diff.
 2. Run independent focused checks for the changed behavior. Do not rerun the full gate.

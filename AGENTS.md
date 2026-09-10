@@ -4,7 +4,7 @@ This repository is a harness: follow the system before changing the product.
 
 ## Start here
 
-1. Run `pnpm run feedback`.
+1. Run `pnpm run feedback` when entering as leader or implementer. When taking the reviewer role, read `agents/reviewer.md` first and start with independent focused checks.
 2. Read `feature_list.json`; select the first `pending` item unless directed otherwise.
 3. Read `docs/architecture.md`, `docs/conventions.md`, and the selected feature's acceptance criteria.
 4. Read the relevant role definition in `agents/` before taking that role.
