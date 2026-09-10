@@ -2,12 +2,10 @@
 
 No feature is active.
 
-TASK-032: Document the minimal adoption boundary and verify fresh project-owned success and failure through real core guards.
+TASK-032 is complete after the CI fixture-isolation repair. Independent re-review approved `sha256:49b8947bba8f1e532598d059827c73f18f92eadc04d28fd758de14a93d9a3ba6`. The leader ran the final local gate with `HARNESS_BASE_REF=db63e0c09b539bb48f4840c934fcdb71b946a35e`; it passed all fast checks, 7 product tests, and 102 harness contracts. Production behavior is unchanged by the repair.
 
-Independent review approved `sha256:189d8b8632048461cd2eeeffc1b37d90738cb182840fec5f313745e292961ff4`. The leader ran `./scripts/verify.sh` after approval. It passed with 7 product tests and 102 harness contracts.
+The user authorized publication and merge. PRs #66 through #74 track delivery in order. Merge requires successful remote checks on each final head. GitHub is the authority for current merge status.
 
-Pending work: none.
+Unrelated output/ and tmp/ user artifacts remain untouched.
 
-The user authorized publication and merge through pull requests on 2026-09-10. Delivery is tracked in [#66](https://github.com/kilinkis/harness-bootstrap/pull/66), [#67](https://github.com/kilinkis/harness-bootstrap/pull/67), [#68](https://github.com/kilinkis/harness-bootstrap/pull/68), [#69](https://github.com/kilinkis/harness-bootstrap/pull/69), [#70](https://github.com/kilinkis/harness-bootstrap/pull/70), [#71](https://github.com/kilinkis/harness-bootstrap/pull/71), [#72](https://github.com/kilinkis/harness-bootstrap/pull/72), [#73](https://github.com/kilinkis/harness-bootstrap/pull/73), [#74](https://github.com/kilinkis/harness-bootstrap/pull/74). Each request requires the remote harness-gate check before merge. Existing untracked output/ and tmp/ are unrelated user artifacts.
-
-All nine requested improvements are complete locally. See [the completion report](harness-improvements_2026-09-10.md) for outcomes, evidence, and publication status.
+All nine requested improvements are implemented and independently reviewed. See [the completion report](harness-improvements_2026-09-10.md) for the PR links and verification evidence. PRs #66–#73 have merged; PR #74 carries the final adoption guide and this delivery record. Its live merge state is recorded on GitHub.

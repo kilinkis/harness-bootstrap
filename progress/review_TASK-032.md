@@ -1,37 +1,34 @@
-# Review: TASK-032
+# Review: TASK-032 — inherited CI fixture repair
 
 ## Verdict
 
-Approved. No blocking findings remain for TASK-032.
+Approved. No blocking findings remain for the corrected TASK-032 snapshot.
 
 ## Scope reviewed
 
-The change satisfies all five acceptance criteria. The concise adoption map distinguishes files to copy, adapt, omit, and treat as optional. It covers Node and pnpm versions, dependency reconciliation and locked installation, Git history and target prerequisites, both historical compatibility maps, the guarded project extension, and local versus CI delivery. Primary adoption entry points link the map. Metrics and impact analysis remain optional, and no generator or orchestration framework was added.
+Renewed approval covers the previously approved adoption map and minimal fixture plus the inherited TASK-028 test repair. The original independent review is preserved verbatim in [review_TASK-032_round1.md](review_TASK-032_round1.md). It verified the copy/adapt/omit/optional guidance, prerequisites, project pass/fail behavior, actual copied guards, and stated fixture limits. Those files and behaviors are unchanged, so the original findings and verification evidence remain applicable.
 
-Inspected `docs/adoption-map.md`, `README.md`, `ADOPTION_CHECKLIST.md`, `docs/adoption-handoff.md`, and `tests/harness/minimal-adoption.test.ts`. Also reviewed the TASK-032 criteria, current plan, implementation report, staged diff, package manifest, CI workflow, copied core-script list, and the existing adoption and verification-loop contracts. Applied the existing reviewer role and completion protocol.
+Inspected the staged diff, original approval, integration evidence in `progress/impl_TASK-032.md`, and the selector fixture correction. The only implementation delta from the prior TASK-032 HEAD is the three-line environment isolation in `tests/harness/local-verification.test.ts`. It removes inherited `HARNESS_BASE_REF` from a private child-environment copy, allowing the default fixture to use its own Git history. Explicit fixture arguments and production behavior remain unchanged.
 
-The fixture copies actual delivery, state, release, binding, and inventory commands with their required helpers. It explicitly clears both historical maps. Its empty queue, project configuration, inventory, project command, and artifact contract belong to the fixture. It copies no sample source or work-item history. The project command reads configuration and writes an artifact; the later contract reads that artifact. The controlled failure changes runtime input, so a snapshot rejection cannot be mistaken for proof of project failure propagation.
-
-The guide accurately limits the fixture's claims. It reuses installed dependencies through a symlink and omits TypeScript, ESLint, Fallow, production builds, and the full copied harness suite. It does not label omitted checks as passing stubs. An empty queue has no completed approval for binding to validate and is explicitly not adoption-completion evidence. The negative-build guidance now requires observing the project-stage failure rather than accepting a delivery or snapshot rejection.
-
-No material correctness, readability, architecture, security, or performance issue was found within the accepted documentation and fixture scope. No production source, dependency, sample product, or historical report changed.
+The staged and incoming fixture blobs both equal the independently reviewed repair blob `84c631e75c1e084ab3a0541d58b2df76c70555c7`. No unresolved merge entries remain. All original TASK-032 acceptance criteria remain satisfied, and this inherited repair introduces no new material finding.
 
 ## Commands and results
 
-- `node --import tsx --test tests/harness/minimal-adoption.test.ts tests/harness/adoption-guidance.test.ts tests/harness/verification-loop.test.ts`: passed all 10 contracts with the process access required by nested command runners. The fresh fixture accepted valid project input through both local and CI entrypoints. Invalid runtime input produced `PROJECT_CONFIGURATION_INVALID` and prevented the later artifact contract in both phases. The copied guard also rejected unfinished active work and tracked configuration changes with the expected delivery diagnostics.
-- Inspected the fixture's copy and adaptation operations. The test asserts absent sample CLI and history files, an empty queue, and empty historical maps. Its commands execute the copied validators and project-owned checks rather than replacing them with success stubs. Nested test context is cleared so the adopted contract executes.
-- A Python link check resolved all 26 local Markdown link targets across the four changed guides. Every target exists.
-- Compared the guide's Node 24, pnpm 10.34.5, frozen-lockfile installation, full-history checkout, comparison inputs, and CI phase with `package.json` and `.github/workflows/verify.yml`. They match.
-- `git diff --name-only`: returned no tracked worktree differences from the index.
+- `HARNESS_BASE_REF=1111111111111111111111111111111111111111 HARNESS_DELIVERY_PHASE=ci node --import tsx --test tests/harness/local-verification.test.ts`: passed all 6 focused contracts with required CLI IPC access. Default selection succeeded under the inherited non-fixture SHA. Explicit-base selection and staged non-documentation rejection also passed.
+- Inspected the staged diff and statistics: only the selector fixture changes implementation. Other staged changes are queue and progress evidence.
+- `git rev-parse :tests/harness/local-verification.test.ts MERGE_HEAD:tests/harness/local-verification.test.ts`: both returned `84c631e75c1e084ab3a0541d58b2df76c70555c7`.
+- `git ls-files -u`: returned no unresolved index entries.
+- `git diff --name-only`: returned no tracked worktree differences before report renewal.
 - `git diff --cached --check`: passed.
-- `pnpm run review:digest`: passed with approved IPC access. The independently computed digest matches the implementation handoff.
+- `pnpm run review:digest`: independently produced the renewed digest below.
+- Confirmed the numbered report path was free, preserved the original canonical report with exclusive creation, and verified identical bytes before writing this renewal.
 
-The focused adoption fixture was removed after execution. The reviewer did not edit implementation files, stage files, run the full repository gate, commit, push, or retry publication. Existing `output/` and `tmp/` artifacts were left untouched.
+The reviewer did not edit implementation files, stage files, run the full gate, commit, push, or merge. Existing `output/` and `tmp/` artifacts remain untouched.
 
-Implementation digest: sha256:189d8b8632048461cd2eeeffc1b37d90738cb182840fec5f313745e292961ff4
+Implementation digest: sha256:49b8947bba8f1e532598d059827c73f18f92eadc04d28fd758de14a93d9a3ba6
 
 ## Remaining risks
 
-Adopters must still install dependencies, adapt their commands and tests, approve actual target coverage, obtain review, and execute their required checks. The minimal fixture proves neither a production build nor completed adoption or product readiness. Its dependency symlink and omitted checks are explicitly documented.
+The original adoption limits remain. The minimal fixture reuses installed dependencies and does not prove fresh installation, production builds, full copied-suite execution, or completed adoption. Adopters still need real project checks and approved target coverage. The inherited test repair changes none of those boundaries.
 
-The leader's final local full gate and evidence finalization remain required. Publication remains blocked pending explicit user authorization, as recorded in `progress/current.md`.
+The leader must run the renewed final gate with the real CI baseline, finalize evidence, and require passing remote checks before merge. Publication and merge are authorized; the leader owns those actions.

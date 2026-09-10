@@ -41,7 +41,7 @@ The implementer did not run the full repository gate, commit, push, or merge. Ga
 
 Intended implementation files were staged before handoff. Queue and progress evidence retain their documented digest exclusions. Existing `output/` and `tmp/` artifacts remain untracked and untouched.
 
-Implementation digest: sha256:189d8b8632048461cd2eeeffc1b37d90738cb182840fec5f313745e292961ff4
+Implementation digest: sha256:49b8947bba8f1e532598d059827c73f18f92eadc04d28fd758de14a93d9a3ba6
 
 ## Remaining risks
 
@@ -56,3 +56,21 @@ Publication remains blocked by the earlier automatic approval review decision re
 After independent approval, `./scripts/verify.sh` exited 0 on the approved snapshot. All fast checks, 7 product tests, and 102 harness contracts passed. Queue and progress evidence were finalized without changing implementation content.
 
 After evidence finalization, `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state` passed.
+
+
+## CI repair integration
+
+Integrated the independently reviewed fixture correction from TASK-031. The only implementation delta from the original TASK-032 HEAD is the same 3 added lines in `tests/harness/local-verification.test.ts`. The staged and incoming blobs both equal `84c631e75c1e084ab3a0541d58b2df76c70555c7`. No production code or new source changes were made.
+
+- `HARNESS_BASE_REF=1111111111111111111111111111111111111111 pnpm exec tsx --test tests/harness/local-verification.test.ts`: all 6 contracts passed.
+- `pnpm run feedback`: all fast checks and 7 product tests passed; the inherited parser duplication remained excluded normally.
+- `git diff --cached --check`: passed. No unstaged implementation differences remain.
+- `pnpm run review:digest`: produced the revised implementation digest above.
+
+The previous approved digest was `sha256:189d8b8632048461cd2eeeffc1b37d90738cb182840fec5f313745e292961ff4`. The old canonical approval remains unchanged for independent preservation and renewal. The leader must run the final gate with the real CI base and require green remote checks. Publication is now authorized; the earlier blocked note records the original implementation context. No full gate, commit, push, or unrelated artifact changes occurred during this integration handoff.
+
+## Leader CI-repair verification
+
+After renewed independent approval, `HARNESS_BASE_REF=db63e0c09b539bb48f4840c934fcdb71b946a35e ./scripts/verify.sh` exited 0. All fast checks, 7 product tests, and 102 harness contracts passed. This repeats the final gate because the CI-discovered fixture repair changed the approved implementation snapshot. Only evidence was finalized afterward.
+
+After renewed evidence finalization, `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state` passed.

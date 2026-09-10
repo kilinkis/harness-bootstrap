@@ -28,6 +28,8 @@ Each preceding work item has its own focused, independent review, and final-gate
 
 The script changes add 170 net runtime lines across the nine fixes. Most new implementation lines are regression tests. The sample source and product tests are unchanged. See the [minimal adoption map](../docs/adoption-map.md) for the resulting first-run workflow.
 
+Remote CI later exposed one test-only integration defect: the temporary default-base fixture inherited HARNESS_BASE_REF from the outer repository. Three added test lines now isolate that fixture environment. No production behavior changed. The repair was independently reviewed, propagated through the dependent snapshots, and each affected approval was renewed while preserving its prior report as numbered history. The complete renewed snapshot passed the final local gate with a real CI base SHA: 7 product tests and 102 harness contracts. Its CI-phase and harness-state checks also passed after evidence finalization.
+
 ## Scope and remaining limits
 
 - New runtime dependency: yaml 2.9.0, used for workspace parsing.
