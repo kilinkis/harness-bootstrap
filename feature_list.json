@@ -427,7 +427,7 @@
       "Sample-specific expectations and adoption guidance are clearly distinguished."
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/62",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "TASK-030",

@@ -94,7 +94,7 @@ async function deliveryFixture(status: string): Promise<string> {
     scripts: Record<string, string>;
   };
   const scripts = { ...manifest.scripts };
-  for (const command of ["check:release", "check:targets", "check", "lint", "analyze:changes", "test:product"]) {
+  for (const command of ["check:release", "check:targets", "check", "lint", "analyze:changes", "test:product", "verify:project"]) {
     scripts[command] = `${shellQuote(process.execPath)} -e ''`;
   }
   scripts["test:harness"] = `${shellQuote(process.execPath)} -e 'console.log("HARNESS_TESTS_EXECUTED")'`;

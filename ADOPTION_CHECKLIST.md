@@ -54,14 +54,14 @@ For a pnpm project, the final composition can use this shape:
   "scripts": {
     "feedback": "...fast checks...",
     "verify:project": "...all required type checks, tests, and production builds...",
-    "verify": "pnpm run feedback && pnpm run verify:project && pnpm run test:harness"
+    "verify": "pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness"
   }
 }
 ```
 
 Keep a slow production build in the full gate. Keep it out of `feedback` when its duration harms the inner loop.
 
-The full `./scripts/verify.sh` command must execute `verify:project`. CI must execute `./scripts/verify.sh` from the intended repository root.
+The full `./scripts/verify.sh` command must execute `verify:project`. CI must execute `./scripts/verify.sh ci` from the intended repository root. Preserve the delivery guard first, feedback next, the project check next, and harness tests last. Connect stages with `&&` so a failure stops later work.
 
 ## 3. Verify workspace coverage
 

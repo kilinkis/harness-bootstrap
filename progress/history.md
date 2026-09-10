@@ -103,3 +103,7 @@ Full verification now distinguishes approved local work from finalized CI delive
 ## 2026-09-10 — TASK-028
 
 Use explicit common-ancestor comparison bases for Fallow and selectors, including safe first-push full analysis. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 89 harness contracts. Evidence: progress/impl_TASK-028.md and progress/review_TASK-028.md.
+
+## 2026-09-10 — TASK-029
+
+Allow project verification while preserving required harness stages, order, and failure propagation. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 94 harness contracts. Evidence: progress/impl_TASK-029.md and progress/review_TASK-029.md.
