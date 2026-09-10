@@ -23,6 +23,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Follow `docs/repair-loop.md` after a verification failure. Stop after its repair budget is exhausted.
 - Follow the technical prose rules in `docs/conventions.md` for durable repository text.
 - Use the low-risk documentation lane in `docs/run-a-ticket.md` only when the automatic classifier approves every changed path.
+- For harness adoption, follow `docs/adoption-handoff.md`: separate harness adoption, project-gate adoption, and product readiness, then hand off the first actionable readiness item.
 
 ## Delivery workflow
 

@@ -147,4 +147,4 @@ Record the evidence:
 
 Adoption is complete only when all applicable items have evidence. Every deployable target must have a production build in the full gate. Every relevant workspace must have a type-check decision. Every required check must fail when its protected condition is broken.
 
-After this checklist is complete, continue with the broader [production-readiness checklist](docs/production-readiness.md). That checklist covers security, performance, accessibility, observability, recovery, cost, and domain-specific gates.
+After this checklist is complete, follow the [adoption handoff protocol](docs/adoption-handoff.md). It separates harness adoption from product readiness, records unresolved decisions, and identifies the first actionable production-readiness work item. Then continue with the broader [production-readiness checklist](docs/production-readiness.md), which covers security, performance, accessibility, observability, recovery, cost, and domain-specific gates.
