@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import { readGitChangedPaths } from "./git-changed-paths.js";
 import { classifyDependencyMaintenance } from "./dependency-maintenance.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
 
@@ -28,7 +27,11 @@ interface IndexEntry {
 const DIGEST_PATTERN = /^sha256:[a-f0-9]{64}$/;
 
 export async function computeImplementationDigest(root: string): Promise<string> {
-  const entries = (await readIndex(root))
+  return digestEntries(await readSnapshot(root));
+}
+
+function digestEntries(snapshot: IndexEntry[]): string {
+  const entries = snapshot
     .filter(({ path }) => isImplementationPath(path))
     .sort((left, right) => left.path.localeCompare(right.path));
   const hash = createHash("sha256");
@@ -41,12 +44,11 @@ export async function computeImplementationDigest(root: string): Promise<string>
 
 export async function validateReviewBinding(
   root: string,
-  base = "origin/main",
 ): Promise<ReviewBindingFinding[]> {
   const findings: ReviewBindingFinding[] = [];
   const features = await readQueue(root, findings);
   if (!features) return findings;
-  const selected = await selectFeature(root, base, features);
+  const selected = selectFeature(features);
   if (!selected) return findings;
 
   const reportPath = `progress/review_${selected.id}.md`;
@@ -84,33 +86,52 @@ export async function validateReviewBinding(
   }
 
   const current = await computeImplementationDigest(root);
-  if (declaration[1] !== current) {
-    addFinding(
-      findings,
-      "REVIEW_BINDING_STALE",
-      `${selected.id}: staged implementation changed after review`,
-      reportPath,
-    );
+  if (declaration[1] === current) return findings;
+  if (selected.status === "done") {
+    try {
+      if (await isReviewedMaintenance(root, reportPath, report, declaration[1])) return findings;
+    } catch {
+      addFinding(findings, "REVIEW_BINDING_BASELINE_INVALID",
+        `${selected.id}: cannot verify the committed review baseline; fetch full history and check the canonical report`,
+        reportPath);
+      return findings;
+    }
   }
+  addFinding(findings, "REVIEW_BINDING_STALE",
+    `${selected.id}: staged implementation changed after review`, reportPath);
   return findings;
 }
 
-async function selectFeature(
-  root: string,
-  base: string,
-  features: QueueFeature[],
-): Promise<QueueFeature | undefined> {
+function selectFeature(features: QueueFeature[]): QueueFeature | undefined {
   const active = features.find(({ status }) =>
     status === "in_progress" || status === "in_review"
   );
   if (active) return active.status === "in_review" ? active : undefined;
-  const completed = [...features].reverse().find(({ status, tracked }) =>
+  return [...features].reverse().find(({ status, tracked }) =>
     status === "done" && tracked
   );
-  if (!completed) return undefined;
-  const changed = await readGitChangedPaths(root, base);
-  if (classifyLowRiskDocumentation(changed).approved) return undefined;
-  return await classifyDependencyMaintenance(root, base, changed) ? undefined : completed;
+}
+
+async function isReviewedMaintenance(
+  root: string,
+  reportPath: string,
+  report: string,
+  digest: string,
+): Promise<boolean> {
+  const anchor = (await readGit(root, ["log", "-1", "--format=%H", "HEAD", "--", reportPath])).trim();
+  if (!anchor) throw new Error("No committed canonical review");
+  const [committedReport, snapshot] = await Promise.all([
+    readGit(root, ["show", `${anchor}:${reportPath}`]),
+    readSnapshot(root, anchor),
+  ]);
+  if (committedReport !== report || digestEntries(snapshot) !== digest) {
+    throw new Error("The canonical report does not bind its committed implementation");
+  }
+  const changed = (await readGit(root, ["diff", "--cached", "--no-renames", "--name-only", "-z", anchor, "--"]))
+    .split("\0").filter((path) => path && isImplementationPath(path));
+  const dependencyPaths = classifyLowRiskDocumentation(changed).refusedPaths;
+  return changed.length > 0 && (dependencyPaths.length === 0 ||
+    await classifyDependencyMaintenance(root, anchor, dependencyPaths));
 }
 
 async function readQueue(
@@ -142,30 +163,25 @@ async function readQueue(
   }
 }
 
-function readIndex(root: string): Promise<IndexEntry[]> {
-  return new Promise((resolveEntries, reject) => {
-    execFile(
-      "git",
-      ["ls-files", "--stage", "-z"],
-      { cwd: root, encoding: "utf8", maxBuffer: 10 * 1024 * 1024 },
-      (error, stdout) => {
-        if (error) {
-          reject(new Error(`Cannot read the staged Git snapshot: ${error.message}`));
-          return;
-        }
-        resolveEntries(parseIndex(stdout));
-      },
-    );
-  });
-}
-
-function parseIndex(output: string): IndexEntry[] {
+async function readSnapshot(root: string, revision?: string): Promise<IndexEntry[]> {
+  const output = await readGit(root, revision
+    ? ["ls-tree", "-r", "-z", revision]
+    : ["ls-files", "--stage", "-z"]);
   return output.split("\0").flatMap((record) => {
-    if (!record) return [];
-    const match = /^(\d+) ([a-f0-9]+) 0\t([\s\S]+)$/.exec(record);
+    const match = /^(\d+) (?:(?:blob|commit) )?([a-f0-9]+)(?: 0)?\t([\s\S]+)$/.exec(record);
     return match?.[1] && match[2] && match[3]
       ? [{ mode: match[1], objectId: match[2], path: match[3] }]
       : [];
+  });
+}
+
+function readGit(root: string, args: string[]): Promise<string> {
+  return new Promise((resolveOutput, reject) => {
+    execFile("git", args, { cwd: root, encoding: "utf8", maxBuffer: 10 * 1024 * 1024 },
+      (error, stdout) => {
+        if (error) reject(new Error(`Cannot read the Git snapshot: ${error.message}`));
+        else resolveOutput(stdout);
+      });
   });
 }
 

@@ -355,5 +355,115 @@
       "The full harness gate remains mandatory and contracts cover accepted and rejected dependency-maintenance changes.",
       "The full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-024",
+    "title": "Preserve review binding across merged maintenance",
+    "acceptance_criteria": [
+      "Approved documentation and dependency maintenance remain valid before merge and after the default branch advances.",
+      "The maintenance exception uses a stable reviewed implementation baseline and still rejects unrelated implementation changes.",
+      "Missing or invalid baseline evidence fails closed without accepting an arbitrary clean tree.",
+      "Temporary Git contracts cover maintenance lifecycle and rejected changes, and the review-binding documentation describes the behavior."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/57",
+    "status": "done"
+  },
+  {
+    "id": "TASK-025",
+    "title": "Discover workspaces without silently truncating YAML",
+    "acceptance_criteria": [
+      "Comments and supported valid pnpm workspace package lists preserve every declared workspace pattern.",
+      "Unsupported or malformed workspace syntax produces a stable finding instead of silently omitting targets.",
+      "Temporary fixtures cover comments between patterns, supported list syntax, malformed configuration, and the approved inventory audit.",
+      "The supported discovery contract is documented without broadening the bootstrap to other package managers."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/58",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-026",
+    "title": "Use the final review as the approval authority",
+    "acceptance_criteria": [
+      "Completed feature approval requires an approved verdict and required evidence in the canonical final review report.",
+      "Numbered review rounds cannot override a rejected or incomplete final report.",
+      "Review binding and completion evaluate the same canonical report without rewriting historical reviews.",
+      "Focused contracts cover old approvals, rejected final reviews, and valid canonical approval."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/59",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-027",
+    "title": "Require approval and completion at delivery boundaries",
+    "acceptance_criteria": [
+      "Fast development feedback remains available while a feature is in progress.",
+      "The final local gate requires an approved review for active implementation work.",
+      "The CI merge boundary requires finalized normal feature state and preserves approved maintenance lanes.",
+      "Focused contracts prove unfinished or unreviewed work is rejected at the appropriate boundary and valid workflows pass.",
+      "Role and verification documentation describes the development, approval, and merge checks."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/60",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-028",
+    "title": "Use an explicit comparison base for verification",
+    "acceptance_criteria": [
+      "Fallow and change classifiers receive one explicitly resolved comparison base.",
+      "A pushed feature branch still analyzes its committed changes against the intended target branch.",
+      "CI supplies the correct PR or pre-push baseline and non-main default branches have a documented supported override.",
+      "Focused Git and command contracts cover pushed branches, detached checkout inputs, default-branch pushes, and invalid bases."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/61",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-029",
+    "title": "Permit project verification in reusable gate contracts",
+    "acceptance_criteria": [
+      "The documented verify:project extension passes reusable harness command contracts.",
+      "Required harness stages and failure propagation remain protected without requiring the exact sample verify command.",
+      "Temporary stub-command fixtures cover a successful extension and a failing project check.",
+      "Sample-specific expectations and adoption guidance are clearly distinguished."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/62",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-030",
+    "title": "Verify the same implementation snapshot that was approved",
+    "acceptance_criteria": [
+      "Final local verification rejects intended tracked implementation differences between the index and working tree.",
+      "Development feedback permits ordinary unstaged work and unrelated user artifacts remain untouched.",
+      "Review and completion evidence files retain their documented digest exclusions.",
+      "Focused contracts cover staged approval, later unstaged edits, clean snapshots, and evidence-only changes."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/63",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-031",
+    "title": "Restrict evidence exemptions to historical bootstrap features",
+    "acceptance_criteria": [
+      "Existing historical bootstrap entries retain their evidence exemption explicitly.",
+      "New normal completed work requires a non-empty local or remote work-item reference and normal evidence.",
+      "Omitting the issue field cannot silently grant a new feature the legacy exemption.",
+      "Focused contracts cover historical compatibility, newly untracked work, and valid local identifiers."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/64",
+    "status": "pending"
+  },
+  {
+    "id": "TASK-032",
+    "title": "Document and verify a minimal bootstrap adoption path",
+    "acceptance_criteria": [
+      "One concise adoption map labels core files to copy, project files to adapt, source history to omit, and optional capabilities.",
+      "First-run instructions specify runtime, package installation, and Git-base prerequisites.",
+      "A minimal adoption fixture demonstrates the documented project extension without copying sample product state.",
+      "Metrics and impact analysis remain optional and no generator or new orchestration framework is introduced.",
+      "Primary adoption entry points link the map and focused adoption contracts pass."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/65",
+    "status": "pending"
   }
 ]

@@ -98,7 +98,8 @@ void test("workflow guidance protects the low-risk and streamlined lanes", async
   assert.match(leader, /after.*approv.*\.\/scripts\/verify\.sh/is);
   assert.match(checkpoints, /after independent approval/i);
   assert.match(verification, /evidence-only finalization/i);
-  assert.match(verification, /no feature is active.*only.*docs\/task-cli\.md.*all other changes.*latest completed tracked approval/i);
+  assert.match(verification, /no feature is active.*latest completed tracked approval/i);
+  assert.match(verification, /cumulative staged documentation and dependency changes.*committed review baseline/i);
 });
 
 async function readRepositoryFile(relativePath: string): Promise<string> {

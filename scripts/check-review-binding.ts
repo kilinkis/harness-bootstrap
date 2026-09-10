@@ -3,10 +3,9 @@ import { resolve } from "node:path";
 import { validateReviewBinding } from "./review-binding.js";
 
 const root = resolve(process.argv[2] ?? ".");
-const base = process.env.HARNESS_BASE_REF ?? "origin/main";
 
 try {
-  const findings = await validateReviewBinding(root, base);
+  const findings = await validateReviewBinding(root);
   if (findings.length === 0) console.log("review binding: valid");
   for (const finding of findings) {
     console.error(`${finding.code}: ${finding.message}`);

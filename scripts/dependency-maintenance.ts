@@ -1,6 +1,4 @@
 import { execFile } from "node:child_process";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 
 const LOCKFILE = "pnpm-lock.yaml";
 const MANIFEST = "package.json";
@@ -27,13 +25,15 @@ export async function classifyDependencyMaintenance(
     .catch(() => false);
 }
 
-async function isAllowedChange(root: string, base: string, path: string): Promise<boolean> {
+async function isAllowedChange(
+  root: string, base: string, path: string,
+): Promise<boolean> {
   if (path === LOCKFILE) return true;
   const [before, after] = await Promise.all([
     readRevisionFile(root, base, path),
-    readFile(resolve(root, path), "utf8"),
+    readRevisionFile(root, "", path),
   ]);
-  if (before === undefined) return false;
+  if (before === undefined || after === undefined) return false;
   return path === MANIFEST
     ? isDependencyManifestChange(before, after)
     : isPnpmSetupVersionChange(before, after);
