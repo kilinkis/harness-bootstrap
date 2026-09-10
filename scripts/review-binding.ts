@@ -32,6 +32,17 @@ export async function computeImplementationDigest(root: string): Promise<string>
   return digestEntries(await readSnapshot(root));
 }
 
+export async function assertDeliverySnapshot(root: string): Promise<void> {
+  const paths = (await readGit(root, ["-c", "core.fileMode=true", "diff", "--no-ext-diff",
+    "--no-textconv", "--ignore-submodules=none", "--no-renames", "--name-only", "-z", "--"]))
+    .split("\0").filter((path) => path && isImplementationPath(path));
+  if (paths.length > 0) {
+    throw new Error("DELIVERY_SNAPSHOT_MISMATCH: tracked implementation differs from the reviewed index: " +
+      paths.map((path) => JSON.stringify(path)).join(", ") +
+      ". Reconcile the working tree with the intended snapshot, then stage and obtain review for changed implementation.");
+  }
+}
+
 function digestEntries(snapshot: IndexEntry[]): string {
   const entries = snapshot
     .filter(({ path }) => isImplementationPath(path))

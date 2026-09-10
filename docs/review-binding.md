@@ -54,9 +54,13 @@ The maintenance baseline is the latest commit in `HEAD` history that changed the
 
 The maintenance exception fails with `REVIEW_BINDING_BASELINE_INVALID` when the committed baseline is unavailable or invalid. Fetch full Git history when the review commit is missing from a shallow checkout. Do not fabricate a new digest to bypass this finding. Keep the canonical report with its reviewed implementation in the delivered commit. A new normal feature approval establishes the next baseline.
 
-The full harness gate and required remote review still apply to maintenance. This content check does not prove that remote review occurred. Untracked files and unstaged changes remain outside the staged digest.
+The full harness gate and required remote review still apply to maintenance. This content check does not prove that remote review occurred. Untracked files and unstaged changes remain outside the staged digest. Final delivery additionally checks that tracked implementation files in the working tree match the index. It rejects unstaged content, deletion, and executable-mode differences before downstream verification. It uses the same `feature_list.json` and `progress/` exclusions as the digest. It does not stage files or remove untracked artifacts.
 
 Keep each changes-requested report in a numbered file such as `progress/review_TASK-003_round1.md`. Do not edit it. Reserve `progress/review_TASK-003.md` for the final approved report that completion checks read.
+
+Final verification assumes a normal full checkout without tracked changes hidden by `assume-unchanged` or `skip-worktree` index flags. The snapshot check uses ordinary Git index-to-working-tree comparison. It does not create an isolated checkout or prevent concurrent edits during verification.
+
+Ordinary `pnpm run feedback` permits unstaged development. Before the final gate, reconcile each reported path with the intended snapshot. If implementation changes are needed, stage them and obtain a new matching review. Do not stage unrelated files to clear the check.
 
 This digest binds content. It does not prove reviewer identity or authority. Use required platform reviews or another trusted identity control when those guarantees are necessary.
 

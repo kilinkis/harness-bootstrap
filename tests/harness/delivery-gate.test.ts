@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
+
+import { computeImplementationDigest } from "../../scripts/review-binding.js";
 
 import { addReviewReport, createFixture, finalizeFeature, runGit,
   writeFeatureQueue } from "./review-binding-fixture.js";
@@ -83,6 +85,68 @@ void test("unknown delivery phases fail before running the full pipeline", async
     assert.notEqual(result.code, 0);
     assert.match(result.output, /Usage:/);
     assert.doesNotMatch(result.output, /HARNESS_TESTS_EXECUTED/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("final entry points reject tracked implementation changes after staged approval", async () => {
+  for (const change of ["content", "deletion", "mode", "staged addition"]) {
+    const root = await deliveryFixture("in_review");
+    try {
+      const path = join(root, "src/value.ts");
+      await addReviewReport(root);
+      await finalizeFeature(root);
+      if (change === "staged addition") {
+        await writeFile(join(root, "src/new.ts"), "export const added = 1;\n");
+        await runGit(root, ["add", "src/new.ts"]);
+      }
+      const digest = await addReviewReport(root);
+      if (change === "deletion") await rm(path);
+      else if (change === "mode") {
+        await runGit(root, ["config", "core.fileMode", "false"]);
+        await chmod(path, 0o755);
+      } else {
+        await writeFile(change === "staged addition" ? join(root, "src/new.ts") : path,
+          "export const changed = 2;\n");
+      }
+      assert.equal(await computeImplementationDigest(root), digest);
+      for (const entry of ["local", "verify", "ci"]) {
+        const result = await runEntry(root, entry);
+        assert.notEqual(result.code, 0, `${change}: ${entry}`);
+        assert.match(result.output, /DELIVERY_SNAPSHOT_MISMATCH/);
+        assert.doesNotMatch(result.output, /HARNESS_TESTS_EXECUTED/);
+      }
+      assert.equal(await computeImplementationDigest(root), digest, "the guard must not stage changes");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }
+});
+
+void test("feedback permits unstaged development and final delivery permits evidence and untracked artifacts", async () => {
+  const root = await deliveryFixture("in_progress");
+  try {
+    await writeFile(join(root, "src/value.ts"), "export const value = 2;\n");
+    const feedback = await runEntry(root, "feedback");
+    assert.equal(feedback.code, 0, feedback.output);
+    await runGit(root, ["add", "src/value.ts"]);
+    await writeFeatureQueue(root, "in_review");
+    await addReviewReport(root);
+    await finalizeFeature(root);
+    const queue = await readFile(join(root, "feature_list.json"), "utf8");
+    await writeFile(join(root, "feature_list.json"), queue + "\n");
+    await writeFile(join(root, "progress/current.md"), "No feature is active. Evidence updated.\n");
+    await mkdir(join(root, "output"));
+    await writeFile(join(root, "output/user-artifact.txt"), "preserve me\n");
+    const digest = await computeImplementationDigest(root);
+    for (const entry of ["local", "verify", "ci"]) {
+      const result = await runEntry(root, entry);
+      assert.equal(result.code, 0, result.output);
+      assert.match(result.output, /HARNESS_TESTS_EXECUTED/);
+    }
+    assert.equal(await readFile(join(root, "output/user-artifact.txt"), "utf8"), "preserve me\n");
+    assert.equal(await computeImplementationDigest(root), digest);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

@@ -78,7 +78,7 @@ After independent approval, the leader runs the full harness gate once before ev
 
 The shell gate defaults to the `local` delivery phase. It runs `pnpm run verify`, which checks the delivery phase, then composes `pnpm run feedback` with `pnpm run test:harness`. Direct `pnpm run verify` also defaults to the guarded local phase. Default gates do not record workflow metrics or run metric contracts.
 
-The local phase rejects `in_progress` work. An `in_review` feature must pass the existing state and binding checks with its own approved final report, required evidence, and matching digest. The leader runs this phase before marking the feature done.
+The local phase rejects `in_progress` work. An `in_review` feature must pass the existing state and binding checks with its own approved final report, required evidence, and matching digest. The leader runs this phase before marking the feature done. Both delivery phases reject tracked implementation differences between the working tree and index before downstream checks run. This includes content, deletions, and executable-mode changes. Queue and progress evidence retain their review-digest exclusions. The check leaves untracked artifacts untouched and never stages changes. Ordinary feedback remains available during unstaged development.
 
 CI invokes the explicit finalized-state phase:
 
