@@ -1,5 +1,6 @@
 import { access, glob, readFile } from "node:fs/promises";
 import { dirname, resolve, sep } from "node:path";
+import { parseDocument } from "yaml";
 
 import type {
   AdoptionFinding,
@@ -123,34 +124,33 @@ function parseWorkspacePatterns(
   text: string,
   findings: AdoptionFinding[],
 ): string[] {
-  const lines = text.split(/\r?\n/);
-  const start = lines.findIndex((line) => /^packages:\s*(?:#.*)?$/.test(line));
-  if (start < 0) {
+  try {
+    // Preserve YAML syntax and inspect parser diagnostics before using partial data.
+    // https://eemeli.org/yaml/#parsing-documents
+    const document = parseDocument(text);
+    if (document.errors.length > 0 || document.warnings.length > 0) {
+      throw new Error("Unsupported or malformed YAML");
+    }
+    const value: unknown = document.toJS();
+    if (!isRecord(value) || !Array.isArray(value.packages) ||
+      value.packages.length === 0 || !value.packages.every(isWorkspacePattern)) {
+      throw new Error("Expected a non-empty list of workspace patterns");
+    }
+    return value.packages;
+  } catch {
     addFinding(
       findings,
       "WORKSPACE_CONFIG_INVALID",
-      "pnpm-workspace.yaml needs a packages list",
+      "pnpm-workspace.yaml must be one valid YAML mapping with a non-empty packages list of strings and no unsupported tags or directives",
       "pnpm-workspace.yaml",
     );
     return [];
   }
+}
 
-  const patterns: string[] = [];
-  for (const line of lines.slice(start + 1)) {
-    if (line && !/^\s/.test(line)) break;
-    const match = /^\s+-\s+(.+?)\s*$/.exec(line);
-    if (!match?.[1]) continue;
-    patterns.push(stripQuotes(match[1].replace(/\s+#.*$/, "").trim()));
-  }
-  if (patterns.length === 0) {
-    addFinding(
-      findings,
-      "WORKSPACE_CONFIG_INVALID",
-      "pnpm-workspace.yaml has an empty packages list",
-      "pnpm-workspace.yaml",
-    );
-  }
-  return patterns;
+function isWorkspacePattern(value: unknown): value is string {
+  return typeof value === "string" && value.trim() !== "" &&
+    !value.includes("\0") && !/[\r\n]/.test(value);
 }
 
 async function readManifest(
@@ -252,11 +252,6 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 
 function trimSlash(pattern: string): string {
   return pattern.replace(/\/$/, "");
-}
-
-function stripQuotes(value: string): string {
-  const quoted = /^(?:'([^']*)'|"([^"]*)")$/.exec(value);
-  return quoted ? (quoted[1] ?? quoted[2] ?? "") : value;
 }
 
 function isUnsafeWorkspacePattern(pattern: string): boolean {
