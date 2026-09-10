@@ -35,11 +35,17 @@ The reviewer does not stage or edit implementation files. The review report is o
 
 ## Gate behavior
 
-`pnpm run check:review-binding` runs in the standard gate. It validates an `in_review` feature. It skips `in_progress` work. When no feature is active, it skips the latest completed binding only when current Git changes pass the same low-risk classifier. All other changes remain bound to the latest completed tracked approval.
+`pnpm run check:review-binding` runs in the standard gate. It validates an `in_review` feature and skips `in_progress` work. When no feature is active, it validates the latest completed tracked approval.
 
 The gate fails when the active review digest is missing, malformed, or different from the staged implementation. If implementation changes after review, return the feature to implementation. Stage the new snapshot. Run verification and review again. The leader checks this binding in the full gate before evidence-only finalization.
 
-When no feature is active, the latest completed review remains binding except for two narrow maintenance lanes: the approved `docs/task-cli.md` documentation path and dependency maintenance. Dependency maintenance can change only `pnpm-lock.yaml`, dependency or `packageManager` fields in `package.json`, and the pnpm setup version in `.github/workflows/verify.yml`. The full harness gate and required remote review still apply. Scripts, source, arbitrary manifest fields, other workflow changes, queue evidence, and unknown paths remain digest-bound.
+When no feature is active, the latest completed review permits two narrow maintenance lanes: `docs/task-cli.md` documentation and dependency maintenance. Dependency maintenance can change only `pnpm-lock.yaml`, dependency or `packageManager` fields in `package.json`, and the pnpm setup version in `.github/workflows/verify.yml`. Scripts, source, arbitrary manifest fields, other workflow changes, and unknown implementation paths remain digest-bound. Queue and progress evidence retain the digest exclusions described above.
+
+The maintenance baseline is the latest commit in `HEAD` history that changed the canonical review report. The gate requires that committed report to match the current report and its implementation digest to match the committed tree. It compares cumulative staged implementation changes against that commit, including staged manifest and workflow contents. Approved documentation and dependency changes can accumulate across maintenance merges. Advancing the default branch does not move the review baseline. An arbitrary clean tree with unrelated implementation changes still fails.
+
+The maintenance exception fails with `REVIEW_BINDING_BASELINE_INVALID` when the committed baseline is unavailable or invalid. Fetch full Git history when the review commit is missing from a shallow checkout. Do not fabricate a new digest to bypass this finding. Keep the canonical report with its reviewed implementation in the delivered commit. A new normal feature approval establishes the next baseline.
+
+The full harness gate and required remote review still apply to maintenance. This content check does not prove that remote review occurred. Untracked files and unstaged changes remain outside the staged digest.
 
 Keep each changes-requested report in a numbered file such as `progress/review_TASK-003_round1.md`. Do not edit it. Reserve `progress/review_TASK-003.md` for the final approved report that completion checks read.
 
