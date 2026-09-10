@@ -329,5 +329,18 @@
       "Adopter guidance defines how to compare releases, adapt changes, verify the result, and record the new baseline without overwriting project-specific configuration.",
       "Contract tests pass and the full harness verification passes."
     ]
+  },
+  {
+    "id": "TASK-022",
+    "title": "Hand off harness adoption to product readiness work",
+    "status": "done",
+    "issue": "local-TASK-022",
+    "acceptance_criteria": [
+      "Adoption guidance defines the boundary between an adopted harness, an adopted project gate, and product readiness.",
+      "An adopting agent is instructed to execute the adoption checklist, record evidence and unresolved decisions, and report the adoption outcome without claiming product readiness.",
+      "The guidance tells the agent to identify the first actionable production-readiness work item and offer to continue immediately when authority and acceptance criteria are clear.",
+      "Primary entry points and focused contract tests keep the adoption handoff guidance visible and prevent its completion boundary from regressing.",
+      "The full harness verification passes."
+    ]
   }
 ]

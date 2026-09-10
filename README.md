@@ -49,6 +49,8 @@ The agent should first inspect the current project's existing instructions, test
 
 Complete the [Harness Adoption Checklist](ADOPTION_CHECKLIST.md) before you declare the adapted gate ready. Inventory every deployable target and relevant workspace. Run each production build in the full gate and prove that a broken build makes the gate fail.
 
+Use the [adoption handoff protocol](docs/adoption-handoff.md) when the checklist is complete. Report harness adoption, project-gate adoption, and product readiness as separate outcomes. Identify the first actionable production-readiness item and offer to start it immediately when its authority and acceptance criteria are clear.
+
 If the project already uses this harness, follow the [upgrade guide](docs/upgrading.md). Release tags define comparison points. Adapt each migration to the project, then update `HARNESS_VERSION` after the full gate passes.
 
 Use the [production-readiness checklist](docs/production-readiness.md) to identify the last-mile gates that apply to the target product. Record why a gate applies, how it is measured, and how CI enforces it. Do not enable every listed gate by default.

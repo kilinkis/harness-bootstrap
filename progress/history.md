@@ -75,3 +75,7 @@ Reduced default workflow cost with a narrow low-risk product-documentation lane,
 ## 2026-09-10 — TASK-021
 
 Added a stable release marker, a harness changelog, and local release validation. Added optional guidance for immutable tags and safe upgrades of adapted repositories. The first tagged baseline is `v0.1.0`. Review approved the change with no findings. Work is tracked in [GitHub Issue #47](https://github.com/kilinkis/harness-bootstrap/issues/47).
+
+## 2026-09-10 — TASK-022
+
+Added an adoption handoff protocol that separates harness adoption, project-gate adoption, and product readiness. Adopting agents must execute the checklist, record evidence and unresolved decisions, and identify the first actionable production-readiness work item. Entry-point contracts keep the completion boundary visible. The repaired leader-owned full gate passed with 7 product tests and 64 harness contracts.
