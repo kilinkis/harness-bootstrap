@@ -51,7 +51,7 @@ The initial focused command established the failure before implementation.
 
 The intended implementation files were staged before handoff. Queue and progress evidence retain their documented digest exclusions. Existing `output/` and `tmp/` artifacts remain untracked and untouched.
 
-Implementation digest: sha256:28e9d139472b72b0f33266a8219ed664524607215ef8564900e9df9364ac4768
+Implementation digest: sha256:779e47f25de882fd29833c4b79df4dc0176285dca74742a81b4bbe0588dc9ea6
 
 ## Remaining risks
 
@@ -66,3 +66,26 @@ Publication remains blocked by the earlier automatic approval review decision re
 After independent approval, `./scripts/verify.sh` exited 0 on the approved snapshot. All fast checks, 7 product tests, and 89 harness contracts passed. Queue and progress evidence were finalized without changing implementation content.
 
 After evidence finalization, `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state` passed.
+
+
+## CI fixture isolation repair
+
+Required [CI run 34528367163](https://github.com/kilinkis/harness-bootstrap/actions/runs/34528367163) failed the contract `the command defaults to origin/main`. CI provides `HARNESS_BASE_REF` for the real repository, but the temporary fixture has independent Git history. Its default-case child inherited a SHA that does not exist there.
+
+Changed only `tests/harness/local-verification.test.ts`: copy the child environment and remove `HARNESS_BASE_REF` before running this fixture's selector. Explicit `--base` cases remain intact. The separate `comparison-base.test.ts` fixtures continue to inject and verify environment overrides, explicit precedence, invalid references, and first-push analysis. No production behavior changed. The repair adds 3 test lines.
+
+- Reproduction: `HARNESS_BASE_REF=1111111111111111111111111111111111111111 pnpm exec tsx --test --test-name-pattern='the command defaults to origin/main' tests/harness/local-verification.test.ts` failed with `COMPARISON_BASE_INVALID` on the inherited SHA.
+- Verification: `HARNESS_BASE_REF=1111111111111111111111111111111111111111 pnpm exec tsx --test tests/harness/comparison-base.test.ts tests/harness/local-verification.test.ts tests/harness/impact-analysis.test.ts tests/harness/verification-loop.test.ts` passed all 22 contracts after isolation.
+- Startup and final `pnpm run feedback` passed all fast checks and 7 product tests. The inherited parser-duplication finding remained excluded by the unchanged new-only gate.
+- `git diff --cached --check` passed. Inspected the staged fixture-only correction.
+- `pnpm run review:digest` produced the revised implementation digest recorded above.
+
+This is one repair attempt in the CI-discovered cycle after the previous focused, fast, and local full gates passed. The hypothesis was that the default fixture must own its environment. The single correction passed the original regression and all related focused checks.
+
+The previous approved digest was `sha256:28e9d139472b72b0f33266a8219ed664524607215ef8564900e9df9364ac4768`. The previous canonical approval has not been edited by the implementer. Independent review must preserve that report as numbered history before writing a renewed canonical approval. The leader still needs to run the final gate with the real CI base environment and confirm remote checks. Later dependent snapshots need the same fixture correction and their own renewed bindings.
+
+The user has now authorized publication and merging through pull requests. The earlier publication-blocked note above records the original implementation context. The implementer did not run a full gate, commit, push, or alter dependent branches during this repair. Untracked `output/` and `tmp/` artifacts remain untouched.
+
+## Leader CI-repair verification
+
+After renewed independent approval, `HARNESS_BASE_REF=db63e0c09b539bb48f4840c934fcdb71b946a35e ./scripts/verify.sh` exited 0. All fast checks, 7 product tests, and 89 harness contracts passed. This repeats the final gate because the CI-discovered fixture repair changed the approved implementation snapshot. Only evidence was finalized afterward.

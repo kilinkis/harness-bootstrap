@@ -2,10 +2,8 @@
 
 No feature is active.
 
-TASK-031: Restrict evidence exemptions to the original bootstrap definitions and require references and evidence for new completed work.
+TASK-031 is complete after the CI fixture-isolation repair. Independent re-review approved `sha256:02ef21aba854a4cd4b96eabcf2b37e34289ae54d37a53053bf03161d6fc01d37`. The leader ran the final local gate with `HARNESS_BASE_REF=db63e0c09b539bb48f4840c934fcdb71b946a35e`; it passed all fast checks, 7 product tests, and 100 harness contracts. Production behavior is unchanged by the repair.
 
-Independent review approved `sha256:74c5651292d291ee9c27ad5048cce77f977b34312b6e33813f9a0f741a60e2f6`. The leader ran `./scripts/verify.sh` after approval. It passed with 7 product tests and 100 harness contracts.
+The user authorized publication and merge. PRs #66 through #74 track delivery in order. Merge requires successful remote checks on each final head. GitHub is the authority for current merge status.
 
-Pending work: TASK-032.
-
-Publication remains subject to explicit user authorization requested after automatic approval review rejected the TASK-024 push. No rejected publication action was retried. Existing untracked output/ and tmp/ are unrelated user artifacts.
+Unrelated output/ and tmp/ user artifacts remain untouched.

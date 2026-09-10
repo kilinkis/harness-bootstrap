@@ -115,3 +115,19 @@ Reject tracked working-tree implementation that differs from the staged approval
 ## 2026-09-10 — TASK-031
 
 Restrict evidence exemptions to the original bootstrap definitions and require references and evidence for new completed work. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 100 harness contracts. Evidence: progress/impl_TASK-031.md and progress/review_TASK-031.md.
+
+## 2026-09-10 — TASK-028 CI repair approval
+
+The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 89 harness contracts. Earlier approval evidence is preserved as numbered history.
+
+## 2026-09-10 — TASK-029 CI repair approval
+
+The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 94 harness contracts. Earlier approval evidence is preserved as numbered history.
+
+## 2026-09-10 — TASK-030 CI repair approval
+
+The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 96 harness contracts. Earlier approval evidence is preserved as numbered history.
+
+## 2026-09-10 — TASK-031 CI repair approval
+
+The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 100 harness contracts. Earlier approval evidence is preserved as numbered history.

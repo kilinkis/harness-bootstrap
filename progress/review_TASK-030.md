@@ -1,34 +1,34 @@
-# Review: TASK-030
+# Review: TASK-030 — inherited CI fixture repair
 
 ## Verdict
 
-Approved. No blocking findings remain for TASK-030.
+Approved. No blocking findings remain for the corrected TASK-030 snapshot.
 
 ## Scope reviewed
 
-The change satisfies all four acceptance criteria. Final local, direct, and CI verification reject tracked implementation differences between the index and working tree before downstream checks. The guard uses the same implementation-path predicate as the digest. Queue and progress evidence remain excluded. Ordinary feedback does not run the guard, and unrelated untracked artifacts remain untouched.
+Renewed approval covers the previously approved snapshot guard plus the inherited TASK-028 fixture repair. The original independent review is preserved verbatim in [review_TASK-030_round1.md](review_TASK-030_round1.md). It verified rejection of tracked content, deletion, mode, and staged-addition differences, while preserving evidence exclusions and untracked artifacts. The guard and its contracts remain unchanged, so the original findings and verification evidence remain applicable.
 
-Inspected `scripts/review-binding.ts`, `scripts/check-delivery.ts`, `tests/harness/delivery-gate.test.ts`, `docs/review-binding.md`, and `docs/verification.md`. Also reviewed the TASK-030 criteria, current plan, implementation report, staged diff, package command composition, and existing binding, project, and verification-loop contracts. Applied the existing reviewer role and completion protocol.
+Inspected the staged diff, original approval, integration evidence in `progress/impl_TASK-030.md`, and the selector fixture correction. The only implementation delta from the prior TASK-030 HEAD is the three-line child-environment isolation in `tests/harness/local-verification.test.ts`. It removes inherited `HARNESS_BASE_REF` from a private environment copy so the default fixture uses its own Git history. Explicit fixture arguments and production behavior remain unchanged.
 
-The Git command compares the working tree with the index, uses NUL-delimited paths, forces executable-mode reporting, and disables external diff and text conversion. It also explicitly requests submodule difference reporting. Diagnostics quote changed paths. The guard does not stage changes. Reusing the existing implementation-path predicate avoids drift between approval scope and final-delivery scope.
-
-No material correctness, readability, architecture, security, or performance issue was found within the accepted normal-checkout scope. No dependency or historical review report changed.
+The staged and incoming fixture blobs both equal the independently reviewed repair blob `84c631e75c1e084ab3a0541d58b2df76c70555c7`. No unresolved merge entries remain. The original acceptance criteria remain satisfied, with no new material finding from this inherited test repair.
 
 ## Commands and results
 
-- `node --import tsx --test tests/harness/delivery-gate.test.ts tests/harness/review-binding.test.ts tests/harness/verification-loop.test.ts tests/harness/project-gate.test.ts`: passed all 27 contracts with the local IPC access required by command runners. Actual local, direct, and CI entrypoints rejected later content edits, deletions, executable-mode changes, and edits to newly staged files. Mode changes remained detectable with repository file-mode reporting disabled. Downstream harness execution did not occur, and the index digest did not change.
-- The same suite accepted clean approved snapshots, evidence-only edits, and unrelated untracked artifacts. Ordinary feedback remained available with unstaged development. Existing review binding and project composition behavior remained valid.
-- `node --import tsx /private/tmp/task030-independent-review.mjs`: passed additional temporary checks. Queue and progress edits were excluded, but a changed tracked file under `progress-extra/` was rejected. A newline-containing tracked filename was reported as a quoted path. Replacing a tracked regular file with a symlink was rejected. A configured external diff command was not executed. The staged digest and unrelated user artifact remained unchanged throughout.
-- `git diff --name-only`: returned no tracked worktree differences from the index during review.
+- `HARNESS_BASE_REF=1111111111111111111111111111111111111111 HARNESS_DELIVERY_PHASE=ci node --import tsx --test tests/harness/local-verification.test.ts`: passed all 6 focused contracts with required CLI IPC access. Default selection succeeded under the inherited non-fixture SHA. Explicit-base selection and staged non-documentation rejection also passed.
+- Inspected the staged diff and statistics: only the selector fixture changes implementation. Other staged changes are queue and progress evidence.
+- `git rev-parse :tests/harness/local-verification.test.ts MERGE_HEAD:tests/harness/local-verification.test.ts`: both returned `84c631e75c1e084ab3a0541d58b2df76c70555c7`.
+- `git ls-files -u`: returned no unresolved index entries.
+- `git diff --name-only`: returned no tracked worktree differences before report renewal.
 - `git diff --cached --check`: passed.
-- `pnpm run review:digest`: passed with approved IPC access. The independently computed digest matches the implementation handoff.
+- `pnpm run review:digest`: independently produced the renewed digest below.
+- Confirmed the numbered report path was free, preserved the original canonical report with exclusive creation, and verified identical bytes before writing this renewal.
 
-Temporary fixtures were removed after verification. Final-entrypoint execution was limited to focused fixtures with unrelated expensive stages stubbed. The reviewer did not edit implementation files, stage files, run the full repository gate, commit, push, or retry publication. Existing `output/` and `tmp/` artifacts were left untouched.
+The reviewer did not edit implementation files, stage files, run the full gate, commit, push, or merge. Existing `output/` and `tmp/` artifacts remain untouched.
 
-Implementation digest: sha256:83b96f8b1ad293cd96c82570488e4ffde7dbc0bc22d1d863fb5588c32362151d
+Implementation digest: sha256:2e15f540d795b8867bcd502f1b2574e80e4d169fd3b45fd8db99ba085bd2234b
 
 ## Remaining risks
 
-The accepted scope assumes a normal full checkout without tracked changes hidden by `assume-unchanged` or `skip-worktree`. Ordinary Git comparison does not isolate execution or prevent concurrent edits after the check. These limits are documented.
+The original normal-checkout limitations remain. The snapshot guard does not cover hidden index flags, concurrent edits after its check, or untracked implementation. The inherited repair does not change these boundaries.
 
-Untracked implementation remains outside the digest and snapshot guard. Intended new files must be staged before review. The leader's final local full gate and evidence finalization remain required. Publication remains blocked pending explicit user authorization, as recorded in `progress/current.md`.
+The leader must run the renewed final gate with the real CI baseline, finalize evidence, and require passing remote checks before merge. Publication and merge are authorized; the leader owns those actions.
