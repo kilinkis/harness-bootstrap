@@ -2,4 +2,4 @@
 
 No feature is active.
 
-TASK-022 added an adoption handoff protocol. It separates harness adoption, project-gate adoption, and product readiness. It instructs adopting agents to record evidence and unresolved decisions, then identify the first actionable production-readiness item. The reviewed implementation digest is `sha256:e1b41db3da8a1f7478ca627c11b298b5339290e49e1b340f77df63af01459bbe`. The repaired leader-owned full gate passed with 7 product tests and 64 harness contracts.
+TASK-023 added a narrow dependency-maintenance lane for no-active-feature pull requests. It permits only pnpm lockfile, dependency or package-manager, and pnpm setup-version changes. All other changes remain bound to the latest approved implementation digest. The reviewed implementation digest is `sha256:18b47ab9fc85ae6ee4b689d93e87a190c250521f1bc72c105c93a0382c5b7057`. The leader-owned full gate passed with 7 product tests and 68 harness contracts.

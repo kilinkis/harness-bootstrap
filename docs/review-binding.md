@@ -39,6 +39,8 @@ The reviewer does not stage or edit implementation files. The review report is o
 
 The gate fails when the active review digest is missing, malformed, or different from the staged implementation. If implementation changes after review, return the feature to implementation. Stage the new snapshot. Run verification and review again. The leader checks this binding in the full gate before evidence-only finalization.
 
+When no feature is active, the latest completed review remains binding except for two narrow maintenance lanes: the approved `docs/task-cli.md` documentation path and dependency maintenance. Dependency maintenance can change only `pnpm-lock.yaml`, dependency or `packageManager` fields in `package.json`, and the pnpm setup version in `.github/workflows/verify.yml`. The full harness gate and required remote review still apply. Scripts, source, arbitrary manifest fields, other workflow changes, queue evidence, and unknown paths remain digest-bound.
+
 Keep each changes-requested report in a numbered file such as `progress/review_TASK-003_round1.md`. Do not edit it. Reserve `progress/review_TASK-003.md` for the final approved report that completion checks read.
 
 This digest binds content. It does not prove reviewer identity or authority. Use required platform reviews or another trusted identity control when those guarantees are necessary.

@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { readGitChangedPaths } from "./git-changed-paths.js";
+import { classifyDependencyMaintenance } from "./dependency-maintenance.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
 
 export interface ReviewBindingFinding {
@@ -108,7 +109,8 @@ async function selectFeature(
   );
   if (!completed) return undefined;
   const changed = await readGitChangedPaths(root, base);
-  return classifyLowRiskDocumentation(changed).approved ? undefined : completed;
+  if (classifyLowRiskDocumentation(changed).approved) return undefined;
+  return await classifyDependencyMaintenance(root, base, changed) ? undefined : completed;
 }
 
 async function readQueue(

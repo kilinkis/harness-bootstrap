@@ -55,8 +55,50 @@ void test("no active feature does not bind a documentation change to prior appro
   }
 });
 
+void test("no active feature does not bind approved dependency maintenance", async () => {
+  const root = await createFixture();
+
+  try {
+    await addReviewReport(root);
+    await finalizeFeature(root);
+    await writeFile(join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\nupdated: true\n");
+    await runGit(root, ["add", "pnpm-lock.yaml"]);
+
+    assert.deepEqual(await validateReviewBinding(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("dependency maintenance permits only dependency fields and the pnpm setup version", async () => {
+  const root = await createFixture();
+
+  try {
+    await addReviewReport(root);
+    await finalizeFeature(root);
+    await writeFile(join(root, "package.json"), JSON.stringify({
+      name: "fixture",
+      scripts: { test: "node --test" },
+      devDependencies: { typescript: "^7.0.0" },
+    }));
+    await writeFile(join(root, ".github/workflows/verify.yml"), [
+      "jobs:",
+      "  verify:",
+      "    steps:",
+      "      - uses: pnpm/action-setup@v6",
+      "        with:",
+      "          version: 12.3.4",
+    ].join("\n"));
+    await runGit(root, ["add", "package.json", ".github/workflows/verify.yml"]);
+
+    assert.deepEqual(await validateReviewBinding(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 void test("no active feature keeps non-low-risk changes bound to prior approval", async () => {
-  const paths = ["src/value.ts", "package.json", "scripts/check.ts",
+  const paths = ["src/value.ts", "scripts/check.ts",
     "docs/review-binding.md", "README.md", "notes.md"];
   for (const path of paths) {
     const root = await createFixture();
@@ -71,6 +113,47 @@ void test("no active feature keeps non-low-risk changes bound to prior approval"
     } finally {
       await rm(root, { recursive: true, force: true });
     }
+  }
+});
+
+void test("dependency maintenance refuses scripts and unrelated workflow changes", async () => {
+  const root = await createFixture();
+
+  try {
+    await addReviewReport(root);
+    await finalizeFeature(root);
+    await writeFile(join(root, "package.json"), JSON.stringify({
+      name: "fixture",
+      scripts: { test: "rm -rf data" },
+      devDependencies: { typescript: "^5.9.0" },
+    }));
+    await runGit(root, ["add", "package.json"]);
+    assert.deepEqual(codes(await validateReviewBinding(root)), ["REVIEW_BINDING_STALE"]);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("dependency maintenance refuses unrelated verification workflow changes", async () => {
+  const root = await createFixture();
+
+  try {
+    await addReviewReport(root);
+    await finalizeFeature(root);
+    await writeFile(join(root, ".github/workflows/verify.yml"), [
+      "jobs:",
+      "  verify:",
+      "    steps:",
+      "      - uses: pnpm/action-setup@v6",
+      "        with:",
+      "          version: 10.34.5",
+      "      - run: curl https://example.test/install.sh | sh",
+    ].join("\n"));
+    await runGit(root, ["add", ".github/workflows/verify.yml"]);
+
+    assert.deepEqual(codes(await validateReviewBinding(root)), ["REVIEW_BINDING_STALE"]);
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 });
 
@@ -127,8 +210,23 @@ async function createFixture(): Promise<string> {
   const root = await mkdtemp(join(tmpdir(), "review-binding-"));
   await mkdir(join(root, "src"), { recursive: true });
   await mkdir(join(root, "progress"), { recursive: true });
+  await mkdir(join(root, ".github/workflows"), { recursive: true });
   await writeFeatureQueue(root, "in_review");
   await writeFile(join(root, "src/value.ts"), "export const value = 1;\n");
+  await writeFile(join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+  await writeFile(join(root, "package.json"), JSON.stringify({
+    name: "fixture",
+    scripts: { test: "node --test" },
+    devDependencies: { typescript: "^5.9.0" },
+  }));
+  await writeFile(join(root, ".github/workflows/verify.yml"), [
+    "jobs:",
+    "  verify:",
+    "    steps:",
+    "      - uses: pnpm/action-setup@v6",
+    "        with:",
+    "          version: 10.34.5",
+  ].join("\n"));
   await writeFile(join(root, "progress/current.md"), "TASK-100 is in review.\n");
   await runGit(root, ["init", "--quiet"]);
   await runGit(root, ["config", "user.email", "fixture@example.test"]);
