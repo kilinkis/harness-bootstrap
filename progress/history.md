@@ -95,3 +95,7 @@ Workspace discovery parses complete YAML documents and rejects malformed or unsu
 ## 2026-09-10 — TASK-026
 
 Completion and binding validate one designated final review, with content-pinned compatibility for four historical approvals. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 80 harness contracts. Evidence: progress/impl_TASK-026.md and progress/review_TASK-026.md.
+
+## 2026-09-10 — TASK-027
+
+Full verification now distinguishes approved local work from finalized CI delivery while keeping development feedback permissive. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 85 harness contracts. Evidence: progress/impl_TASK-027.md and progress/review_TASK-027.md.

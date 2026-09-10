@@ -25,6 +25,7 @@ void test("the full gate contains every fast feedback check", async () => {
     "pnpm run test:product",
   ]);
   assert.deepEqual(manifest.scripts?.verify?.split(" && "), [
+    "pnpm run check:delivery",
     "pnpm run feedback",
     "pnpm run test:harness",
   ]);
@@ -54,8 +55,8 @@ void test("the shell and CI entry points use the full gate", async () => {
   const shellGate = await readRepositoryFile("scripts/verify.sh");
   const workflow = await readRepositoryFile(".github/workflows/verify.yml");
 
-  assert.match(shellGate, /^#!\/usr\/bin\/env bash\nset -euo pipefail\n\npnpm run verify\n$/);
-  assert.match(workflow, /run: \.\/scripts\/verify\.sh/);
+  assert.match(shellGate, /HARNESS_DELIVERY_PHASE="\$phase" pnpm run verify/);
+  assert.match(workflow, /run: \.\/scripts\/verify\.sh ci/);
   assert.doesNotMatch(workflow, /pnpm run feedback/);
   assert.doesNotMatch(workflow, /verify:local|verify:docs/);
 });
@@ -66,7 +67,7 @@ void test("the local selector remains separate from the full gate", async () => 
   ) as PackageManifest;
 
   assert.equal(manifest.scripts?.["verify:local"], "tsx scripts/local-verification.ts");
-  assert.equal(manifest.scripts?.verify, "pnpm run feedback && pnpm run test:harness");
+  assert.equal(manifest.scripts?.verify, "pnpm run check:delivery && pnpm run feedback && pnpm run test:harness");
 });
 
 void test("workflow guidance protects the low-risk and streamlined lanes", async () => {
@@ -95,6 +96,8 @@ void test("workflow guidance protects the low-risk and streamlined lanes", async
   assert.match(implementer, /focused check.*fast feedback/is);
   assert.doesNotMatch(implementer, /then `\.\/scripts\/verify\.sh`/);
   assert.match(reviewer, /independent focused/i);
+  assert.match(agents, /reviewer role.*independent focused/i);
+  assert.match(verification, /CI phase rejects both `in_progress` and `in_review`/);
   assert.match(leader, /after.*approv.*\.\/scripts\/verify\.sh/is);
   assert.match(checkpoints, /after independent approval/i);
   assert.match(verification, /evidence-only finalization/i);

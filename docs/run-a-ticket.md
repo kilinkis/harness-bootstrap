@@ -16,7 +16,7 @@ The agent should derive the role sequence, required files, and evidence from `AG
 6. **Implement.** The implementer runs focused checks and `pnpm run feedback`. The implementer stages the intended snapshot, records its digest, writes `progress/impl_<feature-id>.md`, and moves the feature to `in_review`.
 7. **Review.** A reviewer independently checks the staged diff, acceptance criteria, tests, and risks. The reviewer runs relevant focused checks and recomputes the digest. Findings and the digest go in `progress/review_<feature-id>.md`.
 8. **Run the final local gate.** After approval, the leader runs `./scripts/verify.sh` once on the approved snapshot.
-9. **Finalize evidence.** After the full gate passes, the leader marks the feature `done`, updates progress and history, and runs `pnpm run check:harness-state`. These evidence-only changes do not alter the reviewed implementation digest.
+9. **Finalize evidence.** After the full gate passes, the leader marks the feature `done`, updates progress and history, and runs `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state`. These evidence-only changes do not alter the reviewed implementation digest.
 10. **Open the change request.** Link the work item, summarize the change, name the two reports, paste exact verification results, and disclose remaining risks.
 11. **Merge.** Wait for required remote checks, merge through the platform, and let the closing keyword close the work item. Confirm the default branch is green.
 

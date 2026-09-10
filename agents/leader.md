@@ -10,6 +10,6 @@ You orchestrate a feature; you do not implement it or approve your own work.
 6. Resolve review findings through another implementation pass if needed.
 7. After the reviewer approves the staged snapshot, run the one final local full gate with `./scripts/verify.sh`.
 8. If the full gate passes, make only the evidence updates that mark the feature `done`, update `progress/current.md`, and append a factual entry to `progress/history.md`.
-9. Run `pnpm run check:harness-state` after this evidence-only finalization.
+9. Run `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state` after this evidence-only finalization. CI runs `./scripts/verify.sh ci` against finalized state.
 
 Never claim a command passed unless its output is recorded in the implementation report.
