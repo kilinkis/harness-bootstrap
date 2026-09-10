@@ -107,3 +107,11 @@ Use explicit common-ancestor comparison bases for Fallow and selectors, includin
 ## 2026-09-10 — TASK-029
 
 Allow project verification while preserving required harness stages, order, and failure propagation. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 94 harness contracts. Evidence: progress/impl_TASK-029.md and progress/review_TASK-029.md.
+
+## 2026-09-10 — TASK-028 CI repair approval
+
+The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 89 harness contracts. Earlier approval evidence is preserved as numbered history.
+
+## 2026-09-10 — TASK-029 CI repair approval
+
+The isolated local-selector fixture no longer inherits the outer repository base SHA. Renewed independent review approved the resulting snapshot. The leader final local gate with a real CI base SHA passed 7 product tests and 94 harness contracts. Earlier approval evidence is preserved as numbered history.

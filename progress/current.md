@@ -2,10 +2,8 @@
 
 No feature is active.
 
-TASK-029: Allow project verification while preserving required harness stages, order, and failure propagation.
+TASK-029 is complete after the CI fixture-isolation repair. Independent re-review approved `sha256:2f411ecb473fba243c9fb1ebf462e881203816b0402b6b29ff13c7c6b8b260f7`. The leader ran the final local gate with `HARNESS_BASE_REF=db63e0c09b539bb48f4840c934fcdb71b946a35e`; it passed all fast checks, 7 product tests, and 94 harness contracts. Production behavior is unchanged by the repair.
 
-Independent review approved `sha256:9381e930e3f8bb10d546da4da57faa773669b8c9973162b9a0c8e4c71d868133`. The leader ran `./scripts/verify.sh` after approval. It passed with 7 product tests and 94 harness contracts.
+The user authorized publication and merge. PRs #66 through #74 track delivery in order. Merge requires successful remote checks on each final head. GitHub is the authority for current merge status.
 
-Pending work: TASK-030, TASK-031, TASK-032.
-
-Publication remains subject to explicit user authorization requested after automatic approval review rejected the TASK-024 push. No rejected publication action was retried. Existing untracked output/ and tmp/ are unrelated user artifacts.
+Unrelated output/ and tmp/ user artifacts remain untouched.

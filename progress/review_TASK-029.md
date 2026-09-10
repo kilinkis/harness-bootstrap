@@ -1,34 +1,34 @@
-# Review: TASK-029
+# Review: TASK-029 — inherited CI fixture repair
 
 ## Verdict
 
-Approved. No blocking findings remain for TASK-029.
+Approved. No blocking findings remain for the corrected TASK-029 snapshot.
 
 ## Scope reviewed
 
-The change satisfies all four acceptance criteria. Reusable verification contracts accept the documented `verify:project` extension while preserving ordered delivery, feedback, and harness stages. The optional project stage must run between feedback and harness tests and must have a defined command. Exact stage matching and `&&` composition reject omitted, reordered, duplicated, or failure-masking commands. Temporary execution fixtures prove short-circuit behavior for every stage.
+Renewed approval covers the previously approved project-gate implementation plus the inherited TASK-028 fixture isolation repair. The original independent review is preserved verbatim in [review_TASK-029_round1.md](review_TASK-029_round1.md). It verified the documented project extension, required stage order, failure propagation, and fixture isolation. Those implementation files are unchanged, so its findings and evidence remain applicable.
 
-Inspected `tests/harness/verification-loop.test.ts`, `tests/harness/project-gate.test.ts`, `tests/harness/delivery-gate.test.ts`, `ADOPTION_CHECKLIST.md`, and `docs/verification.md`. Also reviewed the TASK-029 criteria, current plan, implementation report, staged diff, reviewer role, and completion checkpoints.
+Inspected the staged diff, original approval, integration evidence in `progress/impl_TASK-029.md`, and the corrected selector fixture. The only implementation delta from the prior TASK-029 HEAD is the three-line environment isolation in `tests/harness/local-verification.test.ts`. The helper copies the parent environment, removes `HARNESS_BASE_REF`, and passes the copy to its child. Explicit fixture bases remain intact; production behavior is unchanged.
 
-The isolated project contract runs the actual copied verification-loop test. Clearing `NODE_TEST_CONTEXT` permits its nested Node test runner to execute. Positive and negative fixtures establish that the nested check both accepts the extension and rejects weakened commands. The delivery fixtures replace `verify:project` before executing verification, so they do not run an adopter's real project command. Adoption guidance includes the delivery guard and explicit CI phase. The named sample test distinguishes optional command defaults from the reusable composition requirement.
-
-No material correctness, readability, architecture, security, or performance issue was found within the accepted scope. No production source, dependency, or historical review report changed. The bounded sequential-command contract avoids introducing a shell parser.
+The staged fixture blob equals the incoming repaired branch blob and the blob independently approved for TASK-028: `84c631e75c1e084ab3a0541d58b2df76c70555c7`. No unresolved merge entries remain. The original TASK-029 acceptance criteria remain satisfied, and the inherited repair introduces no new material finding.
 
 ## Commands and results
 
-- `node --import tsx --test tests/harness/project-gate.test.ts tests/harness/verification-loop.test.ts tests/harness/delivery-gate.test.ts tests/harness/adoption-guidance.test.ts`: passed all 17 contracts with the local IPC access required by nested CLI runners. The fixtures accepted the extension, executed all four stages in order, and stopped subsequent execution when each individual stage failed. Omitted required stages and masked project failures were rejected. Existing delivery and adoption behavior remained valid.
-- `node --import tsx /private/tmp/task029-independent-review.mjs`: passed additional isolated checks. A temporary copy of the actual project and delivery suites used an adopted manifest with a real project command that would create a marker and fail if invoked. Both suites passed, and the marker was absent. This independently verified that fixture stubs prevented accidental project execution.
-- The same independent script ran the copied reusable contract against reordered stages, semicolon composition, a duplicated harness stage, and an undefined project command. Each case failed with the expected contract assertion. These runs confirmed that the nested test actually executed.
-- `git diff --name-only`: returned no tracked worktree differences from the index.
+- `HARNESS_BASE_REF=1111111111111111111111111111111111111111 HARNESS_DELIVERY_PHASE=ci node --import tsx --test tests/harness/local-verification.test.ts`: passed all 6 focused contracts with required CLI IPC access. Default selection succeeded despite the inherited non-fixture SHA. Explicit bases and staged non-documentation rejection also passed.
+- Inspected `git diff --cached` and its statistics: only the selector fixture changes implementation. Remaining staged changes are queue and progress evidence.
+- `git rev-parse :tests/harness/local-verification.test.ts MERGE_HEAD:tests/harness/local-verification.test.ts`: returned `84c631e75c1e084ab3a0541d58b2df76c70555c7` for both objects.
+- `git ls-files -u`: returned no unresolved index entries.
+- `git diff --name-only`: returned no tracked worktree differences before report renewal.
 - `git diff --cached --check`: passed.
-- `pnpm run review:digest`: passed with approved IPC access. The independently computed digest matches the implementation handoff.
+- `pnpm run review:digest`: independently produced the renewed digest below.
+- Confirmed the numbered report path was free, preserved the original canonical report with exclusive creation, and verified identical bytes before writing this renewal.
 
-Temporary copies and fixtures were removed after verification. Stub command execution was focused verification, not the full repository gate. The reviewer did not edit implementation files, stage files, run the full repository gate, commit, push, or retry publication. Existing `output/` and `tmp/` artifacts were left untouched.
+The reviewer did not edit implementation files, stage files, run the full gate, commit, push, or merge. Existing `output/` and `tmp/` artifacts remain untouched.
 
-Implementation digest: sha256:9381e930e3f8bb10d546da4da57faa773669b8c9973162b9a0c8e4c71d868133
+Implementation digest: sha256:2f411ecb473fba243c9fb1ebf462e881203816b0402b6b29ff13c7c6b8b260f7
 
 ## Remaining risks
 
-The reusable contract supports the documented sequential command shape. Projects must place their own orchestration inside `verify:project`. Stub execution proves composition and failure propagation; adopters must still verify actual project commands and target coverage. Optional sample expectations may need adaptation.
+The original project-composition limits remain: projects use the documented sequential shape, and adopters must verify actual project commands and coverage. This repair only isolates a test environment.
 
-The leader's final local full gate and evidence finalization remain required. Publication remains blocked pending explicit user authorization, as recorded in `progress/current.md`.
+The leader must run the renewed final gate with the real CI baseline, finalize evidence, and require passing remote checks before merge. Publication and merge are authorized; the leader owns those actions.
