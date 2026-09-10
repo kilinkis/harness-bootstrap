@@ -12,7 +12,7 @@ Run the read-only audit from the target repository after you copy the harness sc
 pnpm run audit:adoption
 ```
 
-The audit discovers the root package and packages in `pnpm-workspace.yaml`. It reports TypeScript configuration, frontend indicators, relevant scripts, and unresolved decisions. It also proposes the content for `harness.targets.json`.
+The audit discovers the root package and packages in `pnpm-workspace.yaml`. It reports TypeScript configuration, frontend indicators, relevant scripts, and unresolved decisions. It also proposes the content for `harness.targets.json`. Read the [workspace discovery support contract](docs/target-inventory.md#workspace-discovery-support) and resolve every workspace finding before approving coverage.
 
 Use `pnpm --silent run audit:adoption --json` when another tool must parse the result.
 

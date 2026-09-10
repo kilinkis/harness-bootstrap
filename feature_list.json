@@ -378,7 +378,7 @@
       "The supported discovery contract is documented without broadening the bootstrap to other package managers."
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/58",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "TASK-026",

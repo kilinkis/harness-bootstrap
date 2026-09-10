@@ -87,3 +87,7 @@ Added a narrow dependency-maintenance exception to review binding. It allows onl
 ## 2026-09-10 — TASK-024
 
 Bound maintenance to the committed canonical review snapshot. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 71 harness contracts. Implementation and review evidence are in progress/impl_TASK-024.md and progress/review_TASK-024.md.
+
+## 2026-09-10 — TASK-025
+
+Workspace discovery parses complete YAML documents and rejects malformed or unsupported package lists without silently omitting targets. Independent review approved the staged implementation. The leader full gate passed with 7 product tests and 76 harness contracts. Evidence: progress/impl_TASK-025.md and progress/review_TASK-025.md.

@@ -2,6 +2,10 @@
 
 No feature is active.
 
-TASK-024 preserves review binding across merged maintenance. Independent review approved digest `sha256:8055a78c1f0f469395d5072429d7ab9db610dd35cb4966f3e3c2aac40424e736`. The leader ran `./scripts/verify.sh` after approval. It passed with 7 product tests and 71 harness contracts.
+TASK-025: Workspace discovery parses complete YAML documents and rejects malformed or unsupported package lists without silently omitting targets.
 
-TASK-025 is next. TASK-025 through TASK-032 remain pending and are authorized by the user. Delivery of TASK-024 is in progress. Existing untracked output/ and tmp/ are unrelated user artifacts.
+Independent review approved `sha256:a915d4013b7b639db3b94d81fa60a8fe4a821d6b65e9474bbba99510bfaff6d1`. The leader ran `./scripts/verify.sh` after approval. It passed with 7 product tests and 76 harness contracts.
+
+Pending work: TASK-026, TASK-027, TASK-028, TASK-029, TASK-030, TASK-031, TASK-032.
+
+Publication remains subject to explicit user authorization requested after automatic approval review rejected the TASK-024 push. No rejected publication action was retried. Existing untracked output/ and tmp/ are unrelated user artifacts.
