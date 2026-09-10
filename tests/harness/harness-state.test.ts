@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -58,7 +58,8 @@ None.
 void test("valid tracked and legacy feature state passes", async () => {
   const root = await createFixture({
     features: [
-      feature({ id: "TASK-001", status: "done" }),
+      ...((JSON.parse(await readFile(join(REPOSITORY_ROOT, "feature_list.json"), "utf8")) as FixtureFeature[])
+        .filter(({ id }) => ["TASK-001", "TASK-002", "TASK-004"].includes(id ?? ""))),
       feature({ id: "TASK-100", status: "done", issue: "https://example.test/100" }),
     ],
     files: {
@@ -79,7 +80,7 @@ void test("new active work is limited to five acceptance criteria", async () => 
   const criteria = Array.from({ length: 6 }, (_, index) => `Criterion ${index + 1}.`);
   const root = await createFixture({
     features: [
-      feature({ id: "TASK-001", status: "done", acceptance_criteria: criteria }),
+      feature({ id: "TASK-099", status: "pending", acceptance_criteria: criteria }),
       feature({ id: "TASK-100", status: "in_progress", acceptance_criteria: criteria }),
     ],
     files: { "progress/current.md": "TASK-100 is active.\n" },

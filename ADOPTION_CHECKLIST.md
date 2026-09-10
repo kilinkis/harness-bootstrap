@@ -2,6 +2,8 @@
 
 > Do not trust a green harness gate until this checklist is complete for the target repository.
 
+When replacing the bootstrap queue, remove its three historical evidence exemptions as described in the [historical evidence rules](docs/review-binding.md#historical-bootstrap-evidence). Give each new completed feature a local or remote work-item reference and normal reports.
+
 The bootstrap gate verifies the sample project only. It does not prove that another repository can build or deploy. Complete this checklist when you copy or adapt the harness.
 
 ## Start with the adoption audit

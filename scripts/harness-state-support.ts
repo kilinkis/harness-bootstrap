@@ -10,7 +10,7 @@ export interface HarnessFinding {
 export interface Feature {
   id: string;
   status: string;
-  tracked: boolean;
+  legacy: boolean;
 }
 
 export async function readText(

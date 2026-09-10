@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { isLegacyBootstrapFeature } from "./legacy-bootstrap.js";
 import { validateFeatureEvidence } from "./harness-evidence.js";
 import {
   addFinding,
@@ -102,8 +103,9 @@ function validateFeature(
   validateAcceptance(value.acceptance_criteria, status, label, path, findings);
   validateStatus(status, label, path, findings);
   validateSkipReason(value.skip_reason, status, label, path, findings);
-  const tracked = validateIssue(value, label, path, findings);
-  return id && ALLOWED_STATUSES.has(status) ? { id, status, tracked } : undefined;
+  validateIssue(value, label, path, findings);
+  return id && ALLOWED_STATUSES.has(status)
+    ? { id, status, legacy: isLegacyBootstrapFeature(value) } : undefined;
 }
 
 function validateSkipReason(
@@ -204,12 +206,14 @@ function validateIssue(
   label: string,
   path: string,
   findings: HarnessFinding[],
-): boolean {
+): void {
   const tracked = typeof value.issue === "string" && Boolean(value.issue.trim());
   if (Object.hasOwn(value, "issue") && !tracked) {
     addFinding(findings, "FEATURE_ISSUE_INVALID", `${label}: issue must be non-empty`, path);
   }
-  return tracked;
+  if (!Object.hasOwn(value, "issue") && value.status === "done" && !isLegacyBootstrapFeature(value)) {
+    addFinding(findings, "FEATURE_ISSUE_MISSING", `${label}: completed work needs a local or remote work-item reference`, path);
+  }
 }
 
 async function validateActiveState(

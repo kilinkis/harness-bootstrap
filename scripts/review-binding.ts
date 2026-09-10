@@ -1,3 +1,4 @@
+import { isLegacyBootstrapFeature } from "./legacy-bootstrap.js";
 import { resolveFinalReviewPath } from "./final-review.js";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -17,7 +18,7 @@ export interface ReviewBindingFinding {
 interface QueueFeature {
   id: string;
   status: string;
-  tracked: boolean;
+  legacy: boolean;
 }
 
 interface IndexEntry {
@@ -60,7 +61,7 @@ export async function validateReviewBinding(
 ): Promise<ReviewBindingFinding[]> {
   const findings: ReviewBindingFinding[] = [];
   const features = await readQueue(root, findings);
-  if (!features) return findings;
+  if (!features || findings.length > 0) return findings;
   const selected = selectFeature(features);
   if (!selected) return findings;
 
@@ -123,8 +124,8 @@ function selectFeature(features: QueueFeature[]): QueueFeature | undefined {
     status === "in_progress" || status === "in_review"
   );
   if (active) return active.status === "in_review" ? active : undefined;
-  return [...features].reverse().find(({ status, tracked }) =>
-    status === "done" && tracked
+  return [...features].reverse().find(({ status, legacy }) =>
+    status === "done" && !legacy
   );
 }
 
@@ -162,10 +163,15 @@ async function readQueue(
     return value.flatMap((item) => {
       if (!isRecord(item) || typeof item.id !== "string" ||
         typeof item.status !== "string") return [];
+      const legacy = isLegacyBootstrapFeature(item);
+      if (item.status === "done" && !legacy && (typeof item.issue !== "string" || !item.issue.trim())) {
+        addFinding(findings, "REVIEW_BINDING_ISSUE_MISSING",
+          `${item.id}: completed work needs a local or remote work-item reference`, "feature_list.json");
+      }
       return [{
         id: item.id,
         status: item.status,
-        tracked: typeof item.issue === "string" && item.issue.trim() !== "",
+        legacy,
       }];
     });
   } catch {

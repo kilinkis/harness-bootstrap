@@ -78,3 +78,11 @@ Four completed bootstrap features recorded their actual final approvals under ol
 Each designation requires SHA-256 matches for both the original canonical report and the designated final report. Missing or changed history removes the designation. The normal canonical-report rules then apply. The selected historical report must independently contain the required approval and evidence. These exceptions do not combine reports or apply to new work with reused IDs.
 
 Preserve the historical reports. Do not change their recorded hashes to bypass a failure. When adopting a fresh queue without this bootstrap history, remove the four historical mappings and their history-specific contract from `tests/harness/canonical-review.test.ts`.
+
+## Historical bootstrap evidence
+
+Only the original completed definitions of TASK-001, TASK-002, and TASK-004 are exempt from retrospective implementation reports, final reviews, history entries, and binding. `scripts/legacy-bootstrap.ts` pins each complete queue definition with SHA-256. Object key order does not affect identity. Changed titles, criteria, status, or other fields remove the exception. Reusing one of these IDs does not exempt replacement work.
+
+All other completed features need a nonempty `issue` field that identifies a local or remote work item. A local identifier such as `local-TASK-100` is valid; a GitHub URL is not required. These features also need the normal implementation report, approved final review, history entry, and implementation binding. Missing or empty references fail validation and cannot disable standalone review binding.
+
+Preserve the three historical queue definitions and existing history. Do not fabricate old reports or update the pinned hashes to exempt new work. When adopting a fresh queue without this bootstrap history, replace the historical-definition map with an empty map. Remove the history-specific fixture expectations from `tests/harness/legacy-evidence.test.ts` and `tests/harness/harness-state.test.ts`. Keep the new-work, reference, and evidence rejection contracts.
