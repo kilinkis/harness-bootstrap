@@ -3,7 +3,7 @@ import { readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 
-import { resolveFinalReviewPath } from "../../scripts/final-review.js";
+import { loadFinalReview, resolveFinalReviewPath } from "../../scripts/final-review.js";
 import { validateHarnessState } from "../../scripts/check-harness-state.js";
 import { computeImplementationDigest, validateReviewBinding } from "../../scripts/review-binding.js";
 import { createFixture, writeFeatureQueue } from "./review-binding-fixture.js";
@@ -58,6 +58,59 @@ void test("a complete canonical approval passes independently of numbered rounds
   }
 });
 
+void test("conflicting verdicts and examples cannot authorize a final report", async () => {
+  const root = await createFixture();
+  try {
+    const approved = await completeFixture(root);
+    const rejected = approved.replace("Approved.", "Changes requested.");
+    for (const [label, report] of [
+      ["conflicting inline verdict", rejected + "\nVerdict: approved\n"],
+      ["conflicting section", rejected + "\n## Verdict\nApproved.\n"],
+      ["duplicate approval", approved + "\nVerdict: approved\n"],
+      ["approval suffix", approved.replace("Approved.", "Approved. Changes requested.")],
+      ["fenced approval", rejected + "\n```md\nVerdict: approved\n```\n"],
+      ["comment approval", rejected + "\n<!--\nVerdict: approved\n-->\n"],
+      ["quoted approval", rejected + "\n> Verdict: approved\n"],
+    ]) {
+      await writeFile(join(root, "progress/review_TASK-100.md"), report ?? "");
+      assert.notDeepEqual(await validateHarnessState(root), [], label);
+      assert.notDeepEqual(await validateReviewBinding(root), [], label);
+    }
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+void test("review evidence needs content and a single digest declaration", async () => {
+  const root = await createFixture();
+  try {
+    const approved = await completeFixture(root);
+    for (const body of ["Fixture implementation.", "Focused checks passed.", "None."]) {
+      for (const replacement of ["", "   ", "<!-- pending -->", "### Empty subsection"]) {
+        await writeFile(join(root, "progress/review_TASK-100.md"), approved.replace(body, replacement));
+        assert.notDeepEqual(await validateHarnessState(root), [], `${body}: ${replacement}`);
+        assert.notDeepEqual(await validateReviewBinding(root), [], `${body}: ${replacement}`);
+      }
+    }
+    await writeFile(join(root, "progress/review_TASK-100.md"), approved +
+      `\nImplementation digest: ${await computeImplementationDigest(root)}\n`);
+    assert.notDeepEqual(await validateHarnessState(root), []);
+    assert.notDeepEqual(await validateReviewBinding(root), []);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+void test("approved reports allow fenced evidence without treating examples as declarations", async () => {
+  const root = await createFixture();
+  try {
+    const report = (await completeFixture(root)).replace("Focused checks passed.",
+      "```text\nnode --test: passed\n## Verdict\nChanges requested.\nImplementation digest: example\n```") +
+      "\n<!-- Verdict: rejected -->\n> Verdict: rejected\n";
+    for (const variant of [report, report.replace("## Verdict\nApproved.", "Verdict: `approved`").replaceAll("\n", "\r\n")]) {
+      await writeFile(join(root, "progress/review_TASK-100.md"), variant);
+      assert.deepEqual(await validateHarnessState(root), []);
+      assert.deepEqual(await validateReviewBinding(root), []);
+    }
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
 async function completeFixture(root: string): Promise<string> {
   await writeFeatureQueue(root, "done");
   await writeFile(join(root, "progress/history.md"), "# History\nTASK-100 completed.\n");
@@ -86,6 +139,7 @@ void test("historical final paths require unchanged original and final evidence"
       await writeFile(join(root, canonicalPath), original);
       await writeFile(join(root, historicalPath), final);
       assert.equal(await resolveFinalReviewPath(root, id), historicalPath);
+      assert.deepEqual((await loadFinalReview(root, id)).findings, []);
       await writeFile(join(root, canonicalPath), `${original}\nNew review: changes requested.\n`);
       assert.equal(await resolveFinalReviewPath(root, id), canonicalPath);
       await writeFile(join(root, canonicalPath), original);

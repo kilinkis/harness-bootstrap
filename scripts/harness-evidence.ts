@@ -1,4 +1,4 @@
-import { resolveFinalReviewPath } from "./final-review.js";
+import { loadFinalReview } from "./final-review.js";
 import {
   addFinding,
   containsFeatureId,
@@ -25,25 +25,6 @@ const IMPLEMENTATION_SECTIONS: ReportSection[] = [
   {
     name: "Remaining risks",
     patterns: [/^## (?:Remaining risks|Risks)\s*$/im],
-  },
-];
-
-const REVIEW_SECTIONS: ReportSection[] = [
-  { name: "Verdict", patterns: [/\bVerdict\b/i] },
-  {
-    name: "Scope or findings",
-    patterns: [/^## (?:Scope reviewed|Findings|Review|Review axes)\s*$/im],
-  },
-  {
-    name: "Commands and results",
-    patterns: [/^## (?:Commands and results|Independent verification)\s*$/im],
-  },
-  {
-    name: "Remaining risks or resolution",
-    patterns: [
-      /^## (?:Remaining risks?|Next step)\s*$/im,
-      /No unresolved findings remain\./i,
-    ],
   },
 ];
 
@@ -78,28 +59,7 @@ async function validateCompletedReview(
   featureId: string,
   findings: HarnessFinding[],
 ): Promise<void> {
-  const path = await resolveFinalReviewPath(root, featureId);
-  const report = await readText(root, path, "REVIEW_REPORT_MISSING", findings);
-  if (report !== undefined) validateReviewReport(report, path, featureId, findings);
-}
-
-export function validateReviewReport(
-  report: string,
-  path: string,
-  featureId: string,
-  findings: HarnessFinding[],
-): void {
-  validateReport(report, path, featureId, REVIEW_SECTIONS, findings);
-  if (!hasApprovedVerdict(report)) {
-    addFinding(findings, "REVIEW_APPROVAL_MISSING",
-      `${featureId}: final review report needs an approved verdict`, path);
-  }
-}
-
-function hasApprovedVerdict(report: string): boolean {
-  const inlineVerdict = /^Verdict:\s*`?approved`?\s*$/im;
-  const sectionVerdict = /^## Verdict[ \t]*\r?\n(?:[ \t]*\r?\n)*Approved(?:\.|[ \t]*$)/im;
-  return inlineVerdict.test(report) || sectionVerdict.test(report);
+  findings.push(...(await loadFinalReview(root, featureId)).findings);
 }
 
 async function validateHistory(

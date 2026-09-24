@@ -489,5 +489,18 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/83",
     "status": "done"
+  },
+  {
+    "id": "TASK-035",
+    "title": "Require unambiguous final review approval and evidence",
+    "acceptance_criteria": [
+      "State and binding consume one final-review loading/parsing path, retaining exact pinned historical report selection and supported historical formats.",
+      "Approval requires one unambiguous approved verdict; conflicting or duplicate verdict declarations fail and quoted/fenced examples cannot supply approval.",
+      "Required review evidence sections contain content; empty or comment-only bodies and headings alone cannot satisfy evidence.",
+      "Digest interpretation stays shared and unambiguous, while whole-index binding, reviewed maintenance, existing command diagnostics, and historical report bytes remain protected.",
+      "Focused regressions exercise both existing validator interfaces, valid reports, and historical compatibility; no framework, dependency, or unrelated architecture changes."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/85",
+    "status": "done"
   }
 ]

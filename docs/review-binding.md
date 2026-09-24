@@ -38,6 +38,8 @@ Use `progress/review_<feature-id>.md` for the final approval. Include the featur
 - `## Commands and results`, with independent verification evidence.
 - `## Remaining risks`, with unresolved risks or an explicit statement that none remain.
 
+The final report must contain exactly one verdict declaration. Conflicting or duplicate declarations fail, even if one says approved. Each required evidence section needs non-empty content; headings, whitespace, comments, and digest metadata alone do not count. Fenced or quoted examples cannot declare a verdict or digest. Older inline verdicts and pinned historical formats remain supported.
+
 The final report must contain its own verdict and evidence. Completion and binding read the same final report. Neither check combines numbered rounds or lets an earlier approval override a rejected, incomplete, or missing final report. Binding requires a valid approved report for both `in_review` work and the latest completed feature.
 
 The reviewer does not stage or edit implementation files. The review report is outside the digest scope. After approval and the final local full gate, the implementer can finalize queue and progress evidence without changing the digest.
