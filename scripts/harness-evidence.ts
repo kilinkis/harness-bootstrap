@@ -1,9 +1,9 @@
+import type { Feature } from "./feature-queue.js";
 import { loadFinalReview } from "./final-review.js";
 import {
   addFinding,
   containsFeatureId,
   readText,
-  type Feature,
   type HarnessFinding,
 } from "./harness-state-support.js";
 

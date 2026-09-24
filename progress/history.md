@@ -163,3 +163,7 @@ Completed issue #87. The audit and reusable contract share strict supported-stag
 ## TASK-037: Align inventory decision validation with its schema
 
 Completed issue #89. The parser rejects both decision properties even when one value is blank or invalid. Direct fixtures cover malformed shapes and valid-string preservation in all three slots. Independent review passed 18 focused tests. The final local gate passed 7 product and 100 harness tests. Reports: impl_TASK-037.md and review_TASK-037.md. The issue and PR track delivery.
+
+## TASK-038: Share feature-queue validation
+
+Completed issue #91. State and binding share queue reading, normalized identities, and policy; malformed entries cannot disappear from standalone binding. Independent review passed 38 focused checks. The final gate passed 7 product and 102 harness tests. Reports: impl_TASK-038.md and review_TASK-038.md. The issue and PR track delivery.
