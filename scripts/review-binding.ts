@@ -1,11 +1,10 @@
 import { isLegacyBootstrapFeature } from "./legacy-bootstrap.js";
-import { resolveFinalReviewPath } from "./final-review.js";
+import { loadFinalReview } from "./final-review.js";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import { validateReviewReport } from "./harness-evidence.js";
 import { classifyDependencyMaintenance } from "./dependency-maintenance.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
 
@@ -26,8 +25,6 @@ interface IndexEntry {
   objectId: string;
   path: string;
 }
-
-const DIGEST_PATTERN = /^sha256:[a-f0-9]{64}$/;
 
 export async function computeImplementationDigest(root: string): Promise<string> {
   return digestEntries(await readSnapshot(root));
@@ -65,48 +62,25 @@ export async function validateReviewBinding(
   const selected = selectFeature(features);
   if (!selected) return findings;
 
-  const reportPath = await resolveFinalReviewPath(root, selected.id);
-  let report: string;
-  try {
-    report = await readFile(resolve(root, reportPath), "utf8");
-  } catch {
-    addFinding(
-      findings,
-      "REVIEW_BINDING_MISSING",
-      `${selected.id}: review report does not contain an implementation digest`,
-      reportPath,
-    );
+  const review = await loadFinalReview(root, selected.id);
+  const { path: reportPath, report, digest } = review;
+  const digestFailure = review.findings.find(({ code }) =>
+    code === "REVIEW_REPORT_MISSING" || code === "REVIEW_BINDING_INVALID");
+  if (digestFailure) return [{ ...digestFailure, code: digestFailure.code === "REVIEW_REPORT_MISSING"
+    ? "REVIEW_BINDING_MISSING" : digestFailure.code }];
+  if (report === undefined || digest === undefined) {
+    addFinding(findings, "REVIEW_BINDING_MISSING",
+      `${selected.id}: review report does not contain an implementation digest`, reportPath);
     return findings;
   }
-
-  const declaration = /^Implementation digest:\s*(.*?)\s*$/m.exec(report);
-  if (!declaration?.[1]) {
-    addFinding(
-      findings,
-      "REVIEW_BINDING_MISSING",
-      `${selected.id}: review report does not contain an implementation digest`,
-      reportPath,
-    );
-    return findings;
-  }
-  if (!DIGEST_PATTERN.test(declaration[1])) {
-    addFinding(
-      findings,
-      "REVIEW_BINDING_INVALID",
-      `${selected.id}: implementation digest must use sha256 and 64 lowercase hex characters`,
-      reportPath,
-    );
-    return findings;
-  }
-
-  validateReviewReport(report, reportPath, selected.id, findings);
+  findings.push(...review.findings);
   if (findings.length > 0) return findings;
 
   const current = await computeImplementationDigest(root);
-  if (declaration[1] === current) return findings;
+  if (digest === current) return findings;
   if (selected.status === "done") {
     try {
-      if (await isReviewedMaintenance(root, reportPath, report, declaration[1])) return findings;
+      if (await isReviewedMaintenance(root, reportPath, report, digest)) return findings;
     } catch {
       addFinding(findings, "REVIEW_BINDING_BASELINE_INVALID",
         `${selected.id}: cannot verify the committed review baseline; fetch full history and check the canonical report`,
