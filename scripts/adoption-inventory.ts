@@ -128,7 +128,11 @@ function parseDecision(
   label: string,
   findings: AdoptionFinding[],
 ): InventoryDecision | null {
-  if (!isRecord(value) || !hasOnlyKeys(value, ["command", "notApplicable"])) {
+  if (
+    !isRecord(value) ||
+    Object.keys(value).length !== 1 ||
+    !hasOnlyKeys(value, ["command", "notApplicable"])
+  ) {
     addDecisionInvalid(findings, label);
     return null;
   }

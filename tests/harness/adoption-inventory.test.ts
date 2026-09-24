@@ -8,7 +8,8 @@ import {
   auditAdoption,
   validateTargetInventory,
 } from "../../scripts/adoption-audit.js";
-import type { InventoryTarget } from "../../scripts/adoption-audit-types.js";
+import type { AdoptionFinding, InventoryTarget } from "../../scripts/adoption-audit-types.js";
+import { readTargetInventory } from "../../scripts/adoption-inventory.js";
 
 void test("a malformed inventory produces a stable finding", async () => {
   const root = await createFixture({
@@ -93,6 +94,60 @@ void test("an incomplete target decision produces a stable finding", async () =>
 
   try {
     assert.ok(codes(await auditAdoption(root)).includes("TARGET_DECISION_INVALID"));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("inventory decisions reject invalid shapes in every decision slot", async () => {
+  const invalid: unknown[] = [
+    { command: "node check.mjs", notApplicable: "" },
+    { command: "node check.mjs", notApplicable: 42 },
+    { command: "node check.mjs", notApplicable: null },
+    { command: "", notApplicable: "No TypeScript" },
+    { command: false, notApplicable: "No TypeScript" },
+    { command: "node check.mjs", notApplicable: "No TypeScript" },
+    {}, null, [], "node check.mjs",
+    { command: " \t\n" }, { notApplicable: " \t\n" },
+    { command: 42 }, { notApplicable: false },
+    { command: "node check.mjs", extra: true },
+  ];
+  const root = await createFixture({});
+  try {
+    for (const slot of ["typecheck", "test", "build"] as const) {
+      for (const decision of invalid) {
+        await writeFile(join(root, "harness.targets.json"), JSON.stringify({
+          version: 1, targets: [{ ...validTarget(), [slot]: decision }],
+        }));
+        const findings: AdoptionFinding[] = [];
+        const parsed = await readTargetInventory(root, findings);
+        const context = `${slot}: ${JSON.stringify(decision)}`;
+        assert.deepEqual(parsed?.targets, [], context);
+        assert.deepEqual(findings.map(({ code }) => code), ["TARGET_DECISION_INVALID"], context);
+        assert.ok(findings[0]?.message.includes(`.${slot}`), context);
+      }
+    }
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("inventory decisions preserve either valid alternative in every slot", async () => {
+  const root = await createFixture({});
+  try {
+    for (const slot of ["typecheck", "test", "build"] as const) {
+      for (const decision of [
+        { command: "  node check.mjs --flag='a b'  " },
+        { notApplicable: "  This target does not require this check.  " },
+      ]) {
+        const target = { ...validTarget(), [slot]: decision };
+        await writeFile(join(root, "harness.targets.json"), inventory([target]));
+        const findings: AdoptionFinding[] = [];
+        const parsed = await readTargetInventory(root, findings);
+        assert.deepEqual(findings, []);
+        assert.deepEqual(parsed?.targets, [target]);
+      }
+    }
   } finally {
     await rm(root, { recursive: true, force: true });
   }
