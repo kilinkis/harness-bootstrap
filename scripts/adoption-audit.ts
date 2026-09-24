@@ -1,5 +1,7 @@
 import { resolve } from "node:path";
 
+import { validateGateComposition } from "./gate-composition.js";
+
 import {
   discoverTargets,
   fileExists,
@@ -61,22 +63,7 @@ async function addRepositoryFindings(
   findings: AdoptionFinding[],
 ): Promise<void> {
   const rootScripts = await readRootScripts(root);
-  if (!("verify:project" in rootScripts)) {
-    addFinding(
-      findings,
-      "PROJECT_GATE_MISSING",
-      "Define a project-owned verify:project command",
-      "package.json",
-    );
-  }
-  if (!rootScripts.verify?.includes("verify:project")) {
-    addFinding(
-      findings,
-      "PROJECT_GATE_NOT_COMPOSED",
-      "Compose verify:project into the full verify command",
-      "package.json",
-    );
-  }
+  findings.push(...validateGateComposition(rootScripts, true));
   if (typescriptTargetCount(targets) > 1) {
     addFinding(
       findings,

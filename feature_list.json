@@ -502,5 +502,17 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/85",
     "status": "done"
+  },
+  {
+    "id": "TASK-036",
+    "title": "Share project-gate composition validation with adoption audit",
+    "acceptance_criteria": [
+      "Audit and verification contracts share validation of the supported ordered verify command, retaining the bootstrap form without a project stage and requiring the project stage for adoption.",
+      "Adoption rejects missing or empty project commands, textual mentions or aliases instead of the exact project invocation, missing/reordered/duplicate stages, and shell forms outside the supported fail-fast composition with clear findings.",
+      "Existing execution tests still prove stage order and failure propagation. Focused audit regressions cover false positives and valid composition without multiplying subprocess pipelines.",
+      "Documentation explains the supported composition and limits: structural validation does not prove project command coverage or correctness. No shell-parser framework or dependency is added."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/87",
+    "status": "done"
   }
 ]

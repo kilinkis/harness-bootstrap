@@ -155,3 +155,7 @@ Completed issue #83 criteria in two reviewer-prompt paragraphs. Review coverage 
 ## TASK-035: Require unambiguous final review approval
 
 Completed issue #85. Shared final-review interpretation rejects conflicting verdicts and empty evidence while preserving historical formats, pinned hashes, and binding safeguards. Independent review passed 31 focused tests. The final local gate passed 7 product and 97 harness tests. Reports: impl_TASK-035.md and review_TASK-035.md. Delivery is tracked by the issue and PR.
+
+## TASK-036: Share project-gate composition validation
+
+Completed issue #87. The audit and reusable contract share strict supported-stage validation; direct regressions cover misleading and invalid composition. Existing order/failure execution tests remain. Independent review passed 30 focused tests. The final local gate passed 7 product and 98 harness tests. Reports: impl_TASK-036.md and review_TASK-036.md. The issue and PR track delivery.

@@ -64,6 +64,8 @@ Do not put the audit in the standard gate before you approve and configure the i
 
 During adoption, define a project-owned command such as `verify:project`. It must cover every target recorded in `ADOPTION_CHECKLIST.md`. Include all required workspace type checks, tests, and production builds. Compose it into the full `verify` command, not only into an optional workflow. The supported shape is `pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness`. Keep each required stage in order and preserve `&&` failure propagation. The project stage is optional for the sample CLI and required when an adopter defines project verification.
 
+The adoption audit and reusable verification tests share this composition check. Adoption requires a non-empty `verify:project` command and its exact invocation in the supported sequence. Textual mentions, aliases, extra or reordered stages, and other shell forms produce findings. This structural check does not execute commands or prove their coverage; retain execution and failure-propagation checks.
+
 Do not assume that a root `tsc --noEmit` command covers a monorepo. Select TypeScript project references, workspace scripts, Turborepo, Nx, or another existing project mechanism based on the repository's build graph.
 
 Run a deliberate negative test after you configure the command. Introduce a temporary build failure and confirm that `./scripts/verify.sh` exits with a non-zero status. Restore the failure and run the full gate again. Record both results.

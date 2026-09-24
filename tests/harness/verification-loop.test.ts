@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { validateGateComposition } from "../../scripts/gate-composition.js";
+
 const REPOSITORY_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 
 interface PackageManifest {
@@ -24,7 +26,7 @@ void test("required harness checks permit the documented project extension", asy
     "pnpm run analyze:changes",
     "pnpm run test:product",
   ]);
-  assertFullGateComposition(manifest.scripts);
+  assert.deepEqual(validateGateComposition(manifest.scripts), []);
   assert.deepEqual(manifest.scripts?.["verify:docs"]?.split(" && "), [
     "pnpm run check:harness-state",
     "pnpm run check:release",
@@ -67,18 +69,9 @@ void test("the local selector remains separate from the full gate", async () => 
   ) as PackageManifest;
 
   assert.equal(manifest.scripts?.["verify:local"], "tsx scripts/local-verification.ts");
-  assertFullGateComposition(manifest.scripts);
+  assert.deepEqual(validateGateComposition(manifest.scripts), []);
 });
 
 async function readRepositoryFile(relativePath: string): Promise<string> {
   return readFile(new URL(relativePath, `file://${REPOSITORY_ROOT}/`), "utf8");
-}
-
-function assertFullGateComposition(scripts: Record<string, string> | undefined): void {
-  const commands = scripts?.verify?.split(/\s*&&\s*/);
-  const project = "pnpm run verify:project";
-  const hasProject = commands?.includes(project);
-  assert.deepEqual(commands, ["pnpm run check:delivery", "pnpm run feedback",
-    ...(hasProject ? [project] : []), "pnpm run test:harness"]);
-  if (hasProject) assert.ok(scripts?.["verify:project"]?.trim(), "Define the project verification command");
 }
