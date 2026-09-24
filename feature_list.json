@@ -478,5 +478,16 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/75",
     "status": "done"
+  },
+  {
+    "id": "TASK-034",
+    "title": "Clarify minimum code review coverage and finding severity",
+    "acceptance_criteria": [
+      "Review covers correctness, simplicity, security, and performance where relevant, retaining existing edge-case, scope, test, and architecture checks.",
+      "Findings require concrete evidence, impact, severity, and a clear distinction between required fixes and optional suggestions. Unresolved required fixes block approval; style preferences do not.",
+      "Keep the change within the reviewer prompt and normal work-item/evidence files. No new tools, dependencies, test cases, or review stages."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/83",
+    "status": "done"
   }
 ]

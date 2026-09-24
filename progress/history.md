@@ -147,3 +147,7 @@ The isolated local-selector fixture no longer inherits the outer repository base
 ## TASK-033: Reduce routine harness cost
 
 Completed the five criteria in issue #75. One implementer and one independent reviewer replace the mandatory three-agent routine; approval refreshes retain committed history in Git. Direct snapshot cases replace repeated command pipelines, and useful link checks replace prose policing. Independent focused review approved the staged digest. The final local gate passed 7 product and 94 harness tests. Measurements and limitations are in `impl_TASK-033.md`; delivery status is tracked by the issue and PR.
+
+## TASK-034: Clarify review standards
+
+Completed issue #83 criteria in two reviewer-prompt paragraphs. Review coverage is explicit; findings require evidence, impact, severity, and Required/Optional labels. Independent review approved the staged digest. The final full gate passed 7 product and 94 harness tests. See impl_TASK-034.md and review_TASK-034.md; the issue and PR track delivery.
