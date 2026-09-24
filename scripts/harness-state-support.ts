@@ -7,12 +7,6 @@ export interface HarnessFinding {
   path?: string;
 }
 
-export interface Feature {
-  id: string;
-  status: string;
-  legacy: boolean;
-}
-
 export async function readText(
   root: string,
   path: string,

@@ -526,5 +526,17 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/89",
     "status": "done"
+  },
+  {
+    "id": "TASK-038",
+    "title": "Share feature-queue validation between state and binding",
+    "acceptance_criteria": [
+      "State and binding share queue reading, feature validation, normalized identity, allowed status, and single-active-feature policy.",
+      "Binding rejects malformed, duplicate, unsafe-ID, invalid-status, and multiple-active queues before selecting approval. Valid whitespace-padded IDs use the same report identity as state.",
+      "Preserve existing state diagnostics, binding queue/reference diagnostic aliases, exact legacy exemptions, approval selection, evidence traversal, and digest/maintenance behavior.",
+      "Focused interface tests cover invalid queue parity and valid normalized IDs. Remove the permissive binding reader; add no dependency or general workflow engine."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/91",
+    "status": "done"
   }
 ]

@@ -6,7 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 const REPOSITORY_ROOT = join(import.meta.dirname, "../..");
-const CORE_SCRIPTS = ["verify.sh", "check-delivery.ts", "check-harness-state.ts", "harness-state-support.ts",
+const CORE_SCRIPTS = ["verify.sh", "check-delivery.ts", "check-harness-state.ts", "harness-state-support.ts", "feature-queue.ts",
   "harness-evidence.ts", "review-binding.ts", "check-review-binding.ts", "final-review.ts", "legacy-bootstrap.ts",
   "dependency-maintenance.ts", "low-risk-documentation.ts", "check-harness-release.ts", "harness-release.ts",
   "check-target-inventory.ts", "adoption-audit.ts", "adoption-audit-types.ts", "adoption-findings.ts",

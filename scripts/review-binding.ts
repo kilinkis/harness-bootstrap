@@ -1,9 +1,7 @@
-import { isLegacyBootstrapFeature } from "./legacy-bootstrap.js";
+import { readFeatureQueue, type Feature } from "./feature-queue.js";
 import { loadFinalReview } from "./final-review.js";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 
 import { classifyDependencyMaintenance } from "./dependency-maintenance.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
@@ -14,11 +12,13 @@ export interface ReviewBindingFinding {
   path?: string;
 }
 
-interface QueueFeature {
-  id: string;
-  status: string;
-  legacy: boolean;
-}
+const QUEUE_DIAGNOSTIC_ALIASES: Record<string, string> = {
+  QUEUE_READ_FAILED: "REVIEW_BINDING_QUEUE_INVALID",
+  QUEUE_INVALID_JSON: "REVIEW_BINDING_QUEUE_INVALID",
+  QUEUE_INVALID_SHAPE: "REVIEW_BINDING_QUEUE_INVALID",
+  FEATURE_ISSUE_MISSING: "REVIEW_BINDING_ISSUE_MISSING",
+  FEATURE_ISSUE_INVALID: "REVIEW_BINDING_ISSUE_MISSING",
+};
 
 interface IndexEntry {
   mode: string;
@@ -57,7 +57,10 @@ export async function validateReviewBinding(
   root: string,
 ): Promise<ReviewBindingFinding[]> {
   const findings: ReviewBindingFinding[] = [];
-  const features = await readQueue(root, findings);
+  const features = await readFeatureQueue(root, findings);
+  findings.forEach((finding) => {
+    finding.code = QUEUE_DIAGNOSTIC_ALIASES[finding.code] ?? finding.code;
+  });
   if (!features || findings.length > 0) return findings;
   const selected = selectFeature(features);
   if (!selected) return findings;
@@ -93,7 +96,7 @@ export async function validateReviewBinding(
   return findings;
 }
 
-function selectFeature(features: QueueFeature[]): QueueFeature | undefined {
+function selectFeature(features: Feature[]): Feature | undefined {
   const active = features.find(({ status }) =>
     status === "in_progress" || status === "in_review"
   );
@@ -123,40 +126,6 @@ async function isReviewedMaintenance(
   const dependencyPaths = classifyLowRiskDocumentation(changed).refusedPaths;
   return changed.length > 0 && (dependencyPaths.length === 0 ||
     await classifyDependencyMaintenance(root, anchor, dependencyPaths));
-}
-
-async function readQueue(
-  root: string,
-  findings: ReviewBindingFinding[],
-): Promise<QueueFeature[] | undefined> {
-  try {
-    const value = JSON.parse(
-      await readFile(resolve(root, "feature_list.json"), "utf8"),
-    ) as unknown;
-    if (!Array.isArray(value)) throw new Error("invalid queue");
-    return value.flatMap((item) => {
-      if (!isRecord(item) || typeof item.id !== "string" ||
-        typeof item.status !== "string") return [];
-      const legacy = isLegacyBootstrapFeature(item);
-      if (item.status === "done" && !legacy && (typeof item.issue !== "string" || !item.issue.trim())) {
-        addFinding(findings, "REVIEW_BINDING_ISSUE_MISSING",
-          `${item.id}: completed work needs a local or remote work-item reference`, "feature_list.json");
-      }
-      return [{
-        id: item.id,
-        status: item.status,
-        legacy,
-      }];
-    });
-  } catch {
-    addFinding(
-      findings,
-      "REVIEW_BINDING_QUEUE_INVALID",
-      "Cannot read a valid feature queue for review binding",
-      "feature_list.json",
-    );
-    return undefined;
-  }
 }
 
 async function readSnapshot(root: string, revision?: string): Promise<IndexEntry[]> {
@@ -192,8 +161,4 @@ function addFinding(
   path?: string,
 ): void {
   findings.push({ code, message, ...(path ? { path } : {}) });
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
