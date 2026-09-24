@@ -1,9 +1,9 @@
 # Current Session
 
-No feature is active. TASK-033 is complete locally; delivery is tracked by issue #75 and its PR.
+No feature is active. TASK-034 is complete locally; issue #83 and its PR track delivery.
 
-One implementer plus one independent reviewer is now the routine default. Committed approval history stays in Git, prose assertions were removed, and delivery pipeline launches fell from 26 to 11. See `progress/impl_TASK-033.md` for measurements and limitations.
+The reviewer prompt now states review coverage and requires concrete evidence, impact, severity, and Required/Optional labels. Only unresolved required fixes block approval. No new agents, tools, tests, or stages were added.
 
-Independent approval: `progress/review_TASK-033.md`, digest `sha256:af613129de0027b8227d1bb54b5ddd2bf49f421f84b6e6e512173d428f44361f`. The coordinator ran the final full gate once: all checks, 7 product tests, and 94 harness tests passed. Required remote checks must pass before PR merge; GitHub records delivery status.
+Independent approval is in progress/review_TASK-034.md. The final full gate passed all checks, 7 product tests, and 94 harness tests. Implementation evidence is in progress/impl_TASK-034.md. Required remote checks must pass before merge; GitHub records delivery status.
 
 Unrelated output/ and tmp/ artifacts remain untouched.
