@@ -514,5 +514,17 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/87",
     "status": "done"
+  },
+  {
+    "id": "TASK-037",
+    "title": "Align inventory decision validation with its schema",
+    "acceptance_criteria": [
+      "Each typecheck, test, and build decision contains exactly one command or notApplicable property with a non-whitespace string value.",
+      "Reject both properties even when the second value is blank or has the wrong type. Retain TARGET_DECISION_INVALID and existing deployable-build checks.",
+      "Preserve valid decision strings exactly. Direct fixtures cover invalid shapes and valid alternatives across all three decision slots.",
+      "Keep the fix within inventory validation and focused regression coverage. No new dependency or schema interpreter."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/89",
+    "status": "done"
   }
 ]

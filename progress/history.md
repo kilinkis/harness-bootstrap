@@ -159,3 +159,7 @@ Completed issue #85. Shared final-review interpretation rejects conflicting verd
 ## TASK-036: Share project-gate composition validation
 
 Completed issue #87. The audit and reusable contract share strict supported-stage validation; direct regressions cover misleading and invalid composition. Existing order/failure execution tests remain. Independent review passed 30 focused tests. The final local gate passed 7 product and 98 harness tests. Reports: impl_TASK-036.md and review_TASK-036.md. The issue and PR track delivery.
+
+## TASK-037: Align inventory decision validation with its schema
+
+Completed issue #89. The parser rejects both decision properties even when one value is blank or invalid. Direct fixtures cover malformed shapes and valid-string preservation in all three slots. Independent review passed 18 focused tests. The final local gate passed 7 product and 100 harness tests. Reports: impl_TASK-037.md and review_TASK-037.md. The issue and PR track delivery.
