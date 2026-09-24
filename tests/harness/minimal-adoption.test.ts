@@ -10,7 +10,7 @@ const CORE_SCRIPTS = ["verify.sh", "check-delivery.ts", "check-harness-state.ts"
   "harness-evidence.ts", "review-binding.ts", "check-review-binding.ts", "final-review.ts", "legacy-bootstrap.ts",
   "dependency-maintenance.ts", "low-risk-documentation.ts", "check-harness-release.ts", "harness-release.ts",
   "check-target-inventory.ts", "adoption-audit.ts", "adoption-audit-types.ts", "adoption-findings.ts",
-  "adoption-inventory.ts", "adoption-target-discovery.ts"];
+  "adoption-inventory.ts", "adoption-target-discovery.ts", "gate-composition.ts"];
 
 void test("a fresh adoption executes a real project check and propagates its failure", async () => {
   const root = await createAdoption();

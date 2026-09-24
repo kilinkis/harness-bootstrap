@@ -171,7 +171,7 @@ function rootManifest(): string {
     name: "fixture",
     scripts: {
       "verify:project": "pnpm run check",
-      verify: "pnpm run verify:project",
+      verify: "pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness",
     },
   });
 }

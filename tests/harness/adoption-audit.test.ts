@@ -26,7 +26,7 @@ void test("a single frontend package produces a reviewable proposal", async () =
         test: "tsx --test",
         build: "vite build",
         "verify:project": "pnpm run typecheck && pnpm run test && pnpm run build",
-        verify: "pnpm run verify:project",
+        verify: "pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness",
       },
     }),
     "tsconfig.json": "{}",
@@ -64,7 +64,7 @@ void test("a pnpm workspace reports every TypeScript target", async () => {
       name: "workspace-root",
       scripts: {
         "verify:project": "pnpm -r test",
-        verify: "pnpm run verify:project",
+        verify: "pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness",
       },
     }),
     "pnpm-workspace.yaml": 'packages:\n  - "apps/*"\n  - "packages/*"\n',
@@ -170,6 +170,35 @@ void test("invalid command arguments report a concise error", async () => {
     "Usage: audit-adoption [--json] [repository-root]\n",
   );
   assert.doesNotMatch(result.stderr, /at parseOptions/);
+});
+
+void test("adoption rejects misleading project-gate composition and accepts the supported sequence", async () => {
+  const root = await createFixture({});
+  const full = "pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness";
+  const cases: { verify: string; project?: string; expected: string[] }[] = [
+    { verify: "echo verify:project", project: "node check.mjs", expected: ["PROJECT_GATE_NOT_COMPOSED"] },
+    { verify: full, project: "", expected: ["PROJECT_GATE_MISSING"] },
+    { verify: full, project: "   ", expected: ["PROJECT_GATE_MISSING"] },
+    { verify: full, expected: ["PROJECT_GATE_MISSING"] },
+    { verify: full.replace("pnpm run verify:project", "pnpm run verify:project:extra"), project: "node check.mjs", expected: ["PROJECT_GATE_NOT_COMPOSED"] },
+    { verify: full.replace("pnpm run feedback && ", ""), project: "node check.mjs", expected: ["GATE_COMPOSITION_UNSUPPORTED"] },
+    { verify: full.replace("pnpm run check:delivery && pnpm run feedback", "pnpm run feedback && pnpm run check:delivery"), project: "node check.mjs", expected: ["GATE_COMPOSITION_UNSUPPORTED"] },
+    { verify: full + " && pnpm run verify:project", project: "node check.mjs", expected: ["GATE_COMPOSITION_UNSUPPORTED"] },
+    { verify: full + " || true", project: "node check.mjs", expected: ["GATE_COMPOSITION_UNSUPPORTED"] },
+    { verify: full.replaceAll(" && ", "; "), project: "node check.mjs", expected: ["GATE_COMPOSITION_UNSUPPORTED"] },
+    { verify: full.replace(" && pnpm run verify:project", ""), project: "node check.mjs", expected: ["PROJECT_GATE_NOT_COMPOSED"] },
+    { verify: full, project: "node check.mjs", expected: [] },
+    { verify: "  " + full.replaceAll(" && ", "  &&  ") + "  ", project: "node check.mjs", expected: [] },
+  ];
+  try {
+    for (const { verify, project, expected } of cases) {
+      await writeFile(join(root, "package.json"), JSON.stringify({ name: "fixture",
+        scripts: { verify, ...(project === undefined ? {} : { "verify:project": project }) } }));
+      const findings = codes(await auditAdoption(root)).filter((code) => code.startsWith("PROJECT_GATE_") || code === "GATE_COMPOSITION_UNSUPPORTED");
+      if (expected.length === 0) assert.deepEqual(findings, [], verify);
+      for (const code of expected) assert.ok(findings.includes(code), `${verify}: ${code}`);
+    }
+  } finally { await rm(root, { recursive: true, force: true }); }
 });
 
 async function createFixture(files: Record<string, string>): Promise<string> {

@@ -95,7 +95,7 @@ async function createWorkspace(workspace: string): Promise<string> {
     await mkdir(join(root, path), { recursive: true });
     await writeFile(join(root, path, "package.json"), JSON.stringify({
       name: path,
-      scripts: { "verify:project": "node --test", verify: "pnpm run verify:project" },
+      scripts: { "verify:project": "node --test", verify: "pnpm run check:delivery && pnpm run feedback && pnpm run verify:project && pnpm run test:harness" },
     }));
   }
   await writeFile(join(root, "pnpm-workspace.yaml"), workspace);
