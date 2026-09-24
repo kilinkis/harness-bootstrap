@@ -1,9 +1,8 @@
 import assert from "node:assert/strict";
-import { readFile, rm, writeFile } from "node:fs/promises";
+import { rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 
-import { loadFinalReview, resolveFinalReviewPath } from "../../scripts/final-review.js";
 import { validateHarnessState } from "../../scripts/check-harness-state.js";
 import { computeImplementationDigest, validateReviewBinding } from "../../scripts/review-binding.js";
 import { createFixture, writeFeatureQueue } from "./review-binding-fixture.js";
@@ -126,29 +125,3 @@ async function completeFixture(root: string): Promise<string> {
   await writeFile(join(root, "progress/review_TASK-100.md"), report);
   return report;
 }
-
-void test("historical final paths require unchanged original and final evidence", async () => {
-  for (const [id, suffix] of [["TASK-005", "_followup"], ["TASK-009", "_followup"],
-    ["TASK-011", "_followup"], ["TASK-022", "_round1"]] as const) {
-    const root = await createFixture();
-    const canonicalPath = `progress/review_${id}.md`;
-    const historicalPath = `progress/review_${id}${suffix}.md`;
-    try {
-      const original = await readFile(new URL(`../../${canonicalPath}`, import.meta.url), "utf8");
-      const final = await readFile(new URL(`../../${historicalPath}`, import.meta.url), "utf8");
-      await writeFile(join(root, canonicalPath), original);
-      await writeFile(join(root, historicalPath), final);
-      assert.equal(await resolveFinalReviewPath(root, id), historicalPath);
-      assert.deepEqual((await loadFinalReview(root, id)).findings, []);
-      await writeFile(join(root, canonicalPath), `${original}\nNew review: changes requested.\n`);
-      assert.equal(await resolveFinalReviewPath(root, id), canonicalPath);
-      await writeFile(join(root, canonicalPath), original);
-      await writeFile(join(root, historicalPath), `${final}\nChanged evidence.\n`);
-      assert.equal(await resolveFinalReviewPath(root, id), canonicalPath);
-      await rm(join(root, historicalPath));
-      assert.equal(await resolveFinalReviewPath(root, id), canonicalPath);
-    } finally {
-      await rm(root, { recursive: true, force: true });
-    }
-  }
-});

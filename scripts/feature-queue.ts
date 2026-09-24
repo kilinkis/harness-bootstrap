@@ -1,4 +1,4 @@
-import { isLegacyBootstrapFeature } from "./legacy-bootstrap.js";
+import { isLegacyBootstrapFeature, readBootstrapHistory, type BootstrapHistory } from "./bootstrap-history.js";
 import { addFinding, readText, type HarnessFinding } from "./harness-state-support.js";
 
 export interface Feature {
@@ -28,7 +28,13 @@ export async function readFeatureQueue(
   const queue = parseQueue(queueText, queuePath, findings);
   if (queue === undefined) return undefined;
 
-  const features = validateFeatures(queue, queuePath, findings);
+  let history: BootstrapHistory;
+  try { history = await readBootstrapHistory(root); }
+  catch (error) {
+    addFinding(findings, "BOOTSTRAP_HISTORY_INVALID", String(error), "harness.bootstrap-history.json");
+    return undefined;
+  }
+  const features = validateFeatures(queue, queuePath, findings, history);
   const active = features.filter(({ status }) =>
     status === "in_progress" || status === "in_review"
   );
@@ -67,12 +73,13 @@ function validateFeatures(
   queue: unknown[],
   path: string,
   findings: HarnessFinding[],
+  history: BootstrapHistory,
 ): Feature[] {
   const features: Feature[] = [];
   const seenIds = new Set<string>();
 
   queue.forEach((value, index) => {
-    const feature = validateFeature(value, index, path, seenIds, findings);
+    const feature = validateFeature(value, index, path, seenIds, findings, history);
     if (feature) features.push(feature);
   });
 
@@ -85,6 +92,7 @@ function validateFeature(
   path: string,
   seenIds: Set<string>,
   findings: HarnessFinding[],
+  history: BootstrapHistory,
 ): Feature | undefined {
   if (!isRecord(value)) {
     addFinding(findings, "FEATURE_INVALID_SHAPE", `Feature at index ${index} must be an object`, path);
@@ -97,9 +105,10 @@ function validateFeature(
   validateAcceptance(value.acceptance_criteria, status, label, path, findings);
   validateStatus(status, label, path, findings);
   validateSkipReason(value.skip_reason, status, label, path, findings);
-  validateIssue(value, label, path, findings);
+  const legacy = isLegacyBootstrapFeature(value, history);
+  validateIssue(value, label, path, findings, legacy);
   return id && ALLOWED_STATUSES.has(status)
-    ? { id, status, legacy: isLegacyBootstrapFeature(value) } : undefined;
+    ? { id, status, legacy } : undefined;
 }
 
 function validateSkipReason(
@@ -200,12 +209,13 @@ function validateIssue(
   label: string,
   path: string,
   findings: HarnessFinding[],
+  legacy: boolean,
 ): void {
   const tracked = typeof value.issue === "string" && Boolean(value.issue.trim());
   if (Object.hasOwn(value, "issue") && !tracked) {
     addFinding(findings, "FEATURE_ISSUE_INVALID", `${label}: issue must be non-empty`, path);
   }
-  if (!Object.hasOwn(value, "issue") && value.status === "done" && !isLegacyBootstrapFeature(value)) {
+  if (!Object.hasOwn(value, "issue") && value.status === "done" && !legacy) {
     addFinding(findings, "FEATURE_ISSUE_MISSING", `${label}: completed work needs a local or remote work-item reference`, path);
   }
 }

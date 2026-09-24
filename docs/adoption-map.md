@@ -15,9 +15,9 @@ Use this map before the [adoption checklist](../ADOPTION_CHECKLIST.md). Preserve
 
 ## Fresh queue compatibility
 
-Empty the `HISTORICAL_DEFINITIONS` map in `scripts/legacy-bootstrap.ts` and the `HISTORICAL_REVIEWS` map in `scripts/final-review.ts` when the target does not carry this bootstrap history. Keep both modules and their normal validation paths. Never add replacement work to either exception map.
+Omit `harness.bootstrap-history.json` when the target does not carry this bootstrap history. Keep `scripts/bootstrap-history.ts` and all reusable validators unchanged. Missing history data grants no exceptions. Malformed or unreadable supplied data fails with `BOOTSTRAP_HISTORY_INVALID`. Never add replacement work to the historical pins.
 
-Remove the history-specific expectations from `tests/harness/legacy-evidence.test.ts`, `tests/harness/harness-state.test.ts`, and `tests/harness/canonical-review.test.ts`. Retain their normal evidence, canonical review, and reused-ID rejection tests. Adapt the assertions named "sample bootstrap" in `verification-loop.test.ts` when omitting optional capabilities. Keep the required-stage and project-failure contracts. See the [review-binding rules](review-binding.md) for exact report headings and both historical exceptions.
+Omit `tests/harness/bootstrap-history.test.ts`, which verifies only this repository's pinned history. Retain `legacy-evidence.test.ts`, `harness-state.test.ts`, and `canonical-review.test.ts` for normal evidence and canonical review requirements. Adapt the assertions named "sample bootstrap" in `verification-loop.test.ts` when omitting optional capabilities. Keep the required-stage and project-failure contracts. See the [review-binding rules](review-binding.md) for exact report headings and both historical exceptions.
 
 A fresh `feature_list.json` may initially contain `[]`; this is an empty queue, not completed adoption evidence. Track the adoption itself with a local or remote work-item reference, at most five acceptance criteria, and the normal implementation/review cycle. New completed work needs its own reports and history.
 
@@ -54,7 +54,7 @@ Prove that project failures reach the full gate. Use a controlled failing runtim
 
 ## What the minimal fixture proves
 
-`tests/harness/minimal-adoption.test.ts` creates a fresh Git index, copies the relevant core guards, clears both historical maps, and creates an empty queue and project-owned inventory. It copies no sample product or work-item history. Real delivery, state, release, binding, and target-inventory commands run. With no completed feature, binding correctly has no approval to validate.
+`tests/harness/minimal-adoption.test.ts` creates a fresh Git index, copies the relevant core guards unchanged, omits the optional history file, and creates an empty queue and project-owned inventory. It copies no sample product or work-item history. Real delivery, state, release, binding, and target-inventory commands run. With no completed feature, binding correctly has no approval to validate.
 
 The real project command reads project configuration, validates it against a runtime input, and writes an artifact. A small adopted contract reads that artifact. Local and CI entry points pass valid input, reject a deliberate project configuration failure before the later contract, and retain active-work and snapshot rejection.
 

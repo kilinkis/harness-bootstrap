@@ -167,3 +167,7 @@ Completed issue #89. The parser rejects both decision properties even when one v
 ## TASK-038: Share feature-queue validation
 
 Completed issue #91. State and binding share queue reading, normalized identities, and policy; malformed entries cannot disappear from standalone binding. Independent review passed 38 focused checks. The final gate passed 7 product and 102 harness tests. Reports: impl_TASK-038.md and review_TASK-038.md. The issue and PR track delivery.
+
+## TASK-039: Separate bootstrap history pins
+
+Completed issue #93 after P2 delivery. Existing pins now live in optional repository data with strict fail-closed loading. Fresh adoption omits the data and history-only tests without rewriting validators. Independent review passed 40 focused checks and confirmed exact pin preservation. The final gate passed 7 product and 104 harness tests. Reports: impl_TASK-039.md and review_TASK-039.md. The issue and PR track delivery.

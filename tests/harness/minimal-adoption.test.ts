@@ -7,7 +7,7 @@ import test from "node:test";
 
 const REPOSITORY_ROOT = join(import.meta.dirname, "../..");
 const CORE_SCRIPTS = ["verify.sh", "check-delivery.ts", "check-harness-state.ts", "harness-state-support.ts", "feature-queue.ts",
-  "harness-evidence.ts", "review-binding.ts", "check-review-binding.ts", "final-review.ts", "legacy-bootstrap.ts",
+  "harness-evidence.ts", "review-binding.ts", "check-review-binding.ts", "final-review.ts", "bootstrap-history.ts",
   "dependency-maintenance.ts", "low-risk-documentation.ts", "check-harness-release.ts", "harness-release.ts",
   "check-target-inventory.ts", "adoption-audit.ts", "adoption-audit-types.ts", "adoption-findings.ts",
   "adoption-inventory.ts", "adoption-target-discovery.ts", "gate-composition.ts"];
@@ -17,6 +17,7 @@ void test("a fresh adoption executes a real project check and propagates its fai
   try {
     await assert.rejects(readFile(join(root, "src/cli.ts")), { code: "ENOENT" });
     await assert.rejects(readFile(join(root, "progress/history.md")), { code: "ENOENT" });
+    await assert.rejects(readFile(join(root, "harness.bootstrap-history.json")), { code: "ENOENT" });
     assert.deepEqual(JSON.parse(await readFile(join(root, "feature_list.json"), "utf8")), []);
     for (const phase of ["local", "ci"]) {
       const success = await execute(root, "bash", ["scripts/verify.sh", phase]);
@@ -49,13 +50,6 @@ async function createAdoption(): Promise<string> {
   await mkdir(join(root, "scripts"));
   for (const script of CORE_SCRIPTS) {
     await cp(join(REPOSITORY_ROOT, "scripts", script), join(root, "scripts", script));
-  }
-  for (const [file, map] of [["legacy-bootstrap.ts", "HISTORICAL_DEFINITIONS"], ["final-review.ts", "HISTORICAL_REVIEWS"]]) {
-    const path = join(root, "scripts", file ?? "");
-    const source = await readFile(path, "utf8");
-    const adapted = source.replace(new RegExp(`(const ${map}[^=]+= )\\{[\\s\\S]*?\\n\\};`), "$1{};");
-    assert.match(adapted, new RegExp(`const ${map}[^=]+= \\{\\};`));
-    await writeFile(path, adapted);
   }
   await symlink(join(REPOSITORY_ROOT, "node_modules"), join(root, "node_modules"), "dir");
   for (const file of ["HARNESS_VERSION", "HARNESS_CHANGELOG.md"]) {
