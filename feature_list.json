@@ -538,5 +538,17 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/91",
     "status": "done"
+  },
+  {
+    "id": "TASK-039",
+    "title": "Separate bootstrap history pins from reusable validation",
+    "acceptance_criteria": [
+      "Move the existing three definition hashes and four paired review hashes unchanged into one optional repository data file. Reusable validators default to no historical exceptions when the file is absent.",
+      "Reject malformed or unreadable supplied history with a clear finding. Preserve exact definition/report hash verification, canonical fallback, and normal state/binding evidence requirements.",
+      "Fresh adoption copies unchanged validator source, omits the history file, and no longer rewrites TypeScript maps. Keep historical-only tests separable from reusable contracts.",
+      "Focused tests prove preserved history, modified/reused-ID rejection, absent/malformed history behavior, and fresh adoption. Update adoption guidance; add no dependency or plugin system."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/93",
+    "status": "done"
   }
 ]

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -55,11 +55,9 @@ Approved.
 None.
 `;
 
-void test("valid tracked and legacy feature state passes", async () => {
+void test("valid tracked feature state passes", async () => {
   const root = await createFixture({
     features: [
-      ...((JSON.parse(await readFile(join(REPOSITORY_ROOT, "feature_list.json"), "utf8")) as FixtureFeature[])
-        .filter(({ id }) => ["TASK-001", "TASK-002", "TASK-004"].includes(id ?? ""))),
       feature({ id: "TASK-100", status: "done", issue: "https://example.test/100" }),
     ],
     files: {
