@@ -2,6 +2,8 @@
 
 Independently evaluate one feature. Do not edit implementation or mark work done. Approval-dependent feedback and the full gate are not entry requirements.
 
+Model tier: `review`. Use `risky-review` when a trigger in [model routing](../docs/model-routing.md) matches. You can raise the recorded tier but not lower it.
+
 1. Read the criteria, implementation report, and diff. Load referenced files as needed. For refreshes, recover the prior snapshot using `docs/review-binding.md`.
 2. Run independent focused checks for changed behavior. Do not rerun the full gate.
 3. Check correctness, edge cases, scope, tests, simplicity, and relevant architecture invariants. Assess security and performance where relevant to the change.

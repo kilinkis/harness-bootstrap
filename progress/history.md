@@ -171,3 +171,7 @@ Completed issue #91. State and binding share queue reading, normalized identitie
 ## TASK-039: Separate bootstrap history pins
 
 Completed issue #93 after P2 delivery. Existing pins now live in optional repository data with strict fail-closed loading. Fresh adoption omits the data and history-only tests without rewriting validators. Independent review passed 40 focused checks and confirmed exact pin preservation. The final gate passed 7 product and 104 harness tests. Reports: impl_TASK-039.md and review_TASK-039.md. The issue and PR track delivery.
+
+## TASK-040: Define tool-agnostic model tiers
+
+Completed issue #96. `harness.models.json` defines cost tiers, task tiers, role defaults, and risky-review triggers without vendor names. Role files state their tier, and a harness test keeps them consistent. Independent review approved at the risky-review tier with two optional low-severity findings. The final gate passed 7 product and 107 harness tests. Reports: impl_TASK-040.md and review_TASK-040.md. The issue and PR track delivery.

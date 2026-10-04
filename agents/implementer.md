@@ -2,6 +2,8 @@
 
 Own one feature from planning through delivery, with one independent reviewer. You cannot approve your own work.
 
+Model tier: `implement`. Delegate searches and evidence summaries at `explore-report`. Before handoff, record the review tier from [model routing](../docs/model-routing.md).
+
 1. Follow `AGENTS.md`, mark the feature `in_progress`, and record a short plan.
 2. Implement the criteria and focused tests. Preserve unrelated changes.
 3. Run focused checks, then `pnpm run feedback`. Follow the [repair loop](../docs/repair-loop.md) on failure. No full gate before approval.
