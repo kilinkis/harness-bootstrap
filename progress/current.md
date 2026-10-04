@@ -1,13 +1,5 @@
 # Current Session
 
-Active feature: TASK-040, tracked by issue #96. Status: in progress.
-
-## Plan
-
-1. Add `harness.models.json` with cost tiers, task tiers, risky-review triggers, and role defaults. Use no vendor, tool, or model names.
-2. Add a `Model tier` line to each role file in `agents/`.
-3. Add `docs/model-routing.md` for the policy and `docs/model-adapters.md` for optional per-tool mappings.
-4. Link the guides from `AGENTS.md` and the adoption map.
-5. Add `tests/harness/model-routing.test.ts` for config shape, role consistency, and vendor neutrality.
+No feature is active. TASK-040 is complete locally; issue #96 and its PR track delivery. The harness now defines tool-agnostic model tiers per task and role. Independent approval: progress/review_TASK-040.md. The final gate passed all checks, 7 product tests, and 107 harness tests. See progress/impl_TASK-040.md for evidence and limits. GitHub records remote delivery.
 
 Unrelated output/ and tmp/ remain untouched.

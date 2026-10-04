@@ -562,6 +562,6 @@
       "A harness test validates the config shape, role consistency, and the absence of vendor names in the config."
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/96",
-    "status": "in_progress"
+    "status": "done"
   }
 ]
