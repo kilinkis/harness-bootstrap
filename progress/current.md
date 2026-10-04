@@ -1,5 +1,13 @@
 # Current Session
 
-No feature is active. TASK-039 is complete locally; issue #93 and its PR track delivery. Repository history pins are optional data, and fresh adoption copies reusable validators unchanged. All selected architecture candidates are implemented. Independent approval: progress/review_TASK-039.md. The final gate passed all checks, 7 product tests, and 104 harness tests. See progress/impl_TASK-039.md for evidence and limits. GitHub records remote delivery.
+Active feature: TASK-040, tracked by issue #96. Status: in progress.
+
+## Plan
+
+1. Add `harness.models.json` with cost tiers, task tiers, risky-review triggers, and role defaults. Use no vendor, tool, or model names.
+2. Add a `Model tier` line to each role file in `agents/`.
+3. Add `docs/model-routing.md` for the policy and `docs/model-adapters.md` for optional per-tool mappings.
+4. Link the guides from `AGENTS.md` and the adoption map.
+5. Add `tests/harness/model-routing.test.ts` for config shape, role consistency, and vendor neutrality.
 
 Unrelated output/ and tmp/ remain untouched.

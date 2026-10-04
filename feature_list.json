@@ -550,5 +550,18 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/93",
     "status": "done"
+  },
+  {
+    "id": "TASK-040",
+    "title": "Define tool-agnostic model tiers per task and role",
+    "acceptance_criteria": [
+      "harness.models.json defines cost tiers, task tiers, risky-review triggers, and the default task tier for each role. It names no vendor, tool, or model.",
+      "Each role file states its task tier, and the stated tier matches the config.",
+      "docs/model-routing.md explains when to use each tier and when review escalates to the risky-review tier.",
+      "docs/model-adapters.md shows how to map cost tiers to a specific tool. It is optional and is not required by the gate.",
+      "A harness test validates the config shape, role consistency, and the absence of vendor names in the config."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/96",
+    "status": "in_progress"
   }
 ]

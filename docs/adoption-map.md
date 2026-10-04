@@ -11,6 +11,8 @@ Use this map before the [adoption checklist](../ADOPTION_CHECKLIST.md). Preserve
 | Omit and replace | This repository's `feature_list.json` contents and all sample `progress/` history/reports | Start a new queue or preserve the target's existing queue. Create fresh progress evidence through its normal workflow. Do not copy sample approvals as approval of the adoption. |
 | Optional | Metrics: `record-gate.ts`, `record-agent-run.ts`, `summarize-metrics.ts`, `workflow-metrics*.ts`, `tests/metrics/` | Leave metrics out of default feedback and full gates. Remove unused metrics scripts and sample command expectations together if omitting this capability. |
 | Optional | Impact analysis and local selection: `analyze-impact.ts`, `impact-analysis.ts`, `local-verification.ts`, related tests/guides | Enable only when affected-target selection helps. Keep `comparison-base.ts` and `git-changed-paths.ts` when other retained commands import them. The full gate remains mandatory. |
+| Adapt | `harness.models.json`, `docs/model-routing.md` | Keep the tier names and role defaults. Adapt risky-review paths and conditions to the project. Keep vendor and model names out. |
+| Optional | `docs/model-adapters.md` | Map cost tiers to models only in the agent tool's own configuration. |
 | Optional | Parallel worktrees, MCP integrations, platform templates | Adopt only the capabilities that fit the project. None is needed to execute the core gate. |
 
 ## Fresh queue compatibility

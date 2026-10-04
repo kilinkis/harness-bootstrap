@@ -23,6 +23,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Bind approval to the staged implementation with `docs/review-binding.md`.
 - Follow `docs/repair-loop.md` after a verification failure. Stop after its repair budget is exhausted.
 - Follow the technical prose rules in `docs/conventions.md` for durable repository text.
+- Run each role at its task tier in `docs/model-routing.md`. Escalate review only on a listed trigger.
 - Use the low-risk documentation lane in `docs/run-a-ticket.md` only when the automatic classifier approves every changed path.
 - For harness adoption, follow `docs/adoption-handoff.md`: separate harness adoption, project-gate adoption, and product readiness, then hand off the first actionable readiness item.
 
@@ -60,6 +61,8 @@ Record commands, outcomes/counts, and material risks, with only necessary error 
 | Production-readiness adoption | `docs/production-readiness.md` |
 | Approved verification targets | `docs/target-inventory.md` |
 | GitHub templates and remote setup | `docs/github-setup.md` |
+| Model tier per task and role | `docs/model-routing.md` |
+| Optional per-tool model mappings | `docs/model-adapters.md` |
 | Optional MCP capabilities and safety | `docs/optional-mcp.md` |
 | Completion gate | `CHECKPOINTS.md` |
 | Current session state | `progress/current.md` |

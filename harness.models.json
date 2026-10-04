@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "costTiers": {
+    "low": "The smallest, fastest model that follows instructions and reads files reliably.",
+    "standard": "A general model that writes and tests code reliably.",
+    "high": "The most capable model available. Use it only when an error is expensive."
+  },
+  "taskTiers": {
+    "explore-report": {
+      "costTier": "low",
+      "use": "Search files, summarize context, collect command output, and write progress or evidence reports."
+    },
+    "implement": {
+      "costTier": "standard",
+      "use": "Plan one feature, change code and tests, and repair verification failures."
+    },
+    "review": {
+      "costTier": "standard",
+      "use": "Independently review a normal diff that matches no risky-review trigger."
+    },
+    "risky-review": {
+      "costTier": "high",
+      "use": "Independently review a diff that matches a risky-review trigger."
+    }
+  },
+  "roles": {
+    "coordinator": "explore-report",
+    "implementer": "implement",
+    "reviewer": "review"
+  },
+  "riskyReview": {
+    "paths": [
+      "scripts/**",
+      ".github/workflows/**",
+      "harness.*.json",
+      "package.json"
+    ],
+    "conditions": [
+      "Authentication, authorization, secrets, or other security controls change.",
+      "Data migrations, persistent formats, or destructive operations change.",
+      "Concurrency, transactions, or payment behavior changes.",
+      "The work item records an exception to the 300-line limit.",
+      "A previous review round requested a high-severity change."
+    ]
+  }
+}
