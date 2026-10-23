@@ -566,15 +566,15 @@
   },
   {
     "id": "TASK-041",
-    "title": "Prototype TanStack orchestration with an inventory repair exercise",
+    "title": "Prototype an invoking-agent workflow with local inventory tools",
     "status": "done",
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/98",
     "acceptance_criteria": [
-      "An opt-in CLI uses published TanStack harness sessions to run an implementer and an independent reviewer against a temporary inventory repair exercise.",
-      "The implementer can read and replace only the temporary inventory; the reviewer can read and run a fixed check but cannot edit through its tools. Failed execution or verification cannot report success.",
-      "A credential-free scripted adapter exercises the real harness and tools; an explicit live mode supports a configured Anthropic model without storing credentials.",
-      "Focused tests demonstrate successful handoff, failed verification, and role tool separation. Temporary files and sessions are cleaned up.",
-      "Usage documentation records pinned versions, sources, observed results, and the boundary between the PoC runtime and the existing repository delivery gate."
+      "A local CLI lets the invoking agent start, inspect, edit, check, hand off, review, finish, and clean an inventory repair session without model API calls or credentials.",
+      "Session state survives separate command invocations. Editing is allowed only before handoff; handoff requires a successful current implementer check, and completion requires a current reviewer check and digest-bound approval plus final validation.",
+      "Input and session identifiers are validated, state writes are atomic, concurrent operations fail clearly, and invalid state or stale evidence cannot report success. Cleanup removes only the selected session.",
+      "Focused tests cover the command lifecycle, rejected transitions, invalid input, stale evidence, rejection and repair, cleanup, and concurrent access. Demonstrate the workflow with the invoking agent and an independent reviewer.",
+      "Documentation supplies a copyable agent prompt and command examples, explains usage limits and the local trust boundary, and records the existing repository delivery gate as the approval authority."
     ]
   }
 ]
