@@ -29,7 +29,8 @@
     "impact": "tsx scripts/analyze-impact.ts",
     "verify": "pnpm run check:delivery && pnpm run feedback && pnpm run test:harness",
     "start": "tsx src/cli.ts",
-    "check:delivery": "tsx scripts/check-delivery.ts"
+    "check:delivery": "tsx scripts/check-delivery.ts",
+    "poc:agent": "tsx scripts/poc/agent-cli.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -39,6 +40,7 @@
     "tsx": "^4.20.0",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.68.0",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.0",
+    "zod": "4.6.7"
   }
 }

@@ -563,5 +563,18 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/96",
     "status": "done"
+  },
+  {
+    "id": "TASK-041",
+    "title": "Prototype an invoking-agent workflow with local inventory tools",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/98",
+    "acceptance_criteria": [
+      "A local CLI lets the invoking agent start, inspect, edit, check, hand off, review, finish, and clean an inventory repair session without model API calls or credentials.",
+      "Session state survives separate command invocations. Editing is allowed only before handoff; handoff requires a successful current implementer check, and completion requires a current reviewer check and digest-bound approval plus final validation.",
+      "Input and session identifiers are validated, state writes are atomic, concurrent operations fail clearly, and invalid state or stale evidence cannot report success. Cleanup removes only the selected session.",
+      "Focused tests cover the command lifecycle, rejected transitions, invalid input, stale evidence, rejection and repair, cleanup, and concurrent access. Demonstrate the workflow with the invoking agent and an independent reviewer.",
+      "Documentation supplies a copyable agent prompt and command examples, explains usage limits and the local trust boundary, and records the existing repository delivery gate as the approval authority."
+    ]
   }
 ]
