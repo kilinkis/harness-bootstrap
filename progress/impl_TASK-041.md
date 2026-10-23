@@ -51,3 +51,5 @@ Implementation digest: sha256:a16573e092d9656e72dbd09898ef3726635884d303453a2604
 Independent risky-review approved this digest in `progress/review_TASK-041.md`. The implementer ran `./scripts/verify.sh` once after approval: exit 0, all stages passed, 7 product tests and 115 harness tests passed. Log: `/tmp/task-041-agent-final-gate.log`. Evidence-only finalization marks the feature done locally. Draft PR #99 will carry this revision; no merge is requested.
 
 Finalization checks: `HARNESS_DELIVERY_PHASE=ci node --import tsx scripts/check-delivery.ts` and `node --import tsx scripts/check-harness-state.ts` both passed after evidence-only finalization.
+
+Implementation commit `a29a5dd` was pushed to the feature branch. Draft PR #99 and issue #98 now describe the invoking-agent revision. Publication used the previously authorized kilinkis account only for those processes. Required remote checks remain tracked on the PR. No merge was performed.
