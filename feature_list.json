@@ -563,5 +563,18 @@
     ],
     "issue": "https://github.com/kilinkis/harness-bootstrap/issues/96",
     "status": "done"
+  },
+  {
+    "id": "TASK-041",
+    "title": "Prototype TanStack orchestration with an inventory repair exercise",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/98",
+    "acceptance_criteria": [
+      "An opt-in CLI uses published TanStack harness sessions to run an implementer and an independent reviewer against a temporary inventory repair exercise.",
+      "The implementer can read and replace only the temporary inventory; the reviewer can read and run a fixed check but cannot edit through its tools. Failed execution or verification cannot report success.",
+      "A credential-free scripted adapter exercises the real harness and tools; an explicit live mode supports a configured Anthropic model without storing credentials.",
+      "Focused tests demonstrate successful handoff, failed verification, and role tool separation. Temporary files and sessions are cleaned up.",
+      "Usage documentation records pinned versions, sources, observed results, and the boundary between the PoC runtime and the existing repository delivery gate."
+    ]
   }
 ]

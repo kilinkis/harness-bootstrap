@@ -175,3 +175,7 @@ Completed issue #93 after P2 delivery. Existing pins now live in optional reposi
 ## TASK-040: Define tool-agnostic model tiers
 
 Completed issue #96. `harness.models.json` defines cost tiers, task tiers, role defaults, and risky-review triggers without vendor names. Role files state their tier, and a harness test keeps them consistent. Independent review approved at the risky-review tier with two optional low-severity findings. The final gate passed 7 product and 107 harness tests. Reports: impl_TASK-040.md and review_TASK-040.md. The issue and PR track delivery.
+
+## TASK-041: Prototype TanStack orchestration
+
+Completed issue #98 criteria locally. Separate TanStack sessions repair and review a temporary target inventory through bounded tools and the existing validator. The scripted demo and 6 focused tests passed. Independent risky-review approved the digest and passed 4 additional checks. The final full gate passed 7 product and 113 harness tests. Reports: impl_TASK-041.md and review_TASK-041.md. Anthropic live inference remains unverified without a key. Delivery stays on the requested PoC branch with a draft PR; no merge is requested.
