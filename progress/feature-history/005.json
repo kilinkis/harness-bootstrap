@@ -1,0 +1,28 @@
+[
+  {
+    "id": "TASK-042",
+    "title": "Limit staged authored files to 5000 estimated tokens",
+    "issue": "local-TASK-042",
+    "status": "done",
+    "acceptance_criteria": [
+      "The pre-commit hook rejects added or modified staged authored blobs over 20000 bytes and accepts the exact boundary, without reading working-tree file sizes.",
+      "Lockfiles and generated or vendored files are excluded using documented staged Git attributes; deletions and submodules are skipped.",
+      "Failures list every oversized path and give explicit instructions for splitting code, tests, and documentation, updating references, and staging the result.",
+      "Temporary Git fixtures cover boundaries, partial staging, exclusions, unusual paths, renames, deletions, and hook execution.",
+      "Document installation and activate the hook in this checkout without replacing an existing custom hook setup."
+    ]
+  },
+  {
+    "id": "TASK-043",
+    "title": "Permit focused local verification for small product changes",
+    "issue": "local-TASK-043",
+    "status": "done",
+    "acceptance_criteria": [
+      "An automatic staged-diff classifier permits at most five product source/test/guide files and 150 added plus deleted lines; it rejects empty, binary, unknown, configuration, and harness-control changes while excluding queue/progress evidence from size counts.",
+      "Small changes retain focused tests, type and lint checks, independent digest-bound review, and post-approval snapshot/state/binding checks; full CI remains mandatory before merge.",
+      "Risky semantics including security, persistent data, concurrency, and delivery logic disqualify a change through explicit reviewer confirmation; uncertain scope uses the normal lane.",
+      "Focused contracts prove boundary classification, Git baseline/staging behavior, and refusal of control changes; existing full-gate commands and CI remain unchanged.",
+      "Primary agent, completion, review, and verification instructions explain eligibility and avoid duplicate unchanged local checks."
+    ]
+  }
+]

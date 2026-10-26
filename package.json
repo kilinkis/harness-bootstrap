@@ -29,7 +29,10 @@
     "impact": "tsx scripts/analyze-impact.ts",
     "verify": "pnpm run check:delivery && pnpm run feedback && pnpm run test:harness",
     "start": "tsx src/cli.ts",
-    "check:delivery": "tsx scripts/check-delivery.ts"
+    "check:delivery": "tsx scripts/check-delivery.ts",
+    "check:staged-files": "node scripts/check-staged-file-size.ts",
+    "check:small-change": "tsx scripts/small-change.ts",
+    "verify:small": "pnpm run check:small-change && pnpm run check:delivery && pnpm run check:harness-state && pnpm run check:review-binding"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

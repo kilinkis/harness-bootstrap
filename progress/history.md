@@ -175,3 +175,15 @@ Completed issue #93 after P2 delivery. Existing pins now live in optional reposi
 ## TASK-040: Define tool-agnostic model tiers
 
 Completed issue #96. `harness.models.json` defines cost tiers, task tiers, role defaults, and risky-review triggers without vendor names. Role files state their tier, and a harness test keeps them consistent. Independent review approved at the risky-review tier with two optional low-severity findings. The final gate passed 7 product and 107 harness tests. Reports: impl_TASK-040.md and review_TASK-040.md. The issue and PR track delivery.
+
+## TASK-042 — Staged file token limit
+
+Added and activated an index-only 20,000-byte pre-commit limit with generated-file exclusions and explicit split instructions. Independent review approved the digest; final verification passed 7 product and 109 harness tests. See `progress/impl_TASK-042.md`. Delivery remains blocked by the existing oversized feature queue.
+
+## TASK-043 — Small-code lane
+
+Added bounded product-change classification and focused local verification with independent review and full CI retained. Final gate passed 7 product and 112 harness tests. See `progress/impl_TASK-043.md`. The oversized queue still blocks delivery.
+
+## TASK-044
+
+Archived the completed queue; validation passed. See `progress/impl_TASK-044.md`.
