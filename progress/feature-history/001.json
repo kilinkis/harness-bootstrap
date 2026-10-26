@@ -1,0 +1,141 @@
+[
+  {
+    "id": "TASK-001",
+    "title": "Create a task from the command line",
+    "status": "done",
+    "acceptance_criteria": [
+      "The CLI accepts a task title and optional tag.",
+      "Created tasks persist in a local JSON file.",
+      "The command prints the created task ID."
+    ]
+  },
+  {
+    "id": "TASK-002",
+    "title": "List persisted tasks",
+    "status": "done",
+    "acceptance_criteria": [
+      "The CLI lists each saved task with its ID, status, title, and tag.",
+      "An empty task store produces a clear message."
+    ]
+  },
+  {
+    "id": "TASK-003",
+    "title": "Complete a task from the command line",
+    "status": "skipped",
+    "skip_reason": "The repository owner explicitly removed this sample feature from the work queue.",
+    "acceptance_criteria": [
+      "The CLI accepts a task ID for completion.",
+      "Completing an existing open task persists its completed status.",
+      "An unknown task ID returns a helpful non-zero error."
+    ]
+  },
+  {
+    "id": "TASK-004",
+    "title": "Add repository code-quality gates",
+    "status": "done",
+    "acceptance_criteria": [
+      "ESLint checks TypeScript source and test files using the current flat configuration format.",
+      "The lint gate enforces a maximum file length without duplicating Fallow's complexity checks.",
+      "Fallow reports code duplication, cyclomatic and cognitive complexity, dead code, circular dependencies, and large functions.",
+      "The repository exposes separate full-codebase and changed-file Fallow commands.",
+      "The standard verification command runs type checking, linting, changed-file analysis, and tests.",
+      "The verification documentation explains when to run each quality command."
+    ]
+  },
+  {
+    "id": "TASK-005",
+    "title": "Add contract tests for quality gates",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/3",
+    "acceptance_criteria": [
+      "An ESLint contract test proves the configured 300-line limit rejects an oversized TypeScript file.",
+      "Fallow contract tests prove health analysis detects excessive complexity or function size and duplication analysis detects repeated code.",
+      "A clean temporary fixture passes the representative ESLint and Fallow checks.",
+      "Fixtures are generated in temporary directories and do not pollute normal source analysis.",
+      "Contract tests assert stable exit codes and machine-readable fields instead of human output.",
+      "The standard harness verification command runs both product tests and harness contract tests.",
+      "Verification documentation explains the two test layers."
+    ]
+  },
+  {
+    "id": "TASK-006",
+    "title": "Document and template the delivery workflow",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/5",
+    "acceptance_criteria": [
+      "AGENTS.md contains concise, tool-neutral delivery rules.",
+      "docs/run-a-ticket.md explains how to execute a ticket through the harness without repeating long prompts.",
+      "A GitHub feature issue form captures the objective, acceptance criteria, verification, and context or risks.",
+      "A pull request template captures the linked issue, acceptance criteria, harness reports, verification evidence, and risks.",
+      "docs/github-setup.md documents remote ruleset and required-check setup that is not carried by a clone.",
+      "The README and completion checkpoints link the workflow from the normal entry points.",
+      "The full harness verification passes."
+    ]
+  },
+  {
+    "id": "TASK-007",
+    "title": "Add clear technical prose conventions",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/7",
+    "acceptance_criteria": [
+      "docs/conventions.md defines clear technical prose rules based on applicable ASD-STE100 principles.",
+      "The convention covers documentation, pull request descriptions, release notes, code comments, issues, and progress reports.",
+      "The convention does not claim full ASD-STE100 compliance without validation against the current standard and project terminology.",
+      "Commit messages have a separate concise imperative-subject rule.",
+      "Chat replies are not included in the repository prose requirement.",
+      "AGENTS.md points agents to the prose convention without duplicating it.",
+      "Official ASD-STE100 sources are recorded in the documentation.",
+      "The full harness verification passes."
+    ]
+  },
+  {
+    "id": "TASK-008",
+    "title": "Add a production-readiness adoption checklist",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/9",
+    "acceptance_criteria": [
+      "docs/production-readiness.md provides an adoption checklist.",
+      "Each item can be marked applicable, not applicable with a reason, planned with an owner or ticket, or enforced automatically.",
+      "The checklist covers correctness and coverage, security, performance, accessibility, domain acceptance, observability, deployment and rollback, data protection and recovery, cost limits, and operational documentation.",
+      "The guide asks for a prevented failure, measurable threshold, command, harness integration, required CI check, contract test, and exception owner.",
+      "The guide shows the progression from identified risk to required CI gate.",
+      "The guide tells adopters to select relevant gates instead of enabling every gate by default.",
+      "README.md and AGENTS.md link the checklist from normal adoption and navigation paths.",
+      "The full harness verification passes."
+    ]
+  },
+  {
+    "id": "TASK-009",
+    "title": "Make harness completion checkpoints executable",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/11",
+    "acceptance_criteria": [
+      "A TypeScript validator checks a repository root and returns all harness-state findings through one small interface.",
+      "The validator rejects duplicate or empty feature IDs, invalid statuses, missing titles or acceptance criteria, and more than one active feature in the shared workstream.",
+      "An active feature must appear in progress/current.md.",
+      "An in_review feature must have an implementation report.",
+      "A completed tracked feature must have implementation and review reports and a history entry.",
+      "Required reports contain the accepted evidence sections and identify their feature.",
+      "Legacy untracked bootstrap features remain valid without fabricated evidence.",
+      "The standard harness gate runs the validator before other quality checks.",
+      "Contract tests prove valid state passes and representative invalid states fail with stable finding codes.",
+      "Verification documentation explains the executable checkpoints and their limits.",
+      "The full harness verification passes."
+    ]
+  },
+  {
+    "id": "TASK-010",
+    "title": "Add a fast inner feedback loop",
+    "status": "done",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/13",
+    "acceptance_criteria": [
+      "A fast command validates harness state, types, lint rules, changed-file analysis, and product tests.",
+      "The full verification command composes the fast command with harness contract tests.",
+      "The shell gate invokes the full verification command without duplicate checks.",
+      "CI continues to use the shell gate.",
+      "Contract tests prevent the fast and full gate definitions from drifting.",
+      "Verification documentation explains focused, fast, and full feedback levels.",
+      "The full harness verification passes."
+    ]
+  }
+]

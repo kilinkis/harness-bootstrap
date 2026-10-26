@@ -8,6 +8,8 @@ One implementer plans, implements, and finalizes; one reviewer approves independ
 
 ## Lifecycle
 
+The [small-code lane](small-code-changes.md) substitutes focused/type/lint verification and a reduced post-approval local gate for eligible product changes. Work items, independent review, evidence finalization, and full CI remain required. The steps below describe the normal lane.
+
 1. **Define the work item.** Record one outcome, at most five testable acceptance criteria, expected verification, and relevant risks or context. If the item is vague, improve it before coding.
 2. **Bound the change.** Target at most 300 added implementation lines. Keep cohesive fixes in one item and PR. Split larger work at independently verifiable boundaries; avoid speculative dependent PR stacks. If the work cannot be split, record the reason and a named owner in the work item before activation.
 3. **Start clean.** Update the default branch, run `pnpm run feedback`, confirm no feature is active, and add or select the matching entry in `feature_list.json`.
@@ -16,7 +18,7 @@ One implementer plans, implements, and finalizes; one reviewer approves independ
 6. **Implement.** The implementer runs focused checks and `pnpm run feedback`. The implementer stages the intended snapshot, records its digest, writes `progress/impl_<feature-id>.md`, and moves the feature to `in_review`.
 7. **Review.** A reviewer independently checks the staged diff, acceptance criteria, tests, and risks. The reviewer runs relevant focused checks and recomputes the digest. Findings and the digest go in `progress/review_<feature-id>.md`.
 8. **Run the final local gate.** After approval, the implementer runs `./scripts/verify.sh` once on the approved snapshot.
-9. **Finalize evidence.** After the full gate passes, the implementer marks the feature `done`, updates progress and history, and runs `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state`. These evidence-only changes do not alter the reviewed implementation digest.
+9. **Finalize evidence.** After the applicable local gate passes, the implementer marks the feature `done`, updates progress and history, and runs `HARNESS_DELIVERY_PHASE=ci pnpm run check:delivery` and `pnpm run check:harness-state`. These evidence-only changes do not alter the reviewed implementation digest.
 10. **Open the change request.** Link the work item, summarize the change, link the two reports, summarize exact command outcomes, and disclose remaining risks.
 11. **Merge.** Wait for required remote checks, merge through the platform, and let the closing keyword close the work item. Confirm the default branch is green.
 

@@ -4,8 +4,8 @@ This repository is a harness: follow the system before changing the product.
 
 ## Start here
 
-1. Run `pnpm run feedback` at implementation startup unless this snapshot and environment already passed. Reviewers start with `agents/reviewer.md` and independent focused checks.
-2. Read `feature_list.json`; select the first `pending` item unless directed otherwise.
+1. Run `pnpm run feedback` at implementation startup unless this snapshot and environment already passed. Eligible small product changes may use the focused baseline in `docs/small-code-changes.md`. Reviewers start with `agents/reviewer.md` and independent focused checks.
+2. Read `feature_list.json`; select the first `pending` item unless directed otherwise. Completed queue history lives in `progress/feature-history/`; load it only when needed.
 3. Read `docs/architecture.md`, `docs/conventions.md`, and the selected feature's acceptance criteria.
 4. Read the relevant role definition in `agents/` before taking that role.
 
@@ -24,6 +24,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Follow `docs/repair-loop.md` after a verification failure. Stop after its repair budget is exhausted.
 - Follow the technical prose rules in `docs/conventions.md` for durable repository text.
 - Run each role at its task tier in `docs/model-routing.md`. Escalate review only on a listed trigger.
+- Use the small-code lane in `docs/small-code-changes.md` only after automatic scope classification and reviewer confirmation. Full CI remains required.
 - Use the low-risk documentation lane in `docs/run-a-ticket.md` only when the automatic classifier approves every changed path.
 - For harness adoption, follow `docs/adoption-handoff.md`: separate harness adoption, project-gate adoption, and product readiness, then hand off the first actionable readiness item.
 
@@ -34,7 +35,7 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Create a feature branch from the default branch; do not commit directly to the protected branch.
 - For normal work, open a pull or merge request that links the work item with closing syntax. Record the classifier result instead for the low-risk documentation lane.
 - For normal changes, include implementation and review reports, verification evidence, and remaining risks in the request.
-- The implementer runs focused and fast checks. The reviewer runs independent focused checks. After approval, the same implementer runs the one final local full gate and finalizes evidence.
+- The implementer runs focused and fast checks. The reviewer runs independent focused checks. After approval, the same implementer runs the one final local full gate and finalizes evidence. The approved small-code lane substitutes `pnpm run verify:small` and reuses unchanged focused/type/lint evidence.
 - Merge only after the completion checkpoints and required remote checks pass.
 
 ## Context and evidence cost

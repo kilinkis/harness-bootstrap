@@ -1,6 +1,6 @@
 # Verification
 
-Use three feedback levels while you work.
+Use three feedback levels while you work. Eligible [small-code changes](small-code-changes.md) use focused tests, type/lint checks, independent review, and `pnpm run verify:small` locally. They retain the full CI gate. The fast/full local requirements below describe the normal lane.
 
 ## Focused check
 
@@ -10,7 +10,7 @@ Run the smallest test or command that covers the current change. For example:
 pnpm exec tsx --test tests/tasks.test.ts
 ```
 
-A focused check gives the earliest result. It does not replace a repository gate.
+A focused check gives the earliest result. Alone, it does not replace a repository gate.
 
 ## Fast feedback
 
@@ -119,7 +119,7 @@ After harness-state validation, the commands run complementary checks:
 
 Before review, stage every intended implementation file. Run `pnpm run review:digest`. Follow the [review-binding protocol](review-binding.md). The standard gate skips binding while a feature is `in_progress`. When no feature is active, the latest completed tracked approval remains binding. Every completed feature needs a nonempty local or remote work-item reference and normal evidence, except the three pinned original bootstrap definitions described in the [historical evidence rules](review-binding.md#historical-bootstrap-evidence). Omitting a reference cannot exempt new work. The documented maintenance exception compares cumulative staged documentation and dependency changes with the verified committed review baseline. The gate enforces the active binding while a feature is `in_review`, including the implementer's post-approval full gate.
 
-Dependency maintenance is the only additional no-active-feature exception. It permits pnpm lockfile changes, dependency or package-manager declarations in `package.json`, and the pnpm setup version in the verification workflow. It does not permit scripts, source, arbitrary manifest fields, other workflow changes or unknown implementation files. Queue and progress evidence retain their digest exclusions. The full gate and required remote review remain mandatory.
+Dependency maintenance is the only additional no-active-feature exception. It permits pnpm lockfile changes, dependency or package-manager declarations in `package.json`, and the pnpm setup version in the verification workflow. It does not permit scripts, source, arbitrary manifest fields, other workflow changes or unknown implementation files. Queue and progress evidence retain their digest exclusions. The full gate and required remote review remain mandatory for dependency maintenance.
 
 Use `pnpm run analyze` when you need a full-codebase Fallow report rather than the changed-file merge gate. Its thresholds and CLI entry point are versioned in `.fallowrc.json`; duplication above 5% fails the analysis. The CRAP threshold is calibrated above Fallow's static estimates because this small Node test setup does not emit Istanbul coverage; cyclomatic, cognitive, and function-size limits remain independently enforced.
 

@@ -32,13 +32,18 @@ Use Node 24, pnpm 10.34.5, Git, and Bash. Clone with the default branch history 
 ```bash
 pnpm install --frozen-lockfile
 pnpm run feedback
+git config --local core.hooksPath .githooks
 pnpm start -- add "Ship the harness" --tag portfolio
 pnpm start -- list
 ```
 
-Run `./scripts/verify.sh` for final local verification after approval. CI uses `./scripts/verify.sh ci`. See the [minimal adoption map](docs/adoption-map.md) for Git-base prerequisites and fresh-project setup.
+See [the staged file size hook](docs/pre-commit.md) before installation if you already have custom hooks. The hook limits authored staged files to 5,000 estimated tokens.
+
+Run `./scripts/verify.sh` for normal final local verification after approval; the approved small-code lane uses `pnpm run verify:small`. CI uses `./scripts/verify.sh ci`. See the [minimal adoption map](docs/adoption-map.md) for Git-base prerequisites and fresh-project setup.
 
 See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The implementer runs it once after independent approval, and required CI runs it before merge.
+
+For small product fixes, the [small-code lane](docs/small-code-changes.md) keeps focused checks and independent review locally, with the full suite in required CI.
 
 For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
 
