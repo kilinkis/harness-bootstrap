@@ -7,6 +7,9 @@ import { validateReviewBinding } from "../../scripts/review-binding.js";
 import { classifyTrivialChange, inspectTrivialChange } from "../../scripts/trivial-change.js";
 import { addReviewReport, codes, createFixture, finalizeFeature, runGit } from "./review-binding-fixture.js";
 
+// Fixtures compare with their own origin/main, not the CI pull request base.
+delete process.env.HARNESS_BASE_REF;
+
 const RISKY = ["scripts/**", "src/auth/**"];
 const change = (path: string, added = 1, deleted = 0) => ({ path, added, deleted });
 
@@ -104,6 +107,20 @@ void test("review binding refuses the trivial lane without a risk policy", async
     await stageLines(root, "src/value.ts", 2);
     assert.deepEqual(codes(await validateReviewBinding(root)), ["REVIEW_BINDING_STALE"]);
   } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+void test("an unresolvable comparison base judges everything after approval as one step", async () => {
+  const root = await createPolicyFixture();
+  try {
+    await stageLines(root, "src/value.ts", 20);
+    await mergeToMain(root);
+    await stageLines(root, "src/other.ts", 20);
+    process.env.HARNESS_BASE_REF = "missing-ref";
+    assert.deepEqual(codes(await validateReviewBinding(root)), ["REVIEW_BINDING_STALE"]);
+  } finally {
+    delete process.env.HARNESS_BASE_REF;
     await rm(root, { recursive: true, force: true });
   }
 });

@@ -2,7 +2,7 @@
 
 Review tier: risky-review (scripts/**, package.json; review-binding and evidence controls change).
 
-Implementation digest: sha256:a3f6859041052583fae88efb2ef8d64f4f9c3ecd670762757bfccc78b45ab82f
+Implementation digest: sha256:da62c423761ce08bfe2f360aa0c2e272ea6915ce9caed65972f30d84cc241463
 
 ## Verdict
 
@@ -10,22 +10,27 @@ Approved.
 
 ## Scope reviewed
 
-This report reviews round 2. The round 1 change request is in `progress/review_TASK-045_round1.md`, and the reviewed delta is in "Round 1 changes" of `progress/impl_TASK-045.md`. I re-inspected the full staged diff: `readStep` and the control patterns in `scripts/trivial-change.ts`, the step-wise check in `scripts/review-binding.ts`, `scripts/small-change.ts`, tests, and docs. Committed-baseline validation still fails closed. No remaining code depends on the removed history or current-plan validators.
+Approval refresh. Prior approved snapshot: commit 73efbfc. Its committed `progress/review_TASK-045.md` approved digest `sha256:a3f6859041052583fae88efb2ef8d64f4f9c3ecd670762757bfccc78b45ab82f`. I recomputed that digest from the tree at 73efbfc, and it matches. Earlier rounds are in `progress/review_TASK-045_round1.md` and in the 73efbfc approval. Both reviewed the full change: the trivial classifier, the step-wise review binding, the dependency-maintenance `head`, the removed validators, tests, and docs.
 
-Both required findings from round 1 are fixed. Symlinks, gitlinks, and mode-only changes now fail every binding step and the eligibility command. `.githooks/**`, `renovate.json`, `.npmrc`, `pnpm-workspace.yaml`, `.gitattributes`, and `.fallowrc.json` now require a work item. Bare risky patterns now cover their subtree, and a missing risk policy refuses the lane in the gate. New tests cover each case.
+Delta reviewed with `git diff --cached HEAD`:
 
-No required findings remain.
+- `scripts/review-binding.ts`: the code now fails closed when the comparison base is not on the first-parent path, or when it is missing or unresolvable. In those cases, every commit after the approval plus the index form one step. A base on that path still divides merged steps from the local step. This resolves my round 2 optional finding.
+- `tests/harness/trivial-change.test.ts`: the test now clears `HARNESS_BASE_REF`, which fixes the CI failure. A new test covers an unresolvable base.
 
-1. Optional, medium. `scripts/review-binding.ts:142-149`: the check falls back to one step per commit when the comparison base is not on HEAD's first-parent path. Two cases reach this fallback: a branch that merged `origin/main` into itself, or a missing `origin/main`. Probe: a branch of 90 lines in `src/`, with `origin/main` merged into the middle, made of commits c1 and c2 and a staged change of 30 lines each. `validateReviewBinding` returned no findings. CI on the pull-request merge ref still sees one step, so the gate works there. Locally, though, this fallback lets a change through. To fail closed, judge all commits after the newest first-parent ancestor of the base as one step. The other option is to treat all commits after the anchor as one step.
+Interactions: pull-request CI resolves the base to the base SHA, which is on the merge ref's first-parent path, so earlier trivial merges are still judged one at a time. A missing base can only refuse more changes. No required or optional findings.
 
 ## Commands and results
 
-- `npx tsx --test` on 8 test files: 45 passed, 0 failed. The files were the trivial-change, review-binding, review-binding-lifecycle, harness-state, legacy-evidence, small-change, minimal-adoption, and canonical-review tests.
-- I re-ran the round 1 probes in the scratchpad, outside the repo. All now return `REVIEW_BINDING_STALE`: the ten split commits, the six config paths, `src/auth/login.ts`, the symlink, the gitlink, the chmod, and the unconfigured policy. `check:trivial-change` refuses the symlink. The two new fallback probes reproduce optional finding 1.
+- I ran `npx tsx --test` on 9 focused test files: trivial-change, review-binding, review-binding-lifecycle, harness-state, legacy-evidence, small-change, minimal-adoption, canonical-review, and delivery-gate. With `HARNESS_BASE_REF` unset, 54 passed and 0 failed. With `HARNESS_BASE_REF=deadbeef`, 54 passed and 0 failed.
+- Scratchpad probes, outside the repo:
+  - The merged-main split branch (90 lines) now returns `REVIEW_BINDING_STALE`.
+  - A split branch without `origin/main` now returns `REVIEW_BINDING_STALE`.
+  - Earlier probes still refuse: ten split commits, symlink, gitlink, chmod, and an unconfigured policy.
 - `pnpm -s run review:digest` produced the digest above, which matches the implementation report.
+- I recomputed the 73efbfc tree digest, as stated in Scope reviewed.
 - `git diff --cached --check` passed.
-- I did not run the full gate. The implementer runs it on the approved snapshot.
+- I did not run the full gate. The implementer runs it on this snapshot.
 
 ## Remaining risks
 
-A trivial step is judged by paths and size only. Semantic risk outside `riskyReview.paths` relies on request review. Branch protection must prevent direct pushes to the default branch. Optional finding 1 can make the local gate pass on a branch that CI refuses.
+A trivial step is judged by paths and size only. Semantic risk outside `riskyReview.paths` relies on request review. Branch protection must prevent direct pushes to the default branch. If a local checkout has no usable comparison base, earlier trivial merges count together and may be refused. That is conservative, and CI resolves the base correctly.

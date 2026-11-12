@@ -139,15 +139,17 @@ async function isEachStepWithoutWorkItem(root: string, anchor: string): Promise<
   const riskyPaths = await readRiskyPaths(root);
   const commits = (await readGit(root, ["rev-list", "--first-parent", "--ancestry-path", "--reverse", `${anchor}..HEAD`]))
     .split("\n").filter(Boolean);
-  let target = "HEAD";
+  // Without a comparison base on the first-parent path (missing, unresolvable,
+  // or merged into the branch), everything after the approval is one step.
+  let target = anchor;
   try {
     const base = (await resolveComparisonBase(root)).commit;
-    if (base && (base === anchor || commits.includes(base))) target = base;
+    if (base && commits.includes(base)) target = base;
   } catch {
-    target = "HEAD";
+    target = anchor;
   }
   let previous = anchor;
-  for (const commit of target === "HEAD" ? commits : commits.slice(0, commits.indexOf(target) + 1)) {
+  for (const commit of commits.slice(0, commits.indexOf(target) + 1)) {
     if (!await isStepWithoutWorkItem(root, previous, commit, riskyPaths)) return false;
     previous = commit;
   }
