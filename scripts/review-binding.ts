@@ -5,6 +5,8 @@ import { createHash } from "node:crypto";
 
 import { classifyDependencyMaintenance } from "./dependency-maintenance.js";
 import { classifyLowRiskDocumentation } from "./low-risk-documentation.js";
+import { resolveComparisonBase } from "./comparison-base.js";
+import { classifyTrivialChange, readRiskyPaths, readStep } from "./trivial-change.js";
 
 export interface ReviewBindingFinding {
   code: string;
@@ -124,8 +126,46 @@ async function isReviewedMaintenance(
   const changed = (await readGit(root, ["diff", "--cached", "--no-renames", "--name-only", "-z", anchor, "--"]))
     .split("\0").filter((path) => path && isImplementationPath(path));
   const dependencyPaths = classifyLowRiskDocumentation(changed).refusedPaths;
-  return changed.length > 0 && (dependencyPaths.length === 0 ||
-    await classifyDependencyMaintenance(root, anchor, dependencyPaths));
+  if (changed.length > 0 && (dependencyPaths.length === 0 ||
+    await classifyDependencyMaintenance(root, anchor, dependencyPaths))) return true;
+  return isEachStepWithoutWorkItem(root, anchor);
+}
+
+// Changes merged after the last approval are judged one default-branch step at a
+// time, so separate trivial and maintenance merges do not add up to a refusal.
+// Local commits after the comparison base and the staged index form one final
+// step, as CI sees a request. Every step must need no work item.
+async function isEachStepWithoutWorkItem(root: string, anchor: string): Promise<boolean> {
+  const riskyPaths = await readRiskyPaths(root);
+  const commits = (await readGit(root, ["rev-list", "--first-parent", "--ancestry-path", "--reverse", `${anchor}..HEAD`]))
+    .split("\n").filter(Boolean);
+  let target = "HEAD";
+  try {
+    const base = (await resolveComparisonBase(root)).commit;
+    if (base && (base === anchor || commits.includes(base))) target = base;
+  } catch {
+    target = "HEAD";
+  }
+  let previous = anchor;
+  for (const commit of target === "HEAD" ? commits : commits.slice(0, commits.indexOf(target) + 1)) {
+    if (!await isStepWithoutWorkItem(root, previous, commit, riskyPaths)) return false;
+    previous = commit;
+  }
+  return isStepWithoutWorkItem(root, previous, "", riskyPaths);
+}
+
+async function isStepWithoutWorkItem(
+  root: string,
+  base: string,
+  head: string,
+  riskyPaths: string[] | undefined,
+): Promise<boolean> {
+  const { changes, modeReasons } = await readStep(root, base, head);
+  const paths = changes.map(({ path }) => path).filter(isImplementationPath);
+  if (modeReasons.length > 0) return false;
+  if (paths.length === 0 || classifyLowRiskDocumentation(paths).approved) return true;
+  if (await classifyDependencyMaintenance(root, base, paths, head)) return true;
+  return riskyPaths !== undefined && classifyTrivialChange(changes, riskyPaths).length === 0;
 }
 
 async function readSnapshot(root: string, revision?: string): Promise<IndexEntry[]> {

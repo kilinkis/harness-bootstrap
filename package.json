@@ -32,6 +32,7 @@
     "check:delivery": "tsx scripts/check-delivery.ts",
     "check:staged-files": "node scripts/check-staged-file-size.ts",
     "check:small-change": "tsx scripts/small-change.ts",
+    "check:trivial-change": "tsx scripts/trivial-change.ts",
     "verify:small": "pnpm run check:small-change && pnpm run check:delivery && pnpm run check:harness-state && pnpm run check:review-binding"
   },
   "devDependencies": {

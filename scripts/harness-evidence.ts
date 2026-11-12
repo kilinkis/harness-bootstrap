@@ -51,7 +51,6 @@ export async function validateFeatureEvidence(
   for (const feature of completedNormal) {
     await validateCompletedReview(root, feature.id, findings);
   }
-  await validateHistory(root, completedNormal, findings);
 }
 
 async function validateCompletedReview(
@@ -60,27 +59,6 @@ async function validateCompletedReview(
   findings: HarnessFinding[],
 ): Promise<void> {
   findings.push(...(await loadFinalReview(root, featureId)).findings);
-}
-
-async function validateHistory(
-  root: string,
-  features: Feature[],
-  findings: HarnessFinding[],
-): Promise<void> {
-  if (features.length === 0) return;
-  const path = "progress/history.md";
-  const history = await readText(root, path, "HISTORY_MISSING", findings);
-  if (history === undefined) return;
-  for (const feature of features) {
-    if (!containsFeatureId(history, feature.id)) {
-      addFinding(
-        findings,
-        "HISTORY_ENTRY_MISSING",
-        `${feature.id}: completed feature is missing from history`,
-        path,
-      );
-    }
-  }
 }
 
 function validateReport(

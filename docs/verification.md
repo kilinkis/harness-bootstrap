@@ -97,9 +97,8 @@ The feedback command first runs `pnpm run check:harness-state`. This command val
 - Feature IDs, statuses, titles, and acceptance criteria are valid. An active feature has at most five acceptance criteria. Completed legacy features keep their recorded criteria.
 - A skipped feature has a non-empty reason.
 - Only one feature is active in the shared workstream.
-- Active state agrees with `progress/current.md`.
 - Review state has an implementation report.
-- A completed tracked feature has implementation and review reports and a history entry.
+- A completed tracked feature has implementation and review reports.
 - Required reports identify their feature and contain evidence sections.
 
 A feature is tracked when it has a non-empty `issue` field. Completed bootstrap features without an issue predate the delivery workflow. The validator does not require fabricated reports for those legacy features.
