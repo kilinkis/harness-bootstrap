@@ -43,7 +43,7 @@ Run `./scripts/verify.sh` for normal final local verification after approval; th
 
 See the [task CLI guide](docs/task-cli.md) for product usage. `verify.sh` validates the queue and runs the real test suite. The implementer runs it once after independent approval, and required CI runs it before merge.
 
-For small product fixes, the [small-code lane](docs/small-code-changes.md) keeps focused checks and independent review locally, with the full suite in required CI.
+For typo-sized changes, the [trivial lane](docs/trivial-changes.md) needs no work item or local review; evidence goes in the request body. For small product fixes, the [small-code lane](docs/small-code-changes.md) keeps focused checks and independent review locally, with the full suite in required CI.
 
 For the full work-item-to-merge lifecycle, see [Run a ticket](docs/run-a-ticket.md). Most runs need only a short instruction such as `Implement issue #5 using the harness`; the repository supplies the roles, files, evidence requirements, and delivery rules.
 

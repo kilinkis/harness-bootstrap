@@ -2,7 +2,7 @@
 
 Closes #
 
-Low-risk documentation lane: Not applicable, or record the classifier result.
+Lane: normal, small-code, trivial, or low-risk documentation. For the trivial lane, write `None` above, paste the `pnpm run check:trivial-change` output here, and list focused commands with results under Harness evidence instead of reports.
 
 ## Summary
 

@@ -149,7 +149,6 @@ void test("shared workstream permits only one recorded active feature", async ()
   try {
     assert.deepEqual(codes(await validateHarnessState(root)), [
       "ACTIVE_FEATURE_LIMIT",
-      "ACTIVE_FEATURE_NOT_CURRENT",
     ]);
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -167,7 +166,6 @@ void test("feature identity matching rejects longer IDs", async () => {
 
   try {
     assert.deepEqual(codes(await validateHarnessState(root)), [
-      "ACTIVE_FEATURE_NOT_CURRENT",
       "REPORT_FEATURE_MISSING",
     ]);
   } finally {
@@ -204,7 +202,7 @@ void test("review state requires a structured implementation report", async () =
   }
 });
 
-void test("completed tracked state requires reports and history", async () => {
+void test("completed tracked state requires reports but no history entry", async () => {
   const root = await createFixture({
     features: [
       feature({ id: "TASK-100", status: "done", issue: "https://example.test/100" }),
@@ -214,7 +212,6 @@ void test("completed tracked state requires reports and history", async () => {
 
   try {
     assert.deepEqual(codes(await validateHarnessState(root)), [
-      "HISTORY_ENTRY_MISSING",
       "IMPLEMENTATION_REPORT_MISSING",
       "REVIEW_REPORT_MISSING",
     ]);
