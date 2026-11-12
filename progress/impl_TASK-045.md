@@ -36,10 +36,14 @@ Review round 1 (`progress/review_TASK-045_round1.md`) requested two changes; bot
 - New tests: refused config files, prefix patterns, symlink, submodule, chmod, multi-commit local branch, no risk policy.
 - Focused run: `npx tsx --test tests/harness/trivial-change.test.ts tests/harness/review-binding*.test.ts tests/harness/small-change.test.ts tests/harness/legacy-evidence.test.ts tests/harness/canonical-review.test.ts`: 34 passed.
 
+## CI fix after approval
+
+The first CI run failed `local commits after the comparison base count as one step`: CI sets `HARNESS_BASE_REF` to the pull request base, which does not exist in the fixture repository, so the check fell back to judging each commit alone. The fallback now fails closed: without a comparison base on the first-parent path, everything after the approval is one step. This also resolves the round 2 optional finding. The test file clears `HARNESS_BASE_REF` for its fixtures, and a new test covers an unresolvable base. Focused run with `HARNESS_BASE_REF=deadbeef`: 35 passed. Approved snapshot before this fix: commit 73efbfc.
+
 ## Remaining risks
 
-A trivial step is judged by paths and size only. A one-line change to sensitive code outside `riskyReview.paths` passes the gate, so projects must list sensitive areas there, and request review remains the semantic check. A direct push of a trivial-sized commit to the default branch is indistinguishable from a merged trivial request; branch protection must prevent direct pushes. Existing `progress/history.md` stays as an archive. Round 2 optional finding: when a branch merges `origin/main` into itself, or `origin/main` is missing, the local check falls back to judging each commit alone; CI still judges the request as one step and refuses an oversized change.
+A trivial step is judged by paths and size only. A one-line change to sensitive code outside `riskyReview.paths` passes the gate, so projects must list sensitive areas there, and request review remains the semantic check. A direct push of a trivial-sized commit to the default branch is indistinguishable from a merged trivial request; branch protection must prevent direct pushes. Existing `progress/history.md` stays as an archive.
 
-Final approved gate: `./scripts/verify.sh` passed, 7 product and 123 harness tests.
+Final approved gate after the refreshed approval: `./scripts/verify.sh` with `HARNESS_BASE_REF` set to the PR base passed, 7 product and 124 harness tests.
 
-Implementation digest: sha256:a3f6859041052583fae88efb2ef8d64f4f9c3ecd670762757bfccc78b45ab82f
+Implementation digest: sha256:da62c423761ce08bfe2f360aa0c2e272ea6915ce9caed65972f30d84cc241463
