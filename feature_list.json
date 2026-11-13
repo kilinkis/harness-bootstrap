@@ -15,7 +15,7 @@
   {
     "id": "TASK-045",
     "title": "Add a trivial lane and drop duplicate progress evidence",
-    "issue": "local-TASK-045",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/105",
     "status": "done",
     "acceptance_criteria": [
       "A trivial change (at most 3 files and 30 added plus deleted lines, no work-item, progress, harness-test, dependency, configuration, CI, or riskyReview path) passes review binding without a work item, judged against the actual comparison base; an unconfigured risk policy refuses the lane.",
