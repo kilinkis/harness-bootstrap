@@ -24,13 +24,14 @@ When you adapt this harness to another repository, complete `ADOPTION_CHECKLIST.
 - Follow `docs/repair-loop.md` after a verification failure. Stop after its repair budget is exhausted.
 - Follow the technical prose rules in `docs/conventions.md` for durable repository text.
 - Run each role at its task tier in `docs/model-routing.md`. Escalate review only on a listed trigger.
+- Use the trivial lane in `docs/trivial-changes.md` for changes that `pnpm run check:trivial-change` accepts: no work item, no progress files, evidence in the request body.
 - Use the small-code lane in `docs/small-code-changes.md` only after automatic scope classification and reviewer confirmation. Full CI remains required.
 - Use the low-risk documentation lane in `docs/run-a-ticket.md` only when the automatic classifier approves every changed path.
 - For harness adoption, follow `docs/adoption-handoff.md`: separate harness adoption, project-gate adoption, and product readiness, then hand off the first actionable readiness item.
 
 ## Delivery workflow
 
-- Track every non-trivial change in a work item with at most five acceptance criteria.
+- Track every change outside the trivial lane in a work item with at most five acceptance criteria.
 - Target at most 300 added implementation lines; record a named owner and reason for exceptions. Keep cohesive fixes in one item and PR. Split independently verifiable outcomes; finish delivery before starting dependent work.
 - Create a feature branch from the default branch; do not commit directly to the protected branch.
 - For normal work, open a pull or merge request that links the work item with closing syntax. Record the classifier result instead for the low-risk documentation lane.
@@ -66,8 +67,9 @@ Record commands, outcomes/counts, and material risks, with only necessary error 
 | Optional per-tool model mappings | `docs/model-adapters.md` |
 | Optional MCP capabilities and safety | `docs/optional-mcp.md` |
 | Completion gate | `CHECKPOINTS.md` |
-| Current session state | `progress/current.md` |
-| Previous decisions | `progress/history.md` |
+| Trivial changes without a work item | `docs/trivial-changes.md` |
+| Optional handoff notes | `progress/current.md` |
+| Decisions before TASK-045 | `progress/history.md` (archive, no longer updated) |
 
 ## Report convention
 

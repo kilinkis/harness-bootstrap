@@ -11,5 +11,18 @@
       "Focused regressions cover split and unsplit queues, duplicate IDs across files, nonterminal or malformed archives, latest approval selection, and unchanged historical pins.",
       "Document archival and adoption rules, obtain independent review and passing verification, and commit the accumulated hook, small-code lane, and queue split without bypassing the hook."
     ]
+  },
+  {
+    "id": "TASK-045",
+    "title": "Add a trivial lane and drop duplicate progress evidence",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/105",
+    "status": "done",
+    "acceptance_criteria": [
+      "A trivial change (at most 3 files and 30 added plus deleted lines, no work-item, progress, harness-test, dependency, configuration, CI, or riskyReview path) passes review binding without a work item, judged against the actual comparison base; an unconfigured risk policy refuses the lane.",
+      "Branch-level dependency maintenance and low-risk documentation keep passing after earlier trivial merges; every other untracked change still fails as REVIEW_BINDING_STALE.",
+      "pnpm run check:trivial-change reports eligibility and refusal reasons before an agent commits to the lane.",
+      "Harness state no longer requires progress/history.md entries or a progress/current.md plan; queue status, reports, and review binding remain required for normal work.",
+      "Docs and the PR template describe the trivial lane with PR-body evidence; focused tests cover eligibility limits, risk paths, base-relative maintenance, and the removed requirements."
+    ]
   }
 ]

@@ -16,22 +16,23 @@ export async function classifyDependencyMaintenance(
   root: string,
   base: string,
   changedPaths: string[],
+  head = "",
 ): Promise<boolean> {
   const paths = [...new Set(changedPaths.map(normalizePath))].filter(Boolean).sort();
   if (paths.length === 0 || paths.some((path) => !ALLOWED_PATHS.has(path))) return false;
 
-  return Promise.all(paths.map((path) => isAllowedChange(root, base, path)))
+  return Promise.all(paths.map((path) => isAllowedChange(root, base, path, head)))
     .then((results) => results.every(Boolean))
     .catch(() => false);
 }
 
 async function isAllowedChange(
-  root: string, base: string, path: string,
+  root: string, base: string, path: string, head: string,
 ): Promise<boolean> {
   if (path === LOCKFILE) return true;
   const [before, after] = await Promise.all([
     readRevisionFile(root, base, path),
-    readRevisionFile(root, "", path),
+    readRevisionFile(root, head, path),
   ]);
   if (before === undefined || after === undefined) return false;
   return path === MANIFEST
