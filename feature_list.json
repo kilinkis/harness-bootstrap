@@ -37,5 +37,16 @@
       "Focused tests cover the command lifecycle, rejected transitions, invalid input, stale evidence, rejection and repair, cleanup, and concurrent access. Demonstrate the workflow with the invoking agent and an independent reviewer.",
       "Documentation supplies a copyable agent prompt and command examples, explains usage limits and the local trust boundary, and records the existing repository delivery gate as the approval authority."
     ]
+  },
+  {
+    "id": "TASK-046",
+    "title": "Upgrade the CI runtime to Node 26",
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/108",
+    "status": "done",
+    "acceptance_criteria": [
+      "CI runs the harness gate on Node 26, and @types/node matches that major.",
+      "Type check, lint, product tests, and harness tests pass with the new runtime and types.",
+      "The change has an implementation report and an independent risky-review approval bound to the staged digest, and the harness gate passes on PR #103."
+    ]
   }
 ]
