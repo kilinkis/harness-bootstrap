@@ -33,7 +33,8 @@
     "check:staged-files": "node scripts/check-staged-file-size.ts",
     "check:small-change": "tsx scripts/small-change.ts",
     "check:trivial-change": "tsx scripts/trivial-change.ts",
-    "verify:small": "pnpm run check:small-change && pnpm run check:delivery && pnpm run check:harness-state && pnpm run check:review-binding"
+    "verify:small": "pnpm run check:small-change && pnpm run check:delivery && pnpm run check:harness-state && pnpm run check:review-binding",
+    "poc:agent": "tsx scripts/poc/agent-cli.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -43,6 +44,7 @@
     "tsx": "^4.20.0",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.68.0",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.0",
+    "zod": "4.6.7"
   }
 }
