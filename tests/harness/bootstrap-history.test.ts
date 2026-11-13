@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { readFeatureQueueFiles } from "../../scripts/feature-queue-files.js";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -9,7 +11,7 @@ import { validateReviewBinding } from "../../scripts/review-binding.js";
 import { createFixture } from "./review-binding-fixture.js";
 
 const HISTORY_PATH = "harness.bootstrap-history.json";
-const queue = JSON.parse(await readFile(new URL("../../feature_list.json", import.meta.url), "utf8")) as Record<string, unknown>[];
+const queue = (await readFeatureQueueFiles(fileURLToPath(new URL("../../", import.meta.url)), []))?.flatMap(({ entries }) => entries) as Record<string, unknown>[];
 const historical = queue.filter(({ id }) => ["TASK-001", "TASK-002", "TASK-004"].includes(String(id)));
 
 void test("only the three preserved bootstrap definitions need no retrospective evidence", async () => {

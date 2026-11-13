@@ -1,0 +1,125 @@
+[
+  {
+    "id": "TASK-031",
+    "title": "Restrict evidence exemptions to historical bootstrap features",
+    "acceptance_criteria": [
+      "Existing historical bootstrap entries retain their evidence exemption explicitly.",
+      "New normal completed work requires a non-empty local or remote work-item reference and normal evidence.",
+      "Omitting the issue field cannot silently grant a new feature the legacy exemption.",
+      "Focused contracts cover historical compatibility, newly untracked work, and valid local identifiers."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/64",
+    "status": "done"
+  },
+  {
+    "id": "TASK-032",
+    "title": "Document and verify a minimal bootstrap adoption path",
+    "acceptance_criteria": [
+      "One concise adoption map labels core files to copy, project files to adapt, source history to omit, and optional capabilities.",
+      "First-run instructions specify runtime, package installation, and Git-base prerequisites.",
+      "A minimal adoption fixture demonstrates the documented project extension without copying sample product state.",
+      "Metrics and impact analysis remain optional and no generator or new orchestration framework is introduced.",
+      "Primary adoption entry points link the map and focused adoption contracts pass."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/65",
+    "status": "done"
+  },
+  {
+    "id": "TASK-033",
+    "title": "Reduce routine harness coordination and verification cost",
+    "acceptance_criteria": [
+      "Routine work defaults to one implementer who also plans and finalizes and one independent reviewer; a separate coordinator is optional. Instructions limit context, handoffs, and repeated checks.",
+      "Review refreshes inspect the changed scope and retain one canonical approval, using Git history for committed prior approvals and preserving uncommitted prior evidence. Whole-index binding and required gates remain intact; dependent PR stacks are not the default.",
+      "Remove tests that police prose wording while retaining executable contracts and useful documentation-link checks.",
+      "Exercise delivery snapshot edge cases directly against the guard, with representative CLI integration coverage for local, direct verify, and CI entry points and failure propagation.",
+      "Record concrete before/after test or process measurements, limitations, and verification evidence. No new dependencies or orchestration framework."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/75",
+    "status": "done"
+  },
+  {
+    "id": "TASK-034",
+    "title": "Clarify minimum code review coverage and finding severity",
+    "acceptance_criteria": [
+      "Review covers correctness, simplicity, security, and performance where relevant, retaining existing edge-case, scope, test, and architecture checks.",
+      "Findings require concrete evidence, impact, severity, and a clear distinction between required fixes and optional suggestions. Unresolved required fixes block approval; style preferences do not.",
+      "Keep the change within the reviewer prompt and normal work-item/evidence files. No new tools, dependencies, test cases, or review stages."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/83",
+    "status": "done"
+  },
+  {
+    "id": "TASK-035",
+    "title": "Require unambiguous final review approval and evidence",
+    "acceptance_criteria": [
+      "State and binding consume one final-review loading/parsing path, retaining exact pinned historical report selection and supported historical formats.",
+      "Approval requires one unambiguous approved verdict; conflicting or duplicate verdict declarations fail and quoted/fenced examples cannot supply approval.",
+      "Required review evidence sections contain content; empty or comment-only bodies and headings alone cannot satisfy evidence.",
+      "Digest interpretation stays shared and unambiguous, while whole-index binding, reviewed maintenance, existing command diagnostics, and historical report bytes remain protected.",
+      "Focused regressions exercise both existing validator interfaces, valid reports, and historical compatibility; no framework, dependency, or unrelated architecture changes."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/85",
+    "status": "done"
+  },
+  {
+    "id": "TASK-036",
+    "title": "Share project-gate composition validation with adoption audit",
+    "acceptance_criteria": [
+      "Audit and verification contracts share validation of the supported ordered verify command, retaining the bootstrap form without a project stage and requiring the project stage for adoption.",
+      "Adoption rejects missing or empty project commands, textual mentions or aliases instead of the exact project invocation, missing/reordered/duplicate stages, and shell forms outside the supported fail-fast composition with clear findings.",
+      "Existing execution tests still prove stage order and failure propagation. Focused audit regressions cover false positives and valid composition without multiplying subprocess pipelines.",
+      "Documentation explains the supported composition and limits: structural validation does not prove project command coverage or correctness. No shell-parser framework or dependency is added."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/87",
+    "status": "done"
+  },
+  {
+    "id": "TASK-037",
+    "title": "Align inventory decision validation with its schema",
+    "acceptance_criteria": [
+      "Each typecheck, test, and build decision contains exactly one command or notApplicable property with a non-whitespace string value.",
+      "Reject both properties even when the second value is blank or has the wrong type. Retain TARGET_DECISION_INVALID and existing deployable-build checks.",
+      "Preserve valid decision strings exactly. Direct fixtures cover invalid shapes and valid alternatives across all three decision slots.",
+      "Keep the fix within inventory validation and focused regression coverage. No new dependency or schema interpreter."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/89",
+    "status": "done"
+  },
+  {
+    "id": "TASK-038",
+    "title": "Share feature-queue validation between state and binding",
+    "acceptance_criteria": [
+      "State and binding share queue reading, feature validation, normalized identity, allowed status, and single-active-feature policy.",
+      "Binding rejects malformed, duplicate, unsafe-ID, invalid-status, and multiple-active queues before selecting approval. Valid whitespace-padded IDs use the same report identity as state.",
+      "Preserve existing state diagnostics, binding queue/reference diagnostic aliases, exact legacy exemptions, approval selection, evidence traversal, and digest/maintenance behavior.",
+      "Focused interface tests cover invalid queue parity and valid normalized IDs. Remove the permissive binding reader; add no dependency or general workflow engine."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/91",
+    "status": "done"
+  },
+  {
+    "id": "TASK-039",
+    "title": "Separate bootstrap history pins from reusable validation",
+    "acceptance_criteria": [
+      "Move the existing three definition hashes and four paired review hashes unchanged into one optional repository data file. Reusable validators default to no historical exceptions when the file is absent.",
+      "Reject malformed or unreadable supplied history with a clear finding. Preserve exact definition/report hash verification, canonical fallback, and normal state/binding evidence requirements.",
+      "Fresh adoption copies unchanged validator source, omits the history file, and no longer rewrites TypeScript maps. Keep historical-only tests separable from reusable contracts.",
+      "Focused tests prove preserved history, modified/reused-ID rejection, absent/malformed history behavior, and fresh adoption. Update adoption guidance; add no dependency or plugin system."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/93",
+    "status": "done"
+  },
+  {
+    "id": "TASK-040",
+    "title": "Define tool-agnostic model tiers per task and role",
+    "acceptance_criteria": [
+      "harness.models.json defines cost tiers, task tiers, risky-review triggers, and the default task tier for each role. It names no vendor, tool, or model.",
+      "Each role file states its task tier, and the stated tier matches the config.",
+      "docs/model-routing.md explains when to use each tier and when review escalates to the risky-review tier.",
+      "docs/model-adapters.md shows how to map cost tiers to a specific tool. It is optional and is not required by the gate.",
+      "A harness test validates the config shape, role consistency, and the absence of vendor names in the config."
+    ],
+    "issue": "https://github.com/kilinkis/harness-bootstrap/issues/96",
+    "status": "done"
+  }
+]

@@ -2,7 +2,9 @@
 
 Review tier: risky-review (triggers: scripts/** and package.json).
 
-Implementation digest: sha256:a16573e092d9656e72dbd09898ef3726635884d303453a26043c3a668d8ed600
+Prior snapshot: approval and implementation committed at `f25709e` (`progress/review_TASK-041.md`), digest `sha256:a16573e092d9656e72dbd09898ef3726635884d303453a26043c3a668d8ed600`, independently recomputed from that commit's tree.
+
+Implementation digest: sha256:0c40bb33034eb93a546f0adbfcb94447726527d1c82f8fd8ef002a9930b64ebe
 
 ## Verdict
 
@@ -10,27 +12,29 @@ Approved.
 
 ## Scope reviewed
 
-This refresh replaces the approval of the TanStack experiment with approval of the invoking-agent workflow. The prior review and its complete implementation are recoverable at commit `f940abe`. Independently recomputed that commit's implementation digest as `sha256:ab7cf866bff141d402dbe07908fd96916221a464a276aa0d04102c09d31d95e3`, matching its committed report. The previous canonical report had no uncommitted changes and remains preserved in Git.
+Approval refresh after the staged merge of the default branch (`5e2f2d5`, TASK-042 to TASK-045) into the feature branch at `f25709e`. The prior approval is committed and needs no numbered copy.
 
-Reviewed the revised five acceptance criteria, implementation report, and full staged delta. Inspected `scripts/poc/agent-session.ts`, `scripts/poc/agent-cli.ts`, `tests/harness/agent-poc.test.ts`, `docs/agent-poc.md`, `package.json`, and `pnpm-lock.yaml`. Inspected removal of the TanStack scripts, tests, guide, and dependencies. Checked interactions with the existing inventory validator, repository ignore rules, and review binding protocol.
+The PoC files `scripts/poc/agent-session.ts`, `scripts/poc/agent-cli.ts`, `tests/harness/agent-poc.test.ts`, and `docs/agent-poc.md` are byte-identical to `f25709e`. Compared with the default branch, the staged index adds only the PoC files, the TASK-041 reports, and the conflict resolutions below.
 
-The CLI persists bounded inventory data and evidence between invocations. UUID validation prevents command-selected traversal. Phase checks freeze writes after handoff. Current successful checks and a matching approval are required before final validation can complete a session. Updates use exclusive session locks and atomic replacement. Cleanup targets one selected session. The implementation makes no model API calls and executes no declared inventory commands. The guide accurately delegates reasoning and reviewer independence to the invoking environment.
+- `package.json`: keeps every default-branch script and adds only `poc:agent` and the pinned `zod` 4.6.7 dev dependency.
+- `pnpm-lock.yaml`: takes the default-branch upgrades and adds only the `zod@4.6.7` importer, package, and snapshot entries.
+- `feature_list.json`: default-branch queue plus the unchanged TASK-041 entry, `in_review`. The archives under `progress/feature-history/` are unchanged.
+- `progress/history.md`: identical to the default branch. `progress/current.md` records the refresh state.
 
-No required or optional findings remain for this change. Zod remains pinned at the previously reviewed version. The revised lockfile removes the model dependency tree without changing unrelated package versions.
+Interactions: the PoC does not depend on the history or current-plan requirements that were removed, on the trivial or small-code lanes, on queue archives, or on harness-evidence changes. Session state stays under the ignored `.task-harness/agent-poc/` directory, so the staged-file-size hook never sees it. The large staged files (`pnpm-lock.yaml`, `progress/history.md`) pass that hook. All five acceptance criteria remain met: the lifecycle CLI, phase and evidence gating, validation with atomic locked writes and single-session cleanup, focused tests together with the prior recorded demonstration, and the guide.
 
 ## Commands and results
 
-- `node --import tsx --test tests/harness/agent-poc.test.ts`: passed all 8 tests. Coverage includes persistence across processes, successful completion, rejected transitions, stale and duplicate evidence, rejection and repair, invalid input, malformed state cleanup, concurrent access, forged evidence rejected by final validation, and CLI failures.
-- Independent inline Node checks: malformed JSON reviews, blank reasons, and unsupported review fields all failed without changing saved state. Locks and temporary write files were removed. Saved session files had mode `0600`. Cleaning one session preserved a second session and its readable state.
-- Independent Git-tree digest reconstruction using `git ls-tree -r -z f940abe`, the documented exclusions, and the repository hash format: matched the prior approved digest.
-- `node --import tsx scripts/review-digest.ts`: matched the current implementation digest above.
+- `GIT_INDEX_FILE=<temp> git read-tree f25709e` followed by `node --import tsx scripts/review-digest.ts`: matched the prior digest.
+- `node --import tsx --test tests/harness/agent-poc.test.ts`: 8 passed, 0 failed.
+- `pnpm run test:harness`: 132 passed, 0 failed.
+- `pnpm run check`, `pnpm run lint`, `check:harness-state`, `check:release`, `check:targets`, `check:staged-files`: all passed.
+- CLI smoke test (`poc:agent start`; `handoff` before a check was rejected; `clean` removed only that session): behaved as documented.
 - `git diff --cached --check`: passed.
-- Independently participated in demo session `58da2699-12b6-4a80-aca2-d563287b4d09` through separate CLI `read`, `check`, and `review` invocations. Inspected its task, manifest, schema, and repaired inventory. The reviewer check produced zero findings. Submitted approval for inventory digest `1f34632c5c8cc5310de277c7a780625a64a479932228dfee0e4d4d2c810d323c`. The implementer subsequently recorded successful completion in its report. This demonstration used no model API credentials or SDK calls.
+- `pnpm run review:digest`: matched the implementation digest above.
 
-The reviewer did not edit implementation files, stage files, or run the full gate. The implementer must run the final local gate against this refreshed approved snapshot.
+The reviewer did not edit implementation files, stage files, or run the full gate.
 
 ## Remaining risks
 
-The CLI enforces phases and matching content but cannot authenticate reviewer identity. A caller with filesystem access can alter session evidence. The invoking environment must assign an independent reviewer. A killed process can leave a lock that requires manual recovery. These limits are documented and appropriate for the trusted local experiment.
-
-Inventory validation checks structure and target coverage; it does not prove that declared commands work. A completed synthetic session does not approve repository changes or replace the repository delivery gate. The invoking agent still consumes its normal account allowance. The existing brace-expansion advisories previously recorded in the ESLint dependency chain remain outside this feature. No merge is requested.
+The trust-boundary limits in the prior approval are unchanged. Reviewer identity is not authenticated, local filesystem access can alter evidence, and a killed process can leave a stale lock. A completed session does not replace the repository delivery gate. The implementer must run the final full gate on this merged snapshot before delivery.

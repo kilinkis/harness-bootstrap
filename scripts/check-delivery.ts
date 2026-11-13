@@ -1,5 +1,7 @@
-import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+
+import { readFeatureQueue } from "./feature-queue.js";
+import type { HarnessFinding } from "./harness-state-support.js";
 
 import { assertDeliverySnapshot } from "./review-binding.js";
 
@@ -10,12 +12,10 @@ async function main(): Promise<void> {
   if (process.argv.length > 2 || (phase !== "local" && phase !== "ci")) {
     throw new Error("Usage: HARNESS_DELIVERY_PHASE=local|ci pnpm run check:delivery");
   }
-  const queue: unknown = JSON.parse(await readFile(resolve("feature_list.json"), "utf8"));
-  if (!Array.isArray(queue)) throw new Error("DELIVERY_QUEUE_INVALID: feature queue must be an array");
-  for (const value of queue as unknown[]) {
-    if (typeof value !== "object" || value === null || !("status" in value)) {
-      throw new Error("DELIVERY_QUEUE_INVALID: feature entries must contain a status");
-    }
+  const findings: HarnessFinding[] = [];
+  const queue = await readFeatureQueue(resolve("."), findings);
+  if (!queue || findings.length > 0) throw new Error(`DELIVERY_QUEUE_INVALID: ${findings.map(({ message }) => message).join("; ")}`);
+  for (const value of queue) {
     if (phase === "ci" && (value.status === "in_progress" || value.status === "in_review")) {
       throw new Error("DELIVERY_FINALIZATION_REQUIRED: finalize active feature evidence before CI delivery");
     }

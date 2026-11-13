@@ -1,5 +1,6 @@
+import { readFeatureQueueFiles } from "./feature-queue-files.js";
 import { isLegacyBootstrapFeature, readBootstrapHistory, type BootstrapHistory } from "./bootstrap-history.js";
-import { addFinding, readText, type HarnessFinding } from "./harness-state-support.js";
+import { addFinding, type HarnessFinding } from "./harness-state-support.js";
 
 export interface Feature {
   id: string;
@@ -22,11 +23,8 @@ export async function readFeatureQueue(
   findings: HarnessFinding[],
 ): Promise<Feature[] | undefined> {
   const queuePath = "feature_list.json";
-  const queueText = await readText(root, queuePath, "QUEUE_READ_FAILED", findings);
-  if (queueText === undefined) return undefined;
-
-  const queue = parseQueue(queueText, queuePath, findings);
-  if (queue === undefined) return undefined;
+  const files = await readFeatureQueueFiles(root, findings);
+  if (files === undefined) return undefined;
 
   let history: BootstrapHistory;
   try { history = await readBootstrapHistory(root); }
@@ -34,7 +32,14 @@ export async function readFeatureQueue(
     addFinding(findings, "BOOTSTRAP_HISTORY_INVALID", String(error), "harness.bootstrap-history.json");
     return undefined;
   }
-  const features = validateFeatures(queue, queuePath, findings, history);
+  const seenIds = new Set<string>();
+  const features = files.flatMap(({ entries, path, archived }) => {
+    const validated = validateFeatures(entries, path, findings, history, seenIds);
+    if (archived && validated.some(({ status }) => status !== "done" && status !== "skipped")) {
+      addFinding(findings, "QUEUE_ARCHIVE_NONTERMINAL", "Archived features must be done or skipped", path);
+    }
+    return validated;
+  });
   const active = features.filter(({ status }) =>
     status === "in_progress" || status === "in_review"
   );
@@ -50,33 +55,14 @@ export async function readFeatureQueue(
   return features;
 }
 
-function parseQueue(
-  text: string,
-  path: string,
-  findings: HarnessFinding[],
-): unknown[] | undefined {
-  let value: unknown;
-  try {
-    value = JSON.parse(text) as unknown;
-  } catch {
-    addFinding(findings, "QUEUE_INVALID_JSON", "Feature queue is not valid JSON", path);
-    return undefined;
-  }
-  if (!Array.isArray(value)) {
-    addFinding(findings, "QUEUE_INVALID_SHAPE", "Feature queue must be an array", path);
-    return undefined;
-  }
-  return value as unknown[];
-}
-
 function validateFeatures(
   queue: unknown[],
   path: string,
   findings: HarnessFinding[],
   history: BootstrapHistory,
+  seenIds: Set<string>,
 ): Feature[] {
   const features: Feature[] = [];
-  const seenIds = new Set<string>();
 
   queue.forEach((value, index) => {
     const feature = validateFeature(value, index, path, seenIds, findings, history);

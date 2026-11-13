@@ -21,6 +21,8 @@ Omit `harness.bootstrap-history.json` when the target does not carry this bootst
 
 Omit `tests/harness/bootstrap-history.test.ts`, which verifies only this repository's pinned history. Retain `legacy-evidence.test.ts`, `harness-state.test.ts`, and `canonical-review.test.ts` for normal evidence and canonical review requirements. Adapt the assertions named "sample bootstrap" in `verification-loop.test.ts` when omitting optional capabilities. Keep the required-stage and project-failure contracts. See the [review-binding rules](review-binding.md) for exact report headings and both historical exceptions.
 
+Omit sample `progress/feature-history/` archives with the other sample evidence. The optional archive loader supports existing unsplit arrays unchanged. See [feature queue archives](feature-queue.md) for ongoing maintenance.
+
 A fresh `feature_list.json` may initially contain `[]`; this is an empty queue, not completed adoption evidence. Track the adoption itself with a local or remote work-item reference, at most five acceptance criteria, and the normal implementation/review cycle. New completed work needs its own reports and history.
 
 ## First run

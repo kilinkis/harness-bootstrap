@@ -4,7 +4,9 @@ A review approves one implementation snapshot. It does not approve later changes
 
 This protocol applies to the normal feature workflow. An automatically classified low-risk documentation change uses change-request review and full CI instead of local role reports and a digest.
 
-The harness represents the staged implementation snapshot with a SHA-256 digest. The digest uses each staged file path, Git mode, and Git object ID. It excludes `feature_list.json` and all files in `progress/`. Those files must change when the implementer records review and completion state.
+The harness represents the staged implementation snapshot with a SHA-256 digest. The digest uses each staged file path, Git mode, and Git object ID. It excludes `feature_list.json` and all files in `progress/`, including completed queue archives. State and binding validate the combined active and archived queue; see [feature queue archives](feature-queue.md). Those files must change when the implementer records review and completion state.
+
+The [small-code lane](small-code-changes.md) retains this complete binding protocol. Its approved local completion command is `pnpm run verify:small`; references below to the final local full gate apply to the normal lane. Full CI remains required for both.
 
 ## Implementer handoff
 

@@ -46,10 +46,28 @@ The CLI enforces phases and matching content, not reviewer identity. Local files
 
 ## Review and delivery
 
-Implementation digest: sha256:a16573e092d9656e72dbd09898ef3726635884d303453a26043c3a668d8ed600
+Prior approved digest (commit `f25709e`): sha256:a16573e092d9656e72dbd09898ef3726635884d303453a26043c3a668d8ed600
 
 Independent risky-review approved this digest in `progress/review_TASK-041.md`. The implementer ran `./scripts/verify.sh` once after approval: exit 0, all stages passed, 7 product tests and 115 harness tests passed. Log: `/tmp/task-041-agent-final-gate.log`. Evidence-only finalization marks the feature done locally. Draft PR #99 will carry this revision; no merge is requested.
 
 Finalization checks: `HARNESS_DELIVERY_PHASE=ci node --import tsx scripts/check-delivery.ts` and `node --import tsx scripts/check-harness-state.ts` both passed after evidence-only finalization.
 
 Implementation commit `a29a5dd` was pushed to the feature branch. Draft PR #99 and issue #98 now describe the invoking-agent revision. Publication used the previously authorized kilinkis account only for those processes. Required remote checks remain tracked on the PR. No merge was performed.
+
+## Merge refresh (2026-11-13)
+
+The owner asked to land this prototype. The default branch (`5e2f2d5`, after TASK-042 to TASK-045) was merged into the feature branch at prior approved commit `f25709e`. No PoC source, test, or doc changed.
+
+Conflict resolution:
+
+- `package.json`: kept every default-branch script and appended `poc:agent`. The `zod` dev dependency is unchanged.
+- `feature_list.json`: took the default-branch active queue and appended TASK-041 after TASK-045 so it is the latest completed approval. Archives under `progress/feature-history/` are unchanged.
+- `progress/history.md`: took the default-branch archive unchanged. It is no longer updated after TASK-045.
+- `progress/current.md`: replaced with this refresh state.
+- `pnpm-lock.yaml`: merged automatically; `pnpm install --frozen-lockfile` passed.
+
+Focused checks on the merged index: `check:harness-state`, `check:release`, `check:targets`, `check`, `lint`, and `test:product` passed. `test:harness`: 132 passed, 0 failed, including the 8 PoC tests. `check:review-binding` reported `REVIEW_BINDING_STALE` before this refresh, as expected.
+
+Implementation digest: sha256:0c40bb33034eb93a546f0adbfcb94447726527d1c82f8fd8ef002a9930b64ebe
+
+Independent risky-review approved this digest in `progress/review_TASK-041.md`. The implementer then ran `./scripts/verify.sh` once on the approved snapshot: exit 0, all stages passed, 7 product tests and 132 harness tests passed. Evidence-only finalization marks the feature done. Draft PR #99 carries the merge for owner review; follow-up generalization is tracked in #107.
