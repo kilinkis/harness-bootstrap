@@ -9,7 +9,7 @@ A feature can move to `done` only when every applicable checkpoint is true.
 - [ ] An independent review report exists in `progress/` and has no unresolved blocking finding.
 - [ ] The review report digest matches the staged implementation snapshot.
 - [ ] After independent approval, the implementer runs `./scripts/verify.sh` once and it exits successfully, or the approved [small-code lane](docs/small-code-changes.md) passes `pnpm run verify:small` with focused/type/lint evidence.
-- [ ] `progress/current.md` and `progress/history.md` accurately reflect the outcome.
+- [ ] The feature is marked `done` in `feature_list.json`.
 - [ ] `pnpm run check:harness-state` passes after evidence-only finalization.
 
 If a checkpoint cannot be satisfied, leave the item active and document the blocker. Do not quietly downgrade the requirement.

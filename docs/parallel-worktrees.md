@@ -69,7 +69,7 @@ git worktree list
 Each worktree follows the complete ticket lifecycle:
 
 1. Mark only its selected feature `in_progress`.
-2. Write that feature's plan to `progress/current.md`.
+2. Write handoff notes to `progress/current.md` only if another session will resume the work.
 3. Implement and run focused checks.
 4. Run `pnpm run feedback` before review.
 5. Write the implementation report.
@@ -95,8 +95,7 @@ Stop if the merge reports a conflict. Inspect the competing changes before you r
 Conflicts are most likely in these files:
 
 - `feature_list.json`: keep completed items from `main` and the current branch's feature state.
-- `progress/current.md`: describe only the current branch's active feature. After completion, record no active feature and summarize the current feature.
-- `progress/history.md`: preserve entries from both branches.
+- `progress/current.md`: optional notes; keep the current branch's version.
 - Shared product files: resolve them from the accepted behavior, not from file order.
 
 For implementation changes, use [approval refresh](review-binding.md#approval-refresh) after resolving the merge. After that approval, the implementer runs the final full gate on the resolved snapshot.

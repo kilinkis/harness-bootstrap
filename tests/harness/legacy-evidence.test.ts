@@ -14,7 +14,7 @@ void test("new completed work cannot omit its reference and normal evidence", as
   try {
     await writeQueue(root, [normal]);
     const state = (await validateHarnessState(root)).map(({ code }) => code);
-    for (const code of ["FEATURE_ISSUE_MISSING", "IMPLEMENTATION_REPORT_MISSING", "REVIEW_REPORT_MISSING", "HISTORY_MISSING"]) {
+    for (const code of ["FEATURE_ISSUE_MISSING", "IMPLEMENTATION_REPORT_MISSING", "REVIEW_REPORT_MISSING"]) {
       assert.ok(state.includes(code), code);
     }
     assert.ok((await validateReviewBinding(root)).some(({ code }) => code === "REVIEW_BINDING_ISSUE_MISSING"));
@@ -28,7 +28,6 @@ void test("local references pass with normal evidence and cannot be removed to b
   try {
     await writeQueue(root, [{ ...normal, issue: "local-TASK-100" }]);
     await addReviewReport(root);
-    await writeFile(join(root, "progress/history.md"), "TASK-100 completed.\n");
     await writeFile(join(root, "progress/impl_TASK-100.md"), ["# TASK-100", "## Scope", "Fixture.",
       "## Files changed", "src/value.ts", "## Commands and results", "Passed.", "## Remaining risks", "None."].join("\n"));
     assert.deepEqual(await validateHarnessState(root), []);

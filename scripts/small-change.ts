@@ -1,15 +1,11 @@
-import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { resolveComparisonBase } from "./comparison-base.js";
 import { assertDeliverySnapshot } from "./review-binding.js";
 
-export interface ChangeSize {
-  path: string;
-  added: number;
-  deleted: number;
-}
+import { findNonRegularEntries, readStagedChanges, type ChangeSize } from "./trivial-change.js";
+
 
 export function classifySmallChange(changes: ChangeSize[]): string[] {
   const implementation = changes.filter(({ path }) => path !== "feature_list.json" && !path.startsWith("progress/"));
@@ -36,23 +32,8 @@ export async function inspectSmallChange(root: string, requestedBase?: string): 
   await assertDeliverySnapshot(root);
   const base = await resolveComparisonBase(root, requestedBase);
   if (!base.commit) return ["A first push or missing comparison commit requires the normal lane."];
-  const output = execFileSync("git", [
-    "diff", "--cached", "--no-renames", "--numstat", "-z", base.commit, "--",
-  ], { cwd: root, encoding: "utf8" });
-  const changes = output.split("\0").filter(Boolean).map((record) => {
-    const first = record.indexOf("\t");
-    const second = record.indexOf("\t", first + 1);
-    return { path: record.slice(second + 1), added: Number(record.slice(0, first)), deleted: Number(record.slice(first + 1, second)) };
-  });
-  const reasons = classifySmallChange(changes);
-  const modes = execFileSync("git", ["ls-files", "--stage", "-z"], { cwd: root, encoding: "utf8" });
-  for (const record of modes.split("\0").filter(Boolean)) {
-    const path = record.slice(record.indexOf("\t") + 1);
-    if (changes.some((change) => change.path === path) && !/^100(?:644|755) /.test(record)) {
-      reasons.push(`Non-regular index entry requires the normal lane: ${JSON.stringify(path)}.`);
-    }
-  }
-  return reasons;
+  const changes = await readStagedChanges(root, base.commit);
+  return [...classifySmallChange(changes), ...await findNonRegularEntries(root, changes, "the normal lane")];
 }
 
 const entry = process.argv[1];
